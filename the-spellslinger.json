@@ -1,0 +1,88 @@
+{
+    "name": "The Spell-Slinger",
+    "quote": "Fight fire with <b>fire magic</b>.",
+    "luck_max": 7,
+    "luck_special": "When you spend a point of Luck, the official council of wizards is going to poke their nose into your business...",
+    "harm_max": 7,
+    "harm_unstable": 4,
+    "pre_moves": [
+        {
+            "heading": "Combat Magic",
+            "description": [
+                "You have a few attack spells you can use as weapons.",
+                "When you use these spells to kick some ass, roll <span class='roll'>+Weird</span> instead of +Tough.",
+                "Sometimes the situation may require you to act under pressure to cast your spell without problems.",
+                "<br>Your combat spells can combine any of your base spells  with any of your effects."
+            ],
+            "children": {
+                "heading": "Combat magic, pick <span class='pick'>three</span> (with at least one base):",
+                "type": "pick",
+                "pick": 3,
+                "children": [
+                    {
+                        "heading": "Bases:",
+                        "pick": ">1",
+                        "options": [
+                            {
+                                "name": "Blast",
+                                "description": "2-harm magic close obvious loud",
+                                "tags": ["2-harm", "magic", "close", "obvious", "loud"]
+                            },
+                            {
+                                "name": "Ball",
+                                "description": "1-harm magic area close obvious loud",
+                                "tags": ["1-harm", "magic", "area", "close", "obvious", "loud"]
+                            },
+                            {
+                                "name": "Missile",
+                                "description": "1-harm magic far obvious loud",
+                                "tags": ["1-harm", "magic", "far", "obvious", "loud"]
+                            },
+                            {
+                                "name": "Wall",
+                                "description": "1-harm magic barrier close 1-armour obvious loud",
+                                "tags": ["1-harm", "magic", "barrier", "close", "1-armour", "obvious", "loud"]
+                            }
+                        ]
+                    },
+                    {
+                        "heading": "Effects:",
+                        "options": [
+                            {
+                                "name": "Fire",
+                                "description": "Add '+2 harm fire' to a base. If you get a 10+ on a combat magic roll, the fire won’t spread.",
+                                "tags": ["+2 harm", "fire"]
+                            },
+                            {
+                                "name": "Force or Wind",
+                                "description": "Add '+1 harm forceful' to a base, or '+1 armour' to a wall.",
+                                "tags": ["+1 harm", "forceful", "+1 armour"]
+                            },
+                            {
+                                "name": "Lightning or Entropy",
+                                "description": "Add '+1 harm messy' to a base.",
+                                "tags": ["+1 harm", "messy"]
+                            },
+                            {
+                                "name": "Frost or Ice",
+                                "description": "Adds '-1 harm +2 armour' to a wall, or '+1 harm restraining' to other bases.",
+                                "tags": ["-1 harm", "+2 armour", "restraining"]
+                            },
+                            {
+                                "name": "Earth",
+                                "description": "Add 'forceful restraining' to a base.",
+                                "tags": ["forceful", "restraining"]
+                            },
+                            {
+                                "name": "Necromantic",
+                                "description": "Add 'life-drain' to a base.",
+                                "tags": ["life-drain"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "end": "end"
+}
