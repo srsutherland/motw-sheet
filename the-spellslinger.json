@@ -82,6 +82,60 @@
                     }
                 ]
             }
+        },
+        {
+            "heading": "Moves",
+            "description": [
+                "You get all the basic moves and four Spell-slinger moves.",
+                "You have this one: Tools and Techniques: To use your combat magic effectively you rely on a collection of tools and techniques. Cross off one; you’ll need the rest."
+            ],
+            "children": {
+                "heading": "Pick three of these:",
+                "type": "pick",
+                "pick": 3,
+                "options": [
+                    {
+                        "name": "Advanced Arcane Training",
+                        "description": "If you have two of your three Tools and Techniques at the ready, you may ignore the third one."
+                    },
+                    {
+                        "name": "Arcane Reputation",
+                        "description": "Pick three big organizations or groups in the supernatural community. They’ve heard of you and respect your power. With affected humans, take +1 forward when you manipulate them. You may manipulate affected monsters as if they were human, with no bonus."
+                    },
+                    {
+                        "name": "Could’ve Been Worse",
+                        "description": "When you miss a use magic roll, choose one of the following options instead of losing control of the magic: Fizzle or This Is Gonna Suck."
+                    },
+                    {
+                        "name": "Enchanted Clothing",
+                        "description": "Pick an article of everyday clothing—it’s enchanted without any change in appearance. Take -1 harm from any source that tries to get at you through the garment."
+                    },
+                    {
+                        "name": "Forensic Divination",
+                        "description": "When you successfully investigate a mystery, ask 'What magic was done here?' as a free extra question."
+                    },
+                    {
+                        "name": "Go Big or Go Home",
+                        "description": "When you must use magic as a requirement for Big Magic, take +1 ongoing to those use magic rolls."
+                    },
+                    {
+                        "name": "Not My Fault",
+                        "description": "+1 to act under pressure when dealing with the consequences of your own spell-casting."
+                    },
+                    {
+                        "name": "Practitioner",
+                        "description": "Choose two effects available to you under use magic. Take +1 to use magic whenever you choose one of those effects."
+                    },
+                    {
+                        "name": "Shield Spell",
+                        "description": "When you protect someone, gain 2-armour against any harm that is transferred to you. This doesn’t stack with your other armour, if any."
+                    },
+                    {
+                        "name": "Third Eye",
+                        "description": "When you read a bad situation, open up your third eye for a moment to take in extra information. Take +1 hold on any result of 7 or more. You can see invisible things. On a miss, you may still get 1 hold, but you’re exposed to supernatural danger."
+                    }
+                ]
+            }
         }
     ],
     "end": "end"
