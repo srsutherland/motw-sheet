@@ -1,142 +1,228 @@
 {
-    "name": "The Spell-Slinger",
-    "quote": "Fight fire with <b>fire magic</b>.",
-    "luck_max": 7,
-    "luck_special": "When you spend a point of Luck, the official council of wizards is going to poke their nose into your business...",
-    "harm_max": 7,
-    "harm_unstable": 4,
-    "pre_moves": [
+  "name": "The Spell-Slinger",
+  "quote": "Fight fire with <b>fire magic</b>.",
+  "luck_max": 7,
+  "luck_special": "When you spend a point of Luck, the official council of wizards is going to poke their nose into your business...",
+  "harm_max": 7,
+  "harm_unstable": 4,
+  "pre_moves": [
+    {
+      "heading": "Combat Magic",
+      "description": [
+        "You have a few attack spells you can use as weapons.",
+        "When you use these spells to [[kick some ass]], roll <span class='roll'>+Weird</span> instead of +Tough.",
+        "Sometimes the situation may require you to [[act under pressure]] to cast your spell without problems.",
+        "<br>Your combat spells can combine any of your base spells  with any of your effects."
+      ],
+      "children": {
+        "heading": "Combat magic, pick <span class='pick'>three</span> (with at least one base):",
+        "opt_type": "pick",
+        "pick": 3,
+        "options": [
+          {
+            "heading": "Bases:",
+            "pick": ">1",
+            "options": [
+              {
+                "name": "Blast",
+                "description": "2-harm magic close obvious loud",
+                "tags": ["2-harm", "magic", "close", "obvious", "loud"]
+              },
+              {
+                "name": "Ball",
+                "description": "1-harm magic area close obvious loud",
+                "tags": ["1-harm", "magic", "area", "close", "obvious", "loud"]
+              },
+              {
+                "name": "Missile",
+                "description": "1-harm magic far obvious loud",
+                "tags": ["1-harm", "magic", "far", "obvious", "loud"]
+              },
+              {
+                "name": "Wall",
+                "description": "1-harm magic barrier close 1-armour obvious loud",
+                "tags": ["1-harm", "magic", "barrier", "close", "1-armour", "obvious", "loud"]
+              }
+            ]
+          },
+          {
+            "heading": "Effects:",
+            "options": [
+              {
+                "name": "Fire",
+                "description": "Add '+2 harm fire' to a base. If you get a 10+ on a combat magic roll, the fire won’t spread.",
+                "tags": ["+2 harm", "fire"]
+              },
+              {
+                "name": "Force or Wind",
+                "description": "Add '+1 harm forceful' to a base, or '+1 armour' to a wall.",
+                "tags": ["+1 harm", "forceful", "+1 armour"]
+              },
+              {
+                "name": "Lightning or Entropy",
+                "description": "Add '+1 harm messy' to a base.",
+                "tags": ["+1 harm", "messy"]
+              },
+              {
+                "name": "Frost or Ice",
+                "description": "Adds '-1 harm +2 armour' to a wall, or '+1 harm restraining' to other bases.",
+                "tags": ["-1 harm", "+2 armour", "restraining"]
+              },
+              {
+                "name": "Earth",
+                "description": "Add 'forceful restraining' to a base.",
+                "tags": ["forceful", "restraining"]
+              },
+              {
+                "name": "Necromantic",
+                "description": "Add 'life-drain' to a base.",
+                "tags": ["life-drain"]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "moves": {
+    "heading": "Moves",
+    "description": "You get all the basic moves and four Spell-slinger moves.",
+    "you_get": {
+      "description": "You have this one:",
+      "children": {
+        "name": "Tools and Techniques",
+        "description": "To use your combat magic effectively you rely on a collection of tools and techniques. Cross off one; you’ll need the rest.",
+        "opt_type": "cross",
+        "cross": 1,
+        "options": [
+          {
+            "name": "Consumables",
+            "description": "You need certain supplies— powders, oils, etc—on hand, some will be used up each cast. If you don’t have them, take 1-harm ignore-armour when you cast."
+          },
+          {
+            "name": "Foci",
+            "description": "You need wands, staves, and other obvious props to focus. If you don’t have what you need, your combat magic does 1 less harm."
+          },
+          {
+            "name": "Gestures",
+            "description": "You need to wave your hands around to use combat magic. If you’re restrained, take -1 ongoing for combat magic."
+          },
+          {
+            "name": "Incantations",
+            "description": "You must speak in an arcane languageto control your magic. If you use combat magic without speaking, act under pressure to avoid scrambling your thoughts."
+          }
+        ]
+      }
+    },
+    "children": {
+      "heading": "Pick three of these:",
+      "opt_type": "pick",
+      "pick": 3,
+      "options": [
         {
-            "heading": "Combat Magic",
-            "description": [
-                "You have a few attack spells you can use as weapons.",
-                "When you use these spells to kick some ass, roll <span class='roll'>+Weird</span> instead of +Tough.",
-                "Sometimes the situation may require you to act under pressure to cast your spell without problems.",
-                "<br>Your combat spells can combine any of your base spells  with any of your effects."
-            ],
-            "children": {
-                "heading": "Combat magic, pick <span class='pick'>three</span> (with at least one base):",
-                "type": "pick",
-                "pick": 3,
-                "children": [
-                    {
-                        "heading": "Bases:",
-                        "pick": ">1",
-                        "options": [
-                            {
-                                "name": "Blast",
-                                "description": "2-harm magic close obvious loud",
-                                "tags": ["2-harm", "magic", "close", "obvious", "loud"]
-                            },
-                            {
-                                "name": "Ball",
-                                "description": "1-harm magic area close obvious loud",
-                                "tags": ["1-harm", "magic", "area", "close", "obvious", "loud"]
-                            },
-                            {
-                                "name": "Missile",
-                                "description": "1-harm magic far obvious loud",
-                                "tags": ["1-harm", "magic", "far", "obvious", "loud"]
-                            },
-                            {
-                                "name": "Wall",
-                                "description": "1-harm magic barrier close 1-armour obvious loud",
-                                "tags": ["1-harm", "magic", "barrier", "close", "1-armour", "obvious", "loud"]
-                            }
-                        ]
-                    },
-                    {
-                        "heading": "Effects:",
-                        "options": [
-                            {
-                                "name": "Fire",
-                                "description": "Add '+2 harm fire' to a base. If you get a 10+ on a combat magic roll, the fire won’t spread.",
-                                "tags": ["+2 harm", "fire"]
-                            },
-                            {
-                                "name": "Force or Wind",
-                                "description": "Add '+1 harm forceful' to a base, or '+1 armour' to a wall.",
-                                "tags": ["+1 harm", "forceful", "+1 armour"]
-                            },
-                            {
-                                "name": "Lightning or Entropy",
-                                "description": "Add '+1 harm messy' to a base.",
-                                "tags": ["+1 harm", "messy"]
-                            },
-                            {
-                                "name": "Frost or Ice",
-                                "description": "Adds '-1 harm +2 armour' to a wall, or '+1 harm restraining' to other bases.",
-                                "tags": ["-1 harm", "+2 armour", "restraining"]
-                            },
-                            {
-                                "name": "Earth",
-                                "description": "Add 'forceful restraining' to a base.",
-                                "tags": ["forceful", "restraining"]
-                            },
-                            {
-                                "name": "Necromantic",
-                                "description": "Add 'life-drain' to a base.",
-                                "tags": ["life-drain"]
-                            }
-                        ]
-                    }
-                ]
-            }
+          "name": "Advanced Arcane Training",
+          "description": "If you have two of your three Tools and Techniques at the ready, you may ignore the third one.",
+          "type":"move"
         },
         {
-            "heading": "Moves",
-            "description": [
-                "You get all the basic moves and four Spell-slinger moves.",
-                "You have this one: Tools and Techniques: To use your combat magic effectively you rely on a collection of tools and techniques. Cross off one; you’ll need the rest."
-            ],
-            "children": {
-                "heading": "Pick three of these:",
-                "type": "pick",
-                "pick": 3,
-                "options": [
-                    {
-                        "name": "Advanced Arcane Training",
-                        "description": "If you have two of your three Tools and Techniques at the ready, you may ignore the third one."
-                    },
-                    {
-                        "name": "Arcane Reputation",
-                        "description": "Pick three big organizations or groups in the supernatural community. They’ve heard of you and respect your power. With affected humans, take +1 forward when you manipulate them. You may manipulate affected monsters as if they were human, with no bonus."
-                    },
-                    {
-                        "name": "Could’ve Been Worse",
-                        "description": "When you miss a use magic roll, choose one of the following options instead of losing control of the magic: Fizzle or This Is Gonna Suck."
-                    },
-                    {
-                        "name": "Enchanted Clothing",
-                        "description": "Pick an article of everyday clothing—it’s enchanted without any change in appearance. Take -1 harm from any source that tries to get at you through the garment."
-                    },
-                    {
-                        "name": "Forensic Divination",
-                        "description": "When you successfully investigate a mystery, ask 'What magic was done here?' as a free extra question."
-                    },
-                    {
-                        "name": "Go Big or Go Home",
-                        "description": "When you must use magic as a requirement for Big Magic, take +1 ongoing to those use magic rolls."
-                    },
-                    {
-                        "name": "Not My Fault",
-                        "description": "+1 to act under pressure when dealing with the consequences of your own spell-casting."
-                    },
-                    {
-                        "name": "Practitioner",
-                        "description": "Choose two effects available to you under use magic. Take +1 to use magic whenever you choose one of those effects."
-                    },
-                    {
-                        "name": "Shield Spell",
-                        "description": "When you protect someone, gain 2-armour against any harm that is transferred to you. This doesn’t stack with your other armour, if any."
-                    },
-                    {
-                        "name": "Third Eye",
-                        "description": "When you read a bad situation, open up your third eye for a moment to take in extra information. Take +1 hold on any result of 7 or more. You can see invisible things. On a miss, you may still get 1 hold, but you’re exposed to supernatural danger."
-                    }
-                ]
-            }
+          "name": "Arcane Reputation",
+          "description": "Pick three big organizations or groups in the supernatural community. They’ve heard of you and respect your power. With affected humans, take +1 forward when you manipulate them. You may manipulate affected monsters as if they were human, with no bonus.",
+          "type":"move"
+        },
+        {
+          "name": "Could’ve Been Worse",
+          "description": "When you miss a use magic roll, choose one of the following options instead of losing control of the magic: Fizzle or This Is Gonna Suck.",
+          "type":"move"
+        },
+        {
+          "name": "Enchanted Clothing",
+          "description": "Pick an article of everyday clothing—it’s enchanted without any change in appearance. Take -1 harm from any source that tries to get at you through the garment.",
+          "type":"move"
+        },
+        {
+          "name": "Forensic Divination",
+          "description": "When you successfully investigate a mystery, ask 'What magic was done here?' as a free extra question.",
+          "type":"move"
+        },
+        {
+          "name": "Go Big or Go Home",
+          "description": "When you must use magic as a requirement for Big Magic, take +1 ongoing to those use magic rolls.",
+          "type":"move"
+        },
+        {
+          "name": "Not My Fault",
+          "description": "+1 to act under pressure when dealing with the consequences of your own spell-casting.",
+          "type":"move"
+        },
+        {
+          "name": "Practitioner",
+          "description": "Choose two effects available to you under use magic. Take +1 to use magic whenever you choose one of those effects.",
+          "type":"move"
+        },
+        {
+          "name": "Shield Spell",
+          "description": "When you protect someone, gain 2-armour against any harm that is transferred to you. This doesn’t stack with your other armour, if any.",
+          "type":"move"
+        },
+        {
+          "name": "Third Eye",
+          "description": "When you read a bad situation, open up your third eye for a moment to take in extra information. Take +1 hold on any result of 7 or more. You can see invisible things. On a miss, you may still get 1 hold, but you’re exposed to supernatural danger.",
+          "type":"move"
         }
-    ],
-    "end": "end"
+      ]
+    }
+  },
+  "gear": {
+    "heading": "Gear",
+    "description": "You don’t need much—aside from any foci or consumables to power your magic. Still, it’s good to carry some backup.",
+    "opt_type": "pick",
+    "pick": 1,
+    "options": [
+      {
+        "name": "Old revolver",
+        "tags": ["2-harm", "close", "reload", "loud"],
+        "type":"gear"
+      },
+      {
+        "name": "Ritual knife",
+        "tags": ["1-harm", "hand"],
+        "type":"gear"
+      },
+      {
+        "name": "Heirloom sword",
+        "tags": ["2-harm", "hand", "messy"],
+        "type":"gear"
+      }
+    ]
+  },
+  "look": {
+    "heading": "Look",
+    "children": [
+      {
+        "name": "clothes",
+        "type": "look",
+        "format": "___ clothes",
+        "opt_type": "input",
+        "options": [
+          "rumpled",
+          "stylish",
+          "goth",
+          "old-fashioned"
+        ]
+      },
+      {
+        "name": "eyes",
+        "type": "look",
+        "format": "___ eyes",
+        "opt_type": "input",
+        "options": [
+          "shadowed",
+          "fierce",
+          "weary",
+          "sparkling"
+        ]
+      }
+    ]
+  },
+  "end": "end"
 }
