@@ -16,6 +16,7 @@
       ],
       "children": {
         "heading": "Combat magic, pick <span class='pick'>three</span> (with at least one base):",
+        "id": "combat_magic_picks",
         "opt_type": "pick",
         "pick": 3,
         "options": [
@@ -91,6 +92,7 @@
       "description": "You have this one:",
       "children": {
         "name": "Tools and Techniques",
+        "id": "tools_and_techniques_cross_offs",
         "description": "To use your combat magic effectively you rely on a collection of tools and techniques. Cross off one; you’ll need the rest.",
         "opt_type": "cross",
         "cross": 1,
@@ -221,6 +223,229 @@
           "weary",
           "sparkling"
         ]
+      }
+    ]
+  },
+  "ratings": [
+    {
+      "Charm": -1,
+      "Cool": 1,
+      "Sharp": 1,
+      "Tough": 0,
+      "Weird": 2
+    },
+    {
+      "Charm": 0,
+      "Cool": -1,
+      "Sharp": 1,
+      "Tough": 1,
+      "Weird": 2
+    },
+    {
+      "Charm": -1,
+      "Cool": 0,
+      "Sharp": 2,
+      "Tough": -1,
+      "Weird": 2
+    },
+    {
+      "Charm": 1,
+      "Cool": 0,
+      "Sharp": 1,
+      "Tough": -1,
+      "Weird": 2
+    },
+    {
+      "Charm": 0,
+      "Cool": 0,
+      "Sharp": 1,
+      "Tough": 0,
+      "Weird": 2
+    }
+  ],
+  "introductions": {
+    "heading": "Introductions",
+    "description": [
+      "When you get here, wait for everyone to catch up so you can do your introductions together.",
+      "Go around the group. On your turn, introduce your Spell-slinger by name and look, and tell the group what they know about you."
+    ]
+  },
+  "history": {
+    "heading": "History",
+    "description": "Go around the group again. On your turn, pick one for each of the other hunters:",
+    "options": [
+      "They act as your conscience when the power goes to your head. Ask them about the last time this happened.",
+      "Blood relation, though you were out of contact for years. Ask them how they reconnected with you.",
+      "Mentor from another life. Ask them what they taught you.",
+      "Your magic-fueled rescue of them introduced them to the supernatural. Tell them what creature was after them.",
+      "An old rivalry has turned into a tight friendship. Tell them what you once fought over.",
+      "You thought they were dead, and now they’re back. What “killed” them?",
+      "They’re an on-again/off-again love interest. Ask them what keeps you apart. Tell them what keeps you together.",
+      "A comrade-in-arms. You’ve faced the biggest threats together."
+    ]
+  },
+  "improvements":{
+    "heading": "Improvements",
+    "options": [
+      {
+        "description": "Get +1 Weird, max +3",
+        "increase": "weird",
+        "amount": 1,
+        "max": 3,
+        "type": "improvement"
+      },
+      {
+        "description": "Get +1 Charm, max +2",
+        "increase": "charm",
+        "amount": 1,
+        "max": 2,
+        "type": "improvement"
+      },
+      {
+        "description": "Get +1 Cool, max +2",
+        "increase": "cool",
+        "amount": 1,
+        "max": 2,
+        "type": "improvement"
+      },
+      {
+        "description": "Get +1 Sharp, max +3",
+        "increase": "sharp",
+        "amount": 1,
+        "max": 3,
+        "type": "improvement"
+      },
+      {
+        "description": "Get +1 Tough, max +2",
+        "increase": "tough",
+        "amount": 1,
+        "max": 2,
+        "type": "improvement"
+      },
+      {
+        "description": "Take another Spell-slinger move",
+        "increase": "moves",
+        "amount": 1,
+        "type": "improvement"
+      },
+      {
+        "description": "Take another Spell-slinger move",
+        "increase": "moves",
+        "amount": 1,
+        "type": "improvement"
+      },
+      {
+        "description": "Take a move from another playbook",
+        "increase": "moves",
+        "amount": 1,
+        "type": "improvement"
+      },
+      {
+        "description": "Take a move from another playbook",
+        "increase": "moves_other",
+        "amount": 1,
+        "type": "improvement"
+      },
+      {
+        "description": "Take a move from another playbook",
+        "increase": "moves_other",
+        "amount": 1,
+        "type": "improvement"
+      },
+      {
+        "description": "Add +1 to any rating, max +3",
+        "increase": "any_rating",
+        "amount": 1,
+        "max": 3,
+        "type": "improvement"
+      },
+      {
+        "description": "Take another Combat Magic pick.",
+        "increase": "combat_magic_picks",
+        "amount": 1,
+        "type": "improvement"
+      }
+    ]
+  },
+  "improvements_advanced": {
+    "heading": "Advanced Improvements",
+    "description": "Once you’ve taken five improvements from the Improvements list, you can take one of the following advanced improvements instead of an improvement.",
+    "options": [
+      {
+        "description": "Get +1 to any rating, max +3",
+        "increase": "any_rating",
+        "amount": 1,
+        "max": 3,
+        "type": "improvement"
+      },
+      {
+        "description": "Change this hunter to a new type",
+        "special": "change_playbook",
+        "type": "improvement"
+      },
+      {
+        "description": "Create a second hunter to play as well as this one",
+        "special": "second_hunter",
+        "type": "improvement"
+      },
+      {
+        "description": "Mark two of the basic moves as advanced",
+        "increase": "advanced_moves",
+        "amount": 2,
+        "type": "improvement"
+      },
+      {
+        "description": "Mark another two of the basic moves as advanced",
+        "increase": "advanced_moves",
+        "amount": 2,
+        "type": "improvement"
+      },
+      {
+        "description": "Retire this hunter to safety",
+        "special": "retire",
+        "type": "improvement"
+      },
+      {
+        "description": "Erase one used Luck mark from your playbook",
+        "decrease": "luck_used",
+        "amount": 1,
+        "type": "improvement"
+      },
+      {
+        "description": "Take another Combat Magic pick",
+        "increase": "combat_magic_picks",
+        "amount": 1,
+        "type": "improvement"
+      },
+      {
+        "description": "You may cross off another option from your Tools and Techniques",
+        "decrease": "tools_and_techniques_cross_offs",
+        "amount": 1,
+        "type": "improvement"
+      }
+    ]
+  },
+  "improvements_mythic": {
+    "heading": "Mythic Improvements",
+    "description": "If you have taken at least twelve improvements, at your Keeper’s discretion, you can take one of the following improvements by spending more than one improvement.",
+    "options": [
+      {
+        "description": "Erase one used Luck mark from your playbook",
+        "decrease": "luck_used",
+        "amount": 1,
+        "type": "improvement"
+      },
+      {
+        "description": "Take another Spell-Slinger move.",
+        "increase": "moves",
+        "amount": 1,
+        "type": "improvement"
+      },
+      {
+        "description": "Take another Combat Magic pick",
+        "increase": "combat_magic_picks",
+        "amount": 1,
+        "type": "improvement"
       }
     ]
   },
