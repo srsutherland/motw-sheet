@@ -1,5 +1,6 @@
 {
   "name": "The Spell-Slinger",
+  "id": "the-spellslinger",
   "quote": "Fight fire with <b>fire magic</b>.",
   "luck_max": 7,
   "luck_special": "When you spend a point of Luck, the official council of wizards is going to poke their nose into your business...",
