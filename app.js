@@ -1,3 +1,4 @@
+import Hunter from './src/Hunter.js';
 document.ready = new Promise(
     (resolve) => document.addEventListener('DOMContentLoaded', resolve)
 )
@@ -31,13 +32,16 @@ const new_hunter = () => {
         console.log(name, pb);
         playbook_select.insertAdjacentHTML('beforeend', 
             `<div data-playbook="${name}" class="select-button" id="${pb.id}">
-                <img src="${pb.icon}" class="icon" /> ${name}
+                <div>
+                    <h3>${pb.emoji} ${name}</h3>
+                    <div class="subtitle">${pb.quote}</div>
+                </div>
             </div>`
         );
         const pb_div = document.getElementById(pb.id);
         pb_div.addEventListener('click', () => {
             console.log('clicked', name);
-            const new_sheet = new_sheet(name);
+            const new_sheet = (name);
             sheet_div.appendChild(new_sheet);
             sheet_div.removeChild(playbook_select);
         });

@@ -3,6 +3,10 @@
     --color-button-border: #333333;
 }
 
+.subtitle {
+    color: #666666;
+}
+
 /* Dark Mode */
 @media (prefers-color-scheme: dark) {
     /* Add your dark mode styles here */
@@ -22,10 +26,19 @@
         color: #ffffff;
     }
 
+    input, textarea, select, button {
+        background-color: #333333;
+        color: #ffffff;
+    }
+
     /* vars */
     :root {
         --color-button-background: #333333;
         --color-button-border: #666666;
+    }
+
+    .subtitle {
+        color: #cccccc;
     }
 }
 
@@ -47,4 +60,20 @@ div.select-button {
 
 div.select-button:hover {
     background-color: var(--color-button-border);
+}
+
+.select-button h3 {
+    margin: 0;
+    margin-right: 10px;
+}
+
+.select-button img {
+    width: 20px;
+    height: 20px;
+}
+
+.select-button .subtitle {
+    font-size: 0.8em;
+    margin: 3px 5px;
+    font-style: italic;
 }
