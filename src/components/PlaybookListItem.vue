@@ -11,15 +11,6 @@ const props = defineProps({
     }
 });
 </script>
-
-<!--
-<div data-playbook="${name}" class="select-button" id="${pb.id}">
-    <div>
-        <h3>${pb.emoji} ${name}</h3>
-        <div class="subtitle">${pb.quote}</div>
-    </div>
-</div>
--->
 <template>
     <li>
         <div :data-playbook=pb.name class="select-button" :id=pb.id>
@@ -28,3 +19,47 @@ const props = defineProps({
         </div>
     </li>
 </template>
+
+<style scoped>
+li {
+    list-style: none;
+    margin: 1em 0;
+}
+
+h3 {
+    margin: 0;
+    margin-bottom: .5em;
+}
+
+div.select-button {
+    display: flex;
+    align-items: center;
+    padding: 1em;
+    margin: 0;
+    border-radius: 5px;
+    border: 1px solid var(--color-button-border);
+    background-color: var(--color-button-background);
+    cursor: pointer;
+    box-shadow: 0 0 5px 5px rgba(255, 0, 255, 0.1);
+}
+
+div.select-button:hover {
+    background-color: var(--color-button-border);
+}
+
+.select-button h3 {
+    margin: 0;
+    margin-right: 10px;
+}
+
+.select-button img {
+    width: 20px;
+    height: 20px;
+}
+
+.select-button .subtitle {
+    font-size: 0.8em;
+    margin: 3px 5px;
+    font-style: italic;
+}
+</style>

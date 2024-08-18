@@ -46,34 +46,3 @@ a, a:visited {
     color: unset;
     text-decoration: none;
 }
-
-div.select-button {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    margin: 0 10px;
-    border-radius: 5px;
-    border: 1px solid var(--color-button-border);
-    background-color: var(--color-button-background);
-    cursor: pointer;
-}
-
-div.select-button:hover {
-    background-color: var(--color-button-border);
-}
-
-.select-button h3 {
-    margin: 0;
-    margin-right: 10px;
-}
-
-.select-button img {
-    width: 20px;
-    height: 20px;
-}
-
-.select-button .subtitle {
-    font-size: 0.8em;
-    margin: 3px 5px;
-    font-style: italic;
-}
