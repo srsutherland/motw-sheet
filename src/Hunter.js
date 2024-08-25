@@ -1,4 +1,4 @@
-class Hunter {
+export class Hunter {
     playbook = undefined;
     name = '';
     playbook_name = '';
@@ -14,7 +14,11 @@ class Hunter {
         weird: 0
     };
 
-    constructor(playbook) {
+    constructor(playbook, name) {
         this.playbook = playbook;
+        this.playbook_name = playbook.name;
+        if (name) {
+            this.name = name;
+        }
     }
 }

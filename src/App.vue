@@ -1,5 +1,25 @@
 <script setup>
-import PlaybookList from './components/PlaybookList.vue';
+import { ref } from 'vue';
+import ActionList from './components/ActionList.vue';
+import NewHunter from './components/NewHunter.vue';
+import EditHunter from './components/EditHunter.vue';
+import ShowHunter from './components/ShowHunter.vue';
+//reactive variable
+const currentView = ref('action');
+const hunter = ref(null);
+
+const changeView = (view, ...args) => {
+  console.log(`Changing view to ${view}`);
+  console.log(`Args (${args.length}): ${args}`);
+  currentView.value = view;
+  if (view === 'edit') {
+    const hunter_arg = args[0]
+    if (hunter_arg) {
+      hunter.value = hunter_arg;
+      console.log(`Editing ${hunter.value?.name} the ${hunter.value?.playbook}`);
+    }
+  }
+};
 </script>
 
 <template>
@@ -8,7 +28,10 @@ import PlaybookList from './components/PlaybookList.vue';
   </header>
 
   <main>
-    <PlaybookList />
+    <ActionList v-if="currentView === 'action'" @change-view="changeView"/>
+    <NewHunter v-if="currentView === 'new'" @change-view="changeView"/>
+    <EditHunter v-if="currentView === 'edit'" @change-view="changeView" :hunter="hunter"/>
+    <ShowHunter v-if="currentView === 'show'" @change-view="changeView" :hunter="hunter"/>
   </main>
 </template>
 

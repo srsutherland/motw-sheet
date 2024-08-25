@@ -13,7 +13,12 @@ const props = defineProps({
 </script>
 <template>
     <li>
-        <div :data-playbook=pb.name class="select-button" :id=pb.id>
+        <div 
+            class="select-button"
+            :data-playbook=pb.name 
+            :id=pb.id
+            @click="$parent.$emit('select-playbook', pb)"
+        >
             <h3>{{ pb.emoji }} {{ pb.name }}</h3>
             <div class="subtitle" v-html="pb.quote"></div>
         </div>

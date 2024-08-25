@@ -14,6 +14,12 @@
         background-color: #1a1a1a;
         color: #ffffff;
     }
+
+    /* vars */
+    :root {
+        --color-button-background: #333333;
+        --color-button-border: #666666;
+    }
     
     /* Example: Change the color of headings */
     h1, h2, h3 {
@@ -29,12 +35,6 @@
     input, textarea, select, button {
         background-color: #333333;
         color: #ffffff;
-    }
-
-    /* vars */
-    :root {
-        --color-button-background: #333333;
-        --color-button-border: #666666;
     }
 
     .subtitle {
