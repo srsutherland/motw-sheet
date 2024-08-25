@@ -1,3 +1,7 @@
+<template>
+    <PlaybookList @select-playbook="newHunter" />
+</template>
+
 <script setup>
 import PlaybookList from './PlaybookList.vue';
 import { Hunter } from '@/Hunter';
@@ -10,7 +14,3 @@ const newHunter = (pb) => {
     emit('change-view', 'edit', hunter);
 };
 </script>
-
-<template>
-    <PlaybookList @select-playbook="newHunter" />
-</template>

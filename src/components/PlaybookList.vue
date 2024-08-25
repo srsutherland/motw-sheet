@@ -1,11 +1,3 @@
-<script setup>
-import PlaybookListItem from './PlaybookListItem.vue'
-import { playbooks } from '@/Playbooks';
-globalThis.playbooks = playbooks;
-
-defineEmits(['select-playbook']);
-</script>
-
 <template>
   <section>
     <h2>Playbooks</h2>
@@ -18,3 +10,11 @@ defineEmits(['select-playbook']);
     </ul>
   </section>
 </template>
+
+<script setup>
+import PlaybookListItem from './PlaybookListItem.vue'
+import { playbooks } from '@/Playbooks';
+globalThis.playbooks = playbooks;
+
+defineEmits(['select-playbook']);
+</script>

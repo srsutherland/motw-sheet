@@ -1,3 +1,16 @@
+<template>
+  <header>
+    <h1>MOTW App</h1>
+  </header>
+
+  <main>
+    <ActionList v-if="currentView === 'action'" @change-view="changeView"/>
+    <NewHunter v-if="currentView === 'new'" @change-view="changeView"/>
+    <EditHunter v-if="currentView === 'edit'" @change-view="changeView" :hunter="hunter"/>
+    <ShowHunter v-if="currentView === 'show'" @change-view="changeView" :hunter="hunter"/>
+  </main>
+</template>
+
 <script setup>
 import { ref } from 'vue';
 import ActionList from './components/ActionList.vue';
@@ -21,19 +34,6 @@ const changeView = (view, ...args) => {
   }
 };
 </script>
-
-<template>
-  <header>
-    <h1>MOTW App</h1>
-  </header>
-
-  <main>
-    <ActionList v-if="currentView === 'action'" @change-view="changeView"/>
-    <NewHunter v-if="currentView === 'new'" @change-view="changeView"/>
-    <EditHunter v-if="currentView === 'edit'" @change-view="changeView" :hunter="hunter"/>
-    <ShowHunter v-if="currentView === 'show'" @change-view="changeView" :hunter="hunter"/>
-  </main>
-</template>
 
 <style scoped>
 header {

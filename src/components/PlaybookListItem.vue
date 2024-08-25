@@ -1,16 +1,3 @@
-<script setup>
-const props = defineProps({
-    pb: {
-        type: Object,
-        default: () => ({
-            id: "the-error",
-            name: "The Error",
-            emoji: "🚨",
-            quote: "Something went wrong."
-        })
-    }
-});
-</script>
 <template>
     <li>
         <div 
@@ -24,6 +11,20 @@ const props = defineProps({
         </div>
     </li>
 </template>
+
+<script setup>
+const props = defineProps({
+    pb: {
+        type: Object,
+        default: () => ({
+            id: "the-error",
+            name: "The Error",
+            emoji: "🚨",
+            quote: "Something went wrong."
+        })
+    }
+});
+</script>
 
 <style scoped>
 li {
