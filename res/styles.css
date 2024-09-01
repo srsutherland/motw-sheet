@@ -1,6 +1,18 @@
+@font-face {
+    font-family: 'ThirdMan';
+    src: url('res/font/3rd%20Man.otf') format('opentype');
+}
+
 :root {
     --color-button-background: #ffffff;
     --color-button-border: #333333;
+}
+
+header h1 {
+    font-family: 'ThirdMan', sans-serif;
+    font-size: 2em;
+    margin: 0;
+    font-weight: normal;
 }
 
 .subtitle {

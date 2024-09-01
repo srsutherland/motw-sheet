@@ -1,6 +1,6 @@
 <template>
   <header>
-    <h1>MOTW App</h1>
+    <h1>MOTW Beyond</h1>
   </header>
 
   <main>
