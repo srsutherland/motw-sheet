@@ -64,4 +64,15 @@ const fomatRating = (rating) => {
     width: 50%;
     min-width: 5em;
 }
+
+button {
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    border: 1px solid var(--color-button-border);
+    border-radius: 5px;
+    background-color: var(--color-button-background);
+    cursor: pointer;
+    box-shadow: 0 0 5px 5px rgba(255, 0, 255, 0.1);
+}
+    
 </style>

@@ -2,6 +2,12 @@
     <h1 class="hunter-name">
         {{ props.hunter?.name || "NoName" }}
         {{ props.hunter?.playbook_name ||  "The Unknown" }}
+        <button
+            @click="$emit('change-view', 'edit', props.hunter)"
+            title="Edit"
+        >
+            🖉
+        </button>
     </h1>
     <section>
         <table>
@@ -10,7 +16,7 @@
                 <td class="stat-name">{{ key }}</td>
                 <td class="basic-moves">
                     <ul>
-                        <li v-for="move in basicMovesByStat[value]">{{ move }}</li>
+                        <li v-for="move in basicMovesByStat[key]">{{ move }}</li>
                     </ul>
                 </td>
             </tr>
@@ -60,12 +66,15 @@ const basicMovesByStat = {
     margin: 3px;
 }
 
-
 .stat-name {
-    padding-left: 1em;
-    font-size: 1.2em;
+    padding-left: .7em;
+    font-size: 1.7em;
     font-family: 'ThirdMan', 'sans-serif';
     font-weight: normal;
+}
+
+td ul {
+    margin: 0;
 }
 
 .stat-bubble--1 {
@@ -87,4 +96,8 @@ const basicMovesByStat = {
 .stat-bubble-3 {
     background-color: hsl(180, 100%, 50%, 0.1);
 }
+
+h1 button {
+    vertical-align: middle;
+} 
 </style>
