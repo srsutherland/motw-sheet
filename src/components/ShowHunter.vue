@@ -22,10 +22,17 @@
             </tr>
         </table>
     </section>
+    <Luck :hunter="props.hunter" />
+    <Harm :hunter="props.hunter" />
+    <Experience :hunter="props.hunter" />
+
 </template>
 
 <script setup>
 import { Hunter } from '@/Hunter';
+import Harm from './show/Harm.vue';
+import Luck from './show/Luck.vue';
+import Experience from './show/Experience.vue';
 
 const props = defineProps({
     hunter: Hunter
