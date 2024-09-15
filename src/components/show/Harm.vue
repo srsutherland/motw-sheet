@@ -3,13 +3,13 @@
     <div class="heading">Harm:</div>
     <div class="indent">
         <em>Okay</em>
-        <button @click="changeHarm(-1)">-</button>
+        <BoxButton minus @click="changeHarm(-1)" />
         <span v-for="i in hunter?.harm_max">
             <span v-if="i === hunter?.harm_unstable">|</span>
             <Box filled v-if="hunter?.harm >= i"/>
             <Box v-else/>
         </span>
-        <button @click="changeHarm(1)">+</button>
+        <BoxButton plus @click="changeHarm(1)" />
         <em>Dying</em>
     </div>
     <div class="indent">
@@ -25,6 +25,7 @@
 <script setup>
 import { Hunter } from '@/Hunter';
 import Box from './Box.vue';
+import BoxButton from './BoxButton.vue';
 
 const props = defineProps({
     hunter: Hunter
@@ -54,13 +55,6 @@ const changeHarm = (amount) => {
 <style scoped>
 .indent {
     margin-left: 1em;
-}
-
-button {
-    padding: 0;
-    width: 1em;
-    height: 1em;
-    border-radius: 1em;
 }
 
 .heading {

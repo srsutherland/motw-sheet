@@ -3,12 +3,12 @@
     <span class="heading">Luck</span>:
     <div class="indent">
         <em>Okay</em>
-        <button @click="changeLuck(-1)">-</button>
+        <BoxButton minus @onclick="changeLuck(1)" />
         <span v-for="i in hunter?.luck_max">
             <Box filled v-if="hunter?.luck >= i"/>
             <Box v-else/>
         </span>
-        <button @click="changeLuck(1)">+</button>
+        <BoxButton plus @onclick="changeLuck(-1)" />
         <em>Doomed</em>
     </div>
 </section>
@@ -17,6 +17,7 @@
 <script setup>
 import { Hunter } from '@/Hunter';
 import Box from './Box.vue';
+import BoxButton from './BoxButton.vue';
 
 const props = defineProps({
     hunter: Hunter
@@ -40,13 +41,6 @@ const changeLuck = (amount) => {
 <style scoped>
 .indent {
     margin-left: 1em;
-}
-
-button {
-    padding: 0;
-    width: 1em;
-    height: 1em;
-    border-radius: 1em;
 }
 
 .heading {

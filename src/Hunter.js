@@ -8,6 +8,7 @@ export class Hunter {
     unstable = 0;
     luck = 0;
     experience = 0;
+    level = 0;
     stats = {
         charm: 0,
         cool: 0,
