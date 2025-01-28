@@ -1,4 +1,5 @@
 export class Hunter {
+    uid = undefined;
     playbook = undefined;
     name = '';
     playbook_name = '';
@@ -16,6 +17,7 @@ export class Hunter {
     };
 
     constructor(playbook, name) {
+        this.uid = Date.now();
         this.playbook = playbook;
         this.playbook_name = playbook.name;
         if (name) {

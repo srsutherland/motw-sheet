@@ -1,5 +1,6 @@
 # motw-sheet
-Digital character sheet for Monster of the Week
+Digital character sheet for Monster of the Week. 
+Built in Vue3 with Vite.
 
 | Task                               | Command            |
 |------------------------------------|--------------------|
