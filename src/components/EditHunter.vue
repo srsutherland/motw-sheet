@@ -4,12 +4,19 @@
         {{ hunter?.playbook_name }}
     </h1>
     <section>
-        <p>Ratings, pick one:</p>
-        <select v-model="hunter.ratings">
-            <option v-for="rating in hunter.playbook.ratings" :key="rating" :value="rating">
-                {{ fomatRating(rating) }}
-            </option>
-        </select>
+        <fieldset>
+            <legend>Ratings, pick one:</legend>
+            <div v-for="rating in hunter.playbook.ratings" :key="rating">
+                <label>
+                    <input
+                    type="radio"
+                    :value="rating"
+                    v-model="hunter.ratings"
+                    />
+                    <span v-html="fomatRatingRich(rating)"></span>
+                </label>
+            </div>
+        </fieldset>
     </section>
     <button @click="$emit('change-view', 'show', hunter)">Save</button>
 </template>
@@ -41,10 +48,28 @@ const fomatRating = (rating) => {
       "Weird": 2
     }
       =>
-    Charm-1, Cool+1, Sharp+1, Tough=0, Weird+2
+    "Charm-1, Cool+1, Sharp+1, Tough=0, Weird+2"
     */
     return Object.entries(rating)
         .map(([key, value]) => `${key}${plusOrEqualsOrNothing(value)}${value}`)
+        .join(', ');
+};
+
+const fomatRatingRich = (rating) => {
+    /*
+    {
+      "Charm": -1,
+      "Cool": 1,
+      "Sharp": 1,
+      "Tough": 0,
+      "Weird": 2
+    }
+      =>
+    "Charm-1, Cool+1, Sharp+1, Tough=0, Weird+2"
+    */
+    const numberspan = (value) => `<span class="color-${value}">${plusOrEqualsOrNothing(value)}${value}</span>`;
+    return Object.entries(rating)
+        .map(([key, value]) => `${key}${numberspan(value)}`)
         .join(', ');
 };
 </script>
@@ -74,5 +99,30 @@ button {
     cursor: pointer;
     box-shadow: 0 0 5px 5px rgba(255, 0, 255, 0.1);
 }
-    
+
+fieldset {
+    width: fit-content;
+}
+</style>
+
+<style>
+.color--1 {
+    color: red;
+}
+
+.color-0 {
+    color: orange;
+}
+
+.color-1 {
+    color: yellow;
+}
+
+.color-2 {
+    color: lawngreen;
+}
+
+.color-3 {
+    color: turquoise;
+}
 </style>

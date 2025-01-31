@@ -29,7 +29,7 @@ const changeView = (view, ...args) => {
     const hunter_arg = args[0]
     if (hunter_arg) {
       hunter.value = hunter_arg;
-      console.log(`Editing ${hunter.value?.name} the ${hunter.value?.playbook}`);
+      console.log(`Editing ${hunter.value?.toString()}`);
     }
   }
 };

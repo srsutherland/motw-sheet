@@ -27,4 +27,9 @@ export class Hunter {
         this.harm_unstable = playbook.harm_unstable;
         this.luck_max = playbook.luck_max;
     }
+
+    // string representation of the hunter
+    toString() {
+        return `${this.name || "<Nameless>"} the ${this.playbook_name || "<Unknown Playbook>"}`;
+    }
 }
