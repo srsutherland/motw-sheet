@@ -3,7 +3,7 @@ export class Hunter {
     playbook = undefined;
     name = '';
     playbook_name = '';
-    moves = [];
+    moves = undefined;
     harm = 0;
     unstable = 0;
     luck = 0;
@@ -15,6 +15,7 @@ export class Hunter {
         tough: 0,
         weird: 0
     };
+    gear = undefined;
 
     constructor(playbook, name) {
         this.uid = Date.now();
@@ -26,6 +27,8 @@ export class Hunter {
         this.harm_max = playbook.harm_max;
         this.harm_unstable = playbook.harm_unstable;
         this.luck_max = playbook.luck_max;
+        this.moves = [];
+        this.gear = [];
     }
 
     // string representation of the hunter

@@ -25,6 +25,7 @@
     <Luck :hunter="props.hunter" />
     <Harm :hunter="props.hunter" />
     <Experience :hunter="props.hunter" />
+    <Gear :hunter="props.hunter" />
 
 </template>
 
@@ -33,6 +34,7 @@ import { Hunter } from '@/Hunter';
 import Harm from './show/Harm.vue';
 import Luck from './show/Luck.vue';
 import Experience from './show/Experience.vue';
+import Gear from './show/Gear.vue';
 
 const props = defineProps({
     hunter: Hunter
