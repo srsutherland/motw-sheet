@@ -47,7 +47,7 @@ This page has responsive columns with the following sections:
 1. Hunter name (displayed as "{name} the {playbook}"; name is editable)
 2. Ratings (during character creation, this is hidden until the user makes a ratings selection)
 3. Gear (editable; select from options)
-4. Moves (editable; if moves are available, select from options)
+4. Moves (editable; lists current moves, and if moves are available, has a button to pop up a list of available moves to add)
 5. (special) Playbook-specific sections
 6. Look (editable; select from options)
 7. Ratings selection
