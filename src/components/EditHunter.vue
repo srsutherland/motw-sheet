@@ -46,21 +46,17 @@
     <section id="gear">
         <fieldset>
             <legend>Starter Gear, pick {{ hunter.playbook.gear.pick }}</legend>
-            <label>
-                <div v-for="gear in hunter.playbook.gear.options" :key="gear">
-                    <input
-                        type="checkbox"
-                        :value="gear"
-                        v-model="hunter.gear"
-                    />
+            <div v-for="(gear, index) in hunter.playbook.gear.options" :key="index">
+                <label>
+                    <input type="checkbox" :value="gear" v-model="hunter.gear" />
                     <span>
                         {{ gear.name }}
                     </span>
                     (<span v-for="tag in gear.tags" :key="tag">
                         {{ tag }}{{ " " }}
                     </span>)
-                </div>
-            </label>
+                </label>
+            </div>
         </fieldset>
         <fieldset>
             <legend>Other Gear</legend>

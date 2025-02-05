@@ -3,8 +3,13 @@
     <span class="heading">Gear</span>:
     <div class="indent">
         <ul>
-            <li v-for="item in hunter?.gear" :key="item.name">
-                {{ item.name }}
+            <li v-for="gear in hunter?.gear" :key="gear.name">
+                <span>
+                    {{ gear.name }}
+                </span>
+                (<span v-for="tag in gear.tags" :key="tag">
+                    {{ tag }}{{ " " }}
+                </span>)
             </li>
         </ul>
     </div>
@@ -22,3 +27,15 @@ if (!props.hunter) {
     console.error('No hunter provided');
 }
 </script>
+
+<style scoped>
+.heading {
+    font-weight: bold;
+    /* all caps */
+    text-transform: uppercase;
+}
+
+ul {
+    margin: 0;
+}
+</style>
