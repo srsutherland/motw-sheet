@@ -3,21 +3,87 @@
         <input v-model="hunter.name" placeholder="Name"/>
         {{ hunter?.playbook_name }}
     </h1>
-    <section>
+
+    <!-- Ratings Selection -->
+    <section id="edit-ratings">
         <fieldset>
             <legend>Ratings, pick one:</legend>
             <div v-for="rating in hunter.playbook.ratings" :key="rating">
                 <label>
                     <input
-                    type="radio"
-                    :value="rating"
-                    v-model="hunter.ratings"
+                        type="radio"
+                        :value="rating"
+                        v-model="hunter.ratings"
                     />
                     <span v-html="fomatRatingRich(rating)"></span>
                 </label>
             </div>
         </fieldset>
     </section>
+
+    <!-- Moves Section -->
+    <section>
+        <fieldset>
+            <legend>Moves</legend>
+            <div v-if="hunter?.moves?.length">
+                <ul>
+                    <li v-for="(move, i) in hunter.moves" :key="i">{{ move.name }}</li>
+                </ul>
+            </div>
+            <button>Add Move</button>
+        </fieldset>
+    </section>
+
+    <!-- Special (Playbook-Specific) Section -->
+    <section>
+        <fieldset>
+            <legend>Playbook-Specific</legend>
+            <p>WIP: Additional sections for {{ hunter.playbook_name }}.</p>
+        </fieldset>
+    </section>
+
+    <!-- Gear Section -->
+    <section id="gear">
+        <fieldset>
+            <legend>Starter Gear, pick {{ hunter.playbook.gear.pick }}</legend>
+            <label>
+                <div v-for="gear in hunter.playbook.gear.options" :key="gear">
+                    <input
+                        type="checkbox"
+                        :value="gear"
+                        v-model="hunter.gear"
+                    />
+                    <span>
+                        {{ gear.name }}
+                    </span>
+                    (<span v-for="tag in gear.tags" :key="tag">
+                        {{ tag }}{{ " " }}
+                    </span>)
+                </div>
+            </label>
+        </fieldset>
+        <fieldset>
+            <legend>Other Gear</legend>
+            <p>WIP: Add more gear.</p>
+        </fieldset>
+    </section>
+
+    <!-- Look Section -->
+    <section>
+        <fieldset>
+            <legend>Look</legend>
+            <p>WIP: Let user choose eyes, hair, clothes, etc.</p>
+        </fieldset>
+    </section>
+
+    <!-- History Section -->
+    <section>
+        <fieldset>
+            <legend>History</legend>
+            <p>WIP: Describe relationships with other hunters.</p>
+        </fieldset>
+    </section>
+
     <button @click="$emit('change-view', 'show', hunter)">Save</button>
 </template>
 
@@ -38,22 +104,6 @@ const plusOrEqualsOrNothing = (value) => {
     return value > 0 ? '+' : value === 0 ? '=' : '';
 };
 
-const fomatRating = (rating) => {
-    /*
-    {
-      "Charm": -1,
-      "Cool": 1,
-      "Sharp": 1,
-      "Tough": 0,
-      "Weird": 2
-    }
-      =>
-    "Charm-1, Cool+1, Sharp+1, Tough=0, Weird+2"
-    */
-    return Object.entries(rating)
-        .map(([key, value]) => `${key}${plusOrEqualsOrNothing(value)}${value}`)
-        .join(', ');
-};
 
 const fomatRatingRich = (rating) => {
     /*
@@ -109,19 +159,15 @@ fieldset {
 .color--1 {
     color: red;
 }
-
 .color-0 {
     color: orange;
 }
-
 .color-1 {
     color: yellow;
 }
-
 .color-2 {
     color: lawngreen;
 }
-
 .color-3 {
     color: turquoise;
 }
