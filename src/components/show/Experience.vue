@@ -1,5 +1,5 @@
 <template>
-<section>
+<section class="show-experience">
     <span class="heading">Experience</span>:
     <div class="indent">
         <BoxButton minus @click="changeExperience(-1)" />

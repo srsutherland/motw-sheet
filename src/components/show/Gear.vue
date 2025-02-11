@@ -1,5 +1,5 @@
 <template>
-<section>
+<section class="show-gear">
     <span class="heading">Gear</span>:
     <div class="indent">
         <ul>
@@ -7,7 +7,7 @@
                 <span>
                     {{ gear.name }}
                 </span>
-                (<span v-for="tag in gear.tags" :key="tag">
+                (<span v-for="tag in gear.tags" :key="tag" class="tag">
                     {{ tag }}{{ " " }}
                 </span>)
             </li>

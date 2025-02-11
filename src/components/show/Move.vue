@@ -1,6 +1,8 @@
 <template>
-<div>{{ move?.name }}</div>
-<div>{{ move?.description }}</div>
+<div class="show-move">
+    <div>{{ move?.name }}</div>
+    <div>{{ move?.description }}</div>
+</div>
 </template>
 
 <script setup>

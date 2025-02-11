@@ -1,5 +1,5 @@
 <template>
-<section>
+<section class="show-luck">
     <span class="heading">Luck</span>:
     <div class="indent">
         <em>Okay</em>

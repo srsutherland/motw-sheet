@@ -1,5 +1,5 @@
 <template>
-<section id="ratings">
+<section id="ratings" class="show-ratings">
     <table>
         <tr v-for="(value, key) in props.hunter?.ratings" :key="key">
             <td><div :class="['stat-bubble', 'stat-bubble-'+value]">{{ value }}</div></td>

@@ -1,5 +1,5 @@
 <template>
-<section>
+<section class="show-harm">
     <div class="heading">Harm:</div>
     <div class="indent">
         <em>Okay</em>
