@@ -31,6 +31,8 @@
                 </ul>
             </div>
             <button>Add Move</button>
+            <button @click="addAllMoves">Add ALL ({{ hunter.playbook.moves.children.options.length }}) Moves</button>
+
         </fieldset>
     </section>
 
@@ -117,6 +119,16 @@ const fomatRatingRich = (rating) => {
     return Object.entries(rating)
         .map(([key, value]) => `${key}${numberspan(value)}`)
         .join(', ');
+};
+
+const addAllMoves = () => {
+    const hunter = props.hunter;
+    const all_moves = hunter.playbook.moves.children.options;
+    for (const move of all_moves) {
+        if (!hunter.moves.find((m) => m.name === move.name)) {
+            hunter.moves.push(move);
+        }
+    }
 };
 </script>
 

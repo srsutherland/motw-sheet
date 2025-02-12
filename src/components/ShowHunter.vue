@@ -14,6 +14,14 @@
     <Harm :hunter="props.hunter" />
     <Experience :hunter="props.hunter" />
     <Gear :hunter="props.hunter" />
+    <section class="show-moves">
+        <h2>Moves</h2>
+        <ul>
+            <li v-for="move in props.hunter?.moves" :key="move.name">
+                <Move :move="move" :hunter="props.hunter" />
+            </li>
+        </ul>
+    </section>
 
 </template>
 
@@ -24,6 +32,7 @@ import Harm from './show/Harm.vue';
 import Luck from './show/Luck.vue';
 import Experience from './show/Experience.vue';
 import Gear from './show/Gear.vue';
+import Move from './show/Move.vue';
 
 const props = defineProps({
     hunter: Hunter
