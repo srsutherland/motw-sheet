@@ -136,11 +136,21 @@
         {
           "name": "Could’ve Been Worse",
           "description": "When you miss a use magic roll, choose one of the following options instead of losing control of the magic: Fizzle or This Is Gonna Suck.",
-          "type":"move"
+          "type":"move",
+          "children": [
+            {
+              "name": "Fizzle",
+              "description": "The preparations and materials for the spell are ruined. You’ll have to start over from scratch with the prep time doubled."
+            },
+            {
+              "name": "This Is Gonna Suck",
+              "description": "The effect happens, but you trigger all of the listed glitches but one. You pick the one you avoid"
+            }
+          ]
         },
         {
           "name": "Enchanted Clothing",
-          "description": "Pick an article of everyday clothing—it’s enchanted without any change in appearance. Take -1 harm from any source that tries to get at you through the garment.",
+          "description": "Pick an article of everyday clothing — it’s enchanted without any change in appearance. Take -1 harm from any source that tries to get at you through the garment.",
           "type":"move"
         },
         {
@@ -161,7 +171,20 @@
         {
           "name": "Practitioner",
           "description": "Choose two effects available to you under use magic. Take +1 to use magic whenever you choose one of those effects.",
-          "type":"move"
+          "type":"move",
+          "pick": 2,
+          "options": [
+            "Inflict harm",
+            "Enchant a weapon",
+            "Do one thing that is beyond human limitations",
+            "Bar a place or portal to a specific person or a type of creature",
+            "Trap a specific person, minion, or monster",
+            "Banish a spirit or curse from the person, object, or place it inhabits",
+            "Summon a monster into the world",
+            "Communicate with something that you do not share a language with",
+            "Observe another place or time",
+            "Heal 1-harm from an injury, or cure a disease, or neutralize a poison"
+          ]
         },
         {
           "name": "Shield Spell",
