@@ -81,12 +81,16 @@
             <p>WIP: Describe relationships with other hunters.</p>
         </fieldset>
     </section>
-
+    <section id="pre-moves">
+        <PreMove v-for="pm in hunter.playbook.pre_moves" :hunter="hunter" :pm="pm"/>
+    </section>
     <button @click="$emit('change-view', 'show', hunter)">Save</button>
 </template>
 
 <script setup>
 import { Hunter } from '@/Hunter';
+import Test from './Test.vue';
+import PreMove from './PreMove.vue';
 
 const props = defineProps({
     hunter: Hunter
