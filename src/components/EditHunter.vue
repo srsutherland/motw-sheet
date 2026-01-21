@@ -123,7 +123,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Hunter } from '@/Hunter';
-import Test from './Test.vue';
+// import Test from './Test.vue';
 import PreMove from './PreMove.vue';
 
 const debug = ref(false);
