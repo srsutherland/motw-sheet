@@ -19,15 +19,11 @@
 
 (Experience track placeholder)
 
-<br class="col-break"/>
+<span class="col-break"></span>
 
 ## Combat Magic
 
-You have a few attack spells you can use as weapons.
-
-When you use these spells to **kick some ass**, roll +Weird instead of +Tough.
-
-Sometimes the situation may require you to **act under pressure** to cast your spell without problems.
+You have a few attack spells you can use as weapons. When you use these spells to **kick some ass**, roll +Weird instead of +Tough. Sometimes the situation may require you to **act under pressure** to cast your spell without problems.
 
 Your combat spells can combine any of your base spells with any of your effects.
 
@@ -58,7 +54,7 @@ You have this one:
 - **Gestures:** You need to wave your hands around to use combat magic. If you're restrained, take -1 ongoing for combat magic.
 - **Incantations:** You must speak in an arcane language to control your magic. If you use combat magic without speaking, **act under pressure** to avoid scrambling your thoughts.
 
-<br class="col-break"/>
+<span class="col-break"></span>
 
 Plus pick three of these:
 
@@ -106,7 +102,7 @@ Ratings, pick one line:
 - [ ] Charm+1, Cool=0, Sharp+1, Tough-1, Weird+2
 - [ ] Charm=0, Cool=0, Sharp+1, Tough=0, Weird+2
 
-<br class="col-break"/>
+<span class="col-break"></span>
 
 ## Introductions
 
@@ -126,7 +122,7 @@ Go around the group again. On your turn, pick one for each of the other hunters:
 - They're an on-again/off-again love interest. Ask them what keeps you apart. Tell them what keeps you together.
 - A comrade-in-arms. You've faced the biggest threats together.
 
-<br class="col-break"/>
+<span class="col-break"></span>
 
 ## Leveling Up
 

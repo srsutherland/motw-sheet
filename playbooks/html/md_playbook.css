@@ -1,0 +1,70 @@
+body {
+    background-color: #ddd;
+    line-height: 1.3;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.page {
+    column-count: 3;
+    column-gap: 1.5rem;
+    margin: 2em;
+    padding: 1em;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* force a column break */
+.col-break {
+    display: block;
+    height: 0;
+    break-after: column;
+}
+
+/* force a page break into 3 new columns; display a gutter */
+.page-break {
+    break-before: page;
+    column-span: all;
+    display: block;
+    height: 1.5rem;
+    margin-bottom: 1.5rem;
+    background-color: #f0f0f0;
+}
+
+@font-face {
+    font-family: 'ThirdMan';
+    src: url('../../res/font/3rd%20Man.otf') format('opentype');
+}
+
+p {
+    margin: 0.5em 0;
+}
+
+ul {
+    margin: 0;
+    padding-left: 1em;
+}
+
+h1 {
+    font-family: 'ThirdMan', sans-serif;
+    text-transform: uppercase;
+    margin: 0 0 0;
+    font-size: 4em;
+    font-weight: normal;
+}
+
+h2 {
+    text-transform: uppercase;
+    font-size: 1.1em;
+    margin: 1em 0 -0.3em;
+}
+
+li.task-list-item {
+    list-style-type: none;
+    margin-left: 0;
+    /* first line indent */
+    text-indent: -1em;
+}
+
+li.task-list-item li {
+    text-indent: 0;
+}
