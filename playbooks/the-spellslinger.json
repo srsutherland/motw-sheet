@@ -1,6 +1,6 @@
 {
   "name": "The Spell-Slinger",
-  "id": "the-spellslinger",
+  "id": "the_spellslinger",
   "emoji": "🔮",
   "quote": "Fight fire with <b>fire magic</b>.",
   "luck_max": 7,
@@ -14,7 +14,7 @@
         "You have a few attack spells you can use as weapons.",
         "When you use these spells to [[kick some ass]], roll <span class='roll'>+Weird</span> instead of +Tough.",
         "Sometimes the situation may require you to [[act under pressure]] to cast your spell without problems.",
-        "<br>Your combat spells can combine any of your base spells  with any of your effects."
+        "<br>Your combat spells can combine any of your base spells with any of your effects."
       ],
       "children": {
         "heading": "Combat magic, pick <span class='pick'>three</span> (with at least one base):",
@@ -113,7 +113,7 @@
           },
           {
             "name": "Incantations",
-            "description": "You must speak in an arcane languageto control your magic. If you use combat magic without speaking, act under pressure to avoid scrambling your thoughts."
+            "description": "You must speak in an arcane language to control your magic. If you use combat magic without speaking, act under pressure to avoid scrambling your thoughts."
           }
         ]
       }
@@ -155,7 +155,7 @@
         },
         {
           "name": "Forensic Divination",
-          "description": "When you successfully investigate a mystery, ask 'What magic was done here?' as a free extra question.",
+          "description": "When you successfully investigate a mystery, ask \"What magic was done here?\" as a free extra question.",
           "type":"move"
         },
         {
@@ -320,13 +320,6 @@
         "type": "improvement"
       },
       {
-        "description": "Get +1 Charm, max +2",
-        "increase": "charm",
-        "amount": 1,
-        "max": 2,
-        "type": "improvement"
-      },
-      {
         "description": "Get +1 Cool, max +2",
         "increase": "cool",
         "amount": 1,
@@ -334,10 +327,10 @@
         "type": "improvement"
       },
       {
-        "description": "Get +1 Sharp, max +3",
+        "description": "Get +1 Sharp, max +2",
         "increase": "sharp",
         "amount": 1,
-        "max": 3,
+        "max": 2,
         "type": "improvement"
       },
       {
@@ -369,19 +362,6 @@
         "description": "Take a move from another playbook",
         "increase": "moves_other",
         "amount": 1,
-        "type": "improvement"
-      },
-      {
-        "description": "Take a move from another playbook",
-        "increase": "moves_other",
-        "amount": 1,
-        "type": "improvement"
-      },
-      {
-        "description": "Add +1 to any rating, max +3",
-        "increase": "any_rating",
-        "amount": 1,
-        "max": 3,
         "type": "improvement"
       },
       {
@@ -469,6 +449,12 @@
       {
         "description": "Take another Combat Magic pick",
         "increase": "combat_magic_picks",
+        "amount": 1,
+        "type": "improvement"
+      },
+      {
+        "description": "Take a move from another playbook",
+        "increase": "moves_other",
         "amount": 1,
         "type": "improvement"
       }
