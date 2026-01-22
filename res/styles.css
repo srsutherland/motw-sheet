@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'ThirdMan';
-    src: url('res/font/3rd%20Man.otf') format('opentype');
+    src: url('./font/3rd Man.otf') format('opentype');
 }
 
 :root {
