@@ -1,6 +1,6 @@
 <template>
   <header>
-    <h1>MOTW Beyond</h1>
+    <h1>Monster of the Sheets</h1>
   </header>
 
   <main>
