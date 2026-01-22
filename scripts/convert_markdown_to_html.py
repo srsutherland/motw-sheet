@@ -23,6 +23,7 @@ def convert_markdown_to_html(
   <meta charset=\"utf-8\" />
   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
   <title>{title}</title>
+  <link rel=\"stylesheet\" href=\"md_playbook.css\" />
 </head>
 <body>
 {body}

@@ -1,3 +1,4 @@
+<div class="page">
 
 # The Spell-Slinger
 
@@ -71,7 +72,8 @@ Plus pick three of these:
 - [ ] **Shield Spell**: When you **protect someone**, gain 2-armour against any harm that is transferred to you. This doesn't stack with your other armour, if any.
 - [ ] **Third Eye**: When you **read a bad situation**, you can **open up your third eye** for a moment to take in extra information. Take +1 hold on any result of 7 or more. You can see invisible things. On a miss, you may still get 1 hold, but you're exposed to supernatural danger. Unfiltered hidden reality is rough on the mind!
 
-<br class="page-break"/>
+</div>
+<div class="page">
 
 ## Gear
 
@@ -153,3 +155,5 @@ After you have leveled up *five* times, you qualify for advanced improvements in
 - [ ] Erase one used Luck mark from your playbook
 - [ ] Take another Combat Magic pick
 - [ ] You may cross off another option from your Tools and Techniques
+
+</div>
