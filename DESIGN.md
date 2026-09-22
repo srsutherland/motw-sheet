@@ -2,15 +2,15 @@ App to create, view, and edit digital character sheets from the Monster of the W
 
 # Pages
 
-## root
+## root (no query)
 
 From the main page, the user can create a new character sheet, view an existing character sheet, or edit an existing character sheet.
 
-## /new
+## ?new
 
-A list of playbooks is displayed for the user to choose one. Selecting a playbook will create a new hunter with that playbook and redirect to the /edit page for that hunter.
+A list of playbooks is displayed for the user to choose one. Selecting a playbook will create a new hunter with that playbook and redirect to the ?edit page for that hunter.
 
-## /{id}
+## ?view={id}
 
 This page displays the given hunter. It has responsive columns with the following sections:
 
@@ -41,7 +41,7 @@ This page displays the given hunter. It has responsive columns with the followin
 9. "Post-moves" section(s), if any (playbook-specific)
 10. History
 
-## /{id}/edit
+## ?edit={id}
 
 This page has responsive columns with the following sections:
 
