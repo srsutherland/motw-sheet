@@ -19,7 +19,7 @@ export class Hunter {
     gear = undefined;
 
     constructor(playbook, name) {
-        this.uid = Date.now();
+        this.uid = crypto.randomUUID();
         this.playbook = playbook;
         this.playbook_name = playbook.name;
         if (name) {
@@ -46,6 +46,11 @@ export class Hunter {
             imp_ids.add(new_id);
             improvement.id = new_id;
         })
+    }
+
+    // rebuild a Hunter from its JSON form (skips the constructor)
+    static fromJSON(data) {
+        return Object.assign(Object.create(Hunter.prototype), data);
     }
 
     // string representation of the hunter

@@ -8,6 +8,9 @@
         >
             🖉
         </button>
+        <button @click="exportHunter(props.hunter)" title="Export to file">
+            ⭳
+        </button>
     </h1>
     <Ratings :hunter="props.hunter" />
     <Luck :hunter="props.hunter" />
@@ -33,6 +36,7 @@ import Luck from './show/Luck.vue';
 import Experience from './show/Experience.vue';
 import Gear from './show/Gear.vue';
 import Move from './show/Move.vue';
+import { exportHunter } from '@/Storage';
 
 const props = defineProps({
     hunter: Hunter
