@@ -3,12 +3,12 @@
     <span class="heading">Luck</span>:
     <div class="indent">
         <em>Okay</em>
-        <BoxButton minus @onclick="changeLuck(1)" />
+        <BoxButton minus @click="changeLuck(1)" />
         <span v-for="i in hunter?.luck_max">
             <Box filled v-if="hunter?.luck >= i"/>
             <Box v-else/>
         </span>
-        <BoxButton plus @onclick="changeLuck(-1)" />
+        <BoxButton plus @click="changeLuck(1)" />
         <em>Doomed</em>
     </div>
 </section>
