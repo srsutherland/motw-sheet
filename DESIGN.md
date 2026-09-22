@@ -28,6 +28,7 @@ This page displays the given hunter. It has responsive columns with the followin
    - "+" and "-" buttons to adjust
 4. Harm track
    - Displayed as a track of 7 boxes, from "Okay" to "Dying"
+   - "+" and "-" buttons to adjust
    - At 4 harm, the "unstable" box is checked
 5. Experience track
    - Displayed as a track of 5 boxes, from 0 to 5
@@ -45,14 +46,36 @@ This page displays the given hunter. It has responsive columns with the followin
 This page has responsive columns with the following sections:
 
 1. Hunter name (displayed as "{name} the {playbook}"; name is editable)
-2. Ratings (during character creation, this is hidden until the user makes a ratings selection)
+2. Ratings display (during character creation, this is hidden until the user makes a ratings selection below)
 3. Gear (editable; select from options)
 4. Moves (editable; lists current moves, and if moves are available, has a button to pop up a list of available moves to add)
 5. (special) Playbook-specific sections
 6. Look (editable; select from options)
-7. Ratings selection
+7. Ratings selection (a radio selection of initial arrays)
 8. History 
    - A section for each other hunter at your table with:
+     - a textbox to type their name and playbook
      - select from your playbook how you know them
      - they select from their playbook how they know you
      - a field for notes/clarification on each relationship
+     - (This isn't actually a data link to another hunter, it's just local strings selected from options)
+9. Improvements
+   - Improvements provide either a pre-determined increase or provide a reference to some list you can choose from
+   - The user selects an improvement, and if it offers a choice, the choice is tied to the improvement itself.
+   - Improvement choices should be made in a popup window (or dropdown if simple)
+
+# Data Model
+
+The app uses json files in `/playbooks/` as its source of truth.
+
+## Creation
+
+- Markdown files are created from the PDF as an intermediate, better-structured format.
+- Markdown files are converted to html to check that they look the same as the PDF
+- Markdown files are then used as a reference in creating the JSON files.
+
+## Format
+
+- Display text is markdown, with caveats:
+   - `[[wikilinks]]` to game terms that should have a dotted line and a popup.
+   - `<span class='something'>` for stuff with other special tags
