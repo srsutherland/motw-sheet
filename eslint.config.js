@@ -10,8 +10,7 @@ export default defineConfig([
         files: ['**/*.{vue,js,mjs,jsx}'],
     },
 
-    // app.js is the pre-Vue prototype
-    globalIgnores(['**/dist/**', '**/coverage/**', 'app.js']),
+    globalIgnores(['**/dist/**', '**/coverage/**']),
 
     {
         languageOptions: {
@@ -24,7 +23,14 @@ export default defineConfig([
     js.configs.recommended,
     ...pluginVue.configs['flat/essential'],
 
-    // show/ components are named after sheet sections (Luck, Harm, ...);
+    // components declare props/emit by convention, regardless of if used
+    {
+        rules: {
+            'no-unused-vars': ['error', { varsIgnorePattern: '^(props|emit)$' }],
+        },
+    },
+
+    // show/* components are named after sheet sections (Luck, Harm, ...);
     // the folder already namespaces them
     {
         files: ['src/components/show/**/*.vue'],
