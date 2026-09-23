@@ -7,23 +7,24 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "lint": "eslint . --fix --cache",
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "vue": "^3.4.29"
+    "vue": "^3.5.43"
   },
   "devDependencies": {
-    "@rushstack/eslint-patch": "^1.8.0",
-    "@vitejs/plugin-vue": "^5.0.5",
-    "@vue/eslint-config-prettier": "^9.0.0",
-    "eslint": "^8.57.0",
-    "eslint-plugin-vue": "^9.23.0",
-    "prettier": "^3.2.5",
-    "vite": "^5.3.1",
-    "vite-plugin-vue-devtools": "^7.3.1"
+    "@eslint/js": "^10.0.1",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "eslint": "^10.11.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-vue": "^10.11.0",
+    "globals": "^17.12.0",
+    "prettier": "^3.9.9",
+    "vite": "^8.3.0",
+    "vite-plugin-vue-devtools": "^8.2.1"
   },
-  "allowScripts": {
-    "esbuild": true
+  "engines": {
+    "node": "^22.18.0 || >=24.12.0"
   }
 }
