@@ -1,6 +1,7 @@
 @font-face {
     font-family: 'ThirdMan';
     src: url('./font/3rd Man.otf') format('opentype');
+    font-display: swap;
 }
 
 :root {

@@ -52,11 +52,6 @@ const basicMovesByStat = {
 </script>
 
 <style scoped>
-@font-face {
-    font-family: 'ThirdMan';
-    src: url('res/font/3rd%20Man.otf') format('opentype');
-}
-
 .hunter-name {
     font-family: 'ThirdMan', 'sans-serif';
     font-weight: normal;
