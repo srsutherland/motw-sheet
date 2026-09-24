@@ -1,27 +1,27 @@
 <template>
     <h1 class="hunter-name">
-        {{ props.hunter?.name || "NoName" }}
-        {{ props.hunter?.playbook_name ||  "The Unknown" }}
+        {{ hunter?.name || "NoName" }}
+        {{ hunter?.playbook_name ||  "The Unknown" }}
         <button
-            @click="$emit('change-view', 'edit', props.hunter)"
+            @click="$emit('change-view', 'edit', hunter)"
             title="Edit"
         >
             🖉
         </button>
-        <button @click="exportHunter(props.hunter)" title="Export to file">
+        <button @click="exportHunter(hunter)" title="Export to file">
             ⭳
         </button>
     </h1>
-    <Ratings :hunter="props.hunter" />
-    <Luck :hunter="props.hunter" />
-    <Harm :hunter="props.hunter" />
-    <Experience :hunter="props.hunter" />
-    <Gear :hunter="props.hunter" />
+    <Ratings />
+    <Luck />
+    <Harm />
+    <Experience />
+    <Gear />
     <section class="show-moves">
         <h2>Moves</h2>
         <ul>
-            <li v-for="move in props.hunter?.moves" :key="move.name">
-                <Move :move="move" :hunter="props.hunter" />
+            <li v-for="move in hunter?.moves" :key="move.name">
+                <Move :move="move" />
             </li>
         </ul>
     </section>
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { Hunter } from '@/Hunter';
+import { useHunter } from '@/HunterContext';
 import Ratings from './show/Ratings.vue';
 import Harm from './show/Harm.vue';
 import Luck from './show/Luck.vue';
@@ -38,13 +38,7 @@ import Gear from './show/Gear.vue';
 import Move from './show/Move.vue';
 import { exportHunter } from '@/Storage';
 
-const props = defineProps({
-    hunter: Hunter
-});
-
-if (!props.hunter) {
-    console.error('No hunter provided');
-}
+const hunter = useHunter();
 </script>
 
 <style scoped>

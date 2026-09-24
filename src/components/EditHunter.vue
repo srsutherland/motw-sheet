@@ -83,7 +83,7 @@
         </fieldset>
     </section>
     <section id="pre-moves">
-        <PreMove v-for="pm in hunter.playbook.pre_moves" :key="pm.heading" :hunter="hunter" :pm="pm"/>
+        <PreMove v-for="pm in hunter.playbook.pre_moves" :key="pm.heading" :pm="pm"/>
     </section>
     <section id="improvements">
         <fieldset>
@@ -122,18 +122,12 @@
 
 <script setup>
 import { ref } from 'vue';
-import { Hunter } from '@/Hunter';
+import { useHunter } from '@/HunterContext';
 // import Test from './Test.vue';
 import PreMove from './PreMove.vue';
 
 const debug = ref(false);
-const props = defineProps({
-    hunter: Hunter
-});
-
-if (!props.hunter) {
-    console.error('No hunter provided');
-}
+const hunter = useHunter();
 
 const emit = defineEmits(['change-view']);
 
@@ -162,11 +156,11 @@ const fomatRatingRich = (rating) => {
 };
 
 const addAllMoves = () => {
-    const hunter = props.hunter;
-    const all_moves = hunter.playbook.moves.children.options;
+    const h = hunter.value;
+    const all_moves = h.playbook.moves.children.options;
     for (const move of all_moves) {
-        if (!hunter.moves.find((m) => m.name === move.name)) {
-            hunter.moves.push(move);
+        if (!h.moves.find((m) => m.name === move.name)) {
+            h.moves.push(move);
         }
     }
 };

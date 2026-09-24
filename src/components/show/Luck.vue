@@ -15,25 +15,20 @@
 </template>
 
 <script setup>
-import { Hunter } from '@/Hunter';
+import { useHunter } from '@/HunterContext';
 import Box from './Box.vue';
 import BoxButton from './BoxButton.vue';
 
-const props = defineProps({
-    hunter: Hunter
-});
-
-if (!props.hunter) {
-    console.error('No hunter provided');
-}
+const hunter = useHunter();
 
 const changeLuck = (amount) => {
-    props.hunter.luck += amount;
-    if (props.hunter.luck < 0) {
-        props.hunter.luck = 0;
+    const h = hunter.value;
+    h.luck += amount;
+    if (h.luck < 0) {
+        h.luck = 0;
     }
-    if (props.hunter.luck > props.hunter.luck_max) {
-        props.hunter.luck = props.hunter.luck_max;
+    if (h.luck > h.luck_max) {
+        h.luck = h.luck_max;
     }
 };
 </script>

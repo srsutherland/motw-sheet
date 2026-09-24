@@ -6,8 +6,8 @@
   <main>
     <ActionList v-if="currentView === 'action'" @change-view="changeView"/>
     <NewHunter v-if="currentView === 'new'" @change-view="changeView"/>
-    <EditHunter v-if="currentView === 'edit'" @change-view="changeView" :hunter="hunter"/>
-    <ShowHunter v-if="currentView === 'show'" @change-view="changeView" :hunter="hunter"/>
+    <EditHunter v-if="currentView === 'edit'" @change-view="changeView"/>
+    <ShowHunter v-if="currentView === 'show'" @change-view="changeView"/>
   </main>
 </template>
 
@@ -18,9 +18,11 @@ import NewHunter from './components/NewHunter.vue';
 import EditHunter from './components/EditHunter.vue';
 import ShowHunter from './components/ShowHunter.vue';
 import { loadHunter, saveHunter } from './Storage';
+import { provideHunter } from './HunterContext';
 
 const currentView = ref('action');
 const hunter = ref(null);
+provideHunter(hunter);
 
 // Routes live in the query string (GitHub Pages can't serve arbitrary paths):
 //   ?          -> action (home)

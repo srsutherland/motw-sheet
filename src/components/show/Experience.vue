@@ -21,31 +21,27 @@
 </template>
 
 <script setup>
-import { Hunter } from '@/Hunter';
+import { useHunter } from '@/HunterContext';
 import Box from './Box.vue';
 import BoxButton from './BoxButton.vue';
 
-const props = defineProps({
-    hunter: Hunter
-});
-
-if (!props.hunter) {
-    console.error('No hunter provided');
-}
+const hunter = useHunter();
 
 const changeExperience = (amount) => {
-    props.hunter.experience += amount;
-    if (props.hunter.experience < 0) {
-        props.hunter.experience = 0;
+    const h = hunter.value;
+    h.experience += amount;
+    if (h.experience < 0) {
+        h.experience = 0;
     }
-    if (props.hunter.experience > 5) {
-        props.hunter.experience = 5;
+    if (h.experience > 5) {
+        h.experience = 5;
     }
 };
 
 const levelUp = () => {
-    props.hunter.experience = 0;
-    props.hunter.level += 1;
+    const h = hunter.value;
+    h.experience = 0;
+    h.level += 1;
 };
 </script>
 

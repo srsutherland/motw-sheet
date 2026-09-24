@@ -17,15 +17,9 @@
 </template>
 
 <script setup>
-import { Hunter } from '@/Hunter';
+import { useHunter } from '@/HunterContext';
 
-const props = defineProps({
-    hunter: Hunter
-});
-
-if (!props.hunter) {
-    console.error('No hunter provided');
-}
+const hunter = useHunter();
 </script>
 
 <style scoped>

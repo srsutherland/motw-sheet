@@ -1,7 +1,7 @@
 <template>
 <section id="ratings" class="show-ratings">
     <table>
-        <tr v-for="(value, key) in props.hunter?.ratings" :key="key">
+        <tr v-for="(value, key) in hunter?.ratings" :key="key">
             <td><div :class="['stat-bubble', 'stat-bubble-'+value]">{{ value }}</div></td>
             <td class="stat-name">{{ key }}</td>
             <td class="basic-moves">
@@ -15,16 +15,10 @@
 </template>
 
 <script setup>
-import { Hunter } from '@/Hunter';
+import { useHunter } from '@/HunterContext';
 import { basicMovesByStat } from '@/BasicMoves';
 
-const props = defineProps({
-    hunter: Hunter
-});
-
-if (!props.hunter) {
-    console.error('No hunter provided');
-}
+const hunter = useHunter();
 </script>
 
 <style scoped>

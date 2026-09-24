@@ -23,31 +23,26 @@
 </template>
 
 <script setup>
-import { Hunter } from '@/Hunter';
+import { useHunter } from '@/HunterContext';
 import Box from './Box.vue';
 import BoxButton from './BoxButton.vue';
 
-const props = defineProps({
-    hunter: Hunter
-});
-
-if (!props.hunter) {
-    console.error('No hunter provided');
-}
+const hunter = useHunter();
 
 const changeHarm = (amount) => {
-    props.hunter.harm += amount;
-    if (props.hunter.harm < 0) {
-        props.hunter.harm = 0;
+    const h = hunter.value;
+    h.harm += amount;
+    if (h.harm < 0) {
+        h.harm = 0;
     }
-    if (props.hunter.harm > props.hunter.harm_max) {
-        props.hunter.harm = props.hunter.harm_max;
+    if (h.harm > h.harm_max) {
+        h.harm = h.harm_max;
     }
     if (amount < 0) {
-        props.hunter.unstable = false;
+        h.unstable = false;
     }
-    else if (props.hunter.harm >= props.hunter.harm_unstable) {
-        props.hunter.unstable = true;
+    else if (h.harm >= h.harm_unstable) {
+        h.unstable = true;
     }
 };
 </script>
