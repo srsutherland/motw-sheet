@@ -8,7 +8,7 @@
     <section id="edit-ratings">
         <fieldset>
             <legend>Ratings, pick one:</legend>
-            <div v-for="rating in hunter.playbook.ratings" :key="rating">
+            <div v-for="(rating, i) in hunter.playbook.ratings" :key="i">
                 <label>
                     <input
                         type="radio"
@@ -83,7 +83,7 @@
         </fieldset>
     </section>
     <section id="pre-moves">
-        <PreMove v-for="pm in hunter.playbook.pre_moves" :hunter="hunter" :pm="pm"/>
+        <PreMove v-for="pm in hunter.playbook.pre_moves" :key="pm.heading" :hunter="hunter" :pm="pm"/>
     </section>
     <section id="improvements">
         <fieldset>

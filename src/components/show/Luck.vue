@@ -4,7 +4,7 @@
     <div class="indent">
         <em>Okay</em>
         <BoxButton minus @click="changeLuck(-1)" />
-        <span v-for="i in hunter?.luck_max">
+        <span v-for="i in hunter?.luck_max" :key="i">
             <Box filled v-if="hunter?.luck >= i"/>
             <Box v-else/>
         </span>

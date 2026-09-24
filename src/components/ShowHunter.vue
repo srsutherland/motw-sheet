@@ -41,14 +41,6 @@ const props = defineProps({
 if (!props.hunter) {
     console.error('No hunter provided');
 }
-
-const basicMovesByStat = {
-    Charm: ['Manipulate Someone'],
-    Cool: ['Act Under Pressure', 'Help Out'],
-    Sharp: ['Investigate a Mystery', 'Read a Bad Situation'],
-    Tough: ['Kick Some Ass'],
-    Weird: ['Use Magic'],
-}
 </script>
 
 <style scoped>

@@ -6,7 +6,7 @@
             <td class="stat-name">{{ key }}</td>
             <td class="basic-moves">
                 <ul>
-                    <li v-for="move in basicMovesByStat[key]">{{ move }}</li>
+                    <li v-for="move in basicMovesByStat[key]" :key="move">{{ move }}</li>
                 </ul>
             </td>
         </tr>
@@ -16,6 +16,7 @@
 
 <script setup>
 import { Hunter } from '@/Hunter';
+import { basicMovesByStat } from '@/BasicMoves';
 
 const props = defineProps({
     hunter: Hunter
@@ -23,14 +24,6 @@ const props = defineProps({
 
 if (!props.hunter) {
     console.error('No hunter provided');
-}
-
-const basicMovesByStat = {
-    Charm: ['Manipulate Someone'],
-    Cool: ['Act Under Pressure', 'Help Out'],
-    Sharp: ['Investigate a Mystery', 'Read a Bad Situation'],
-    Tough: ['Kick Some Ass'],
-    Weird: ['Use Magic'],
 }
 </script>
 

@@ -3,7 +3,7 @@
     <span class="heading">Experience</span>:
     <div class="indent">
         <BoxButton minus @click="changeExperience(-1)" />
-        <span v-for="i in 5">
+        <span v-for="i in 5" :key="i">
             <Box filled v-if="hunter?.experience >= i"/>
             <Box v-else/>
         </span>
