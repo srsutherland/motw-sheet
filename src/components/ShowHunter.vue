@@ -1,30 +1,30 @@
 <template>
-    <h1 class="hunter-name">
-        {{ hunter?.name || "NoName" }}
-        {{ hunter?.playbook_name ||  "The Unknown" }}
-        <button
-            @click="$emit('change-view', 'edit', hunter)"
-            title="Edit"
-        >
-            🖉
-        </button>
-        <button @click="exportHunter(hunter)" title="Export to file">
-            ⭳
-        </button>
-    </h1>
-    <Ratings />
-    <LuckTrack />
-    <HarmTrack />
-    <ExperienceTrack />
-    <Gear />
-    <section class="show-moves">
-        <h2>Moves</h2>
-        <ul>
-            <li v-for="move in hunter?.moves" :key="move.name">
-                <Move :move="move" />
-            </li>
-        </ul>
-    </section>
+<h1 class="hunter-name">
+    {{ hunter?.name || "NoName" }}
+    {{ hunter?.playbook_name ||  "The Unknown" }}
+    <button
+        @click="$emit('change-view', 'edit', hunter)"
+        title="Edit"
+    >
+        🖉
+    </button>
+    <button @click="exportHunter(hunter)" title="Export to file">
+        ⭳
+    </button>
+</h1>
+<Ratings />
+<LuckTrack />
+<HarmTrack />
+<ExperienceTrack />
+<Gear />
+<section class="show-moves">
+    <h2>Moves</h2>
+    <ul>
+        <li v-for="move in hunter?.moves" :key="move.name">
+            <Move :move="move" />
+        </li>
+    </ul>
+</section>
 
 </template>
 
@@ -49,5 +49,5 @@ const hunter = useHunter();
 
 h1 button {
     vertical-align: middle;
-} 
+}
 </style>

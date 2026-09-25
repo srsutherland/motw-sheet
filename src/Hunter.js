@@ -14,7 +14,7 @@ export class Hunter {
         cool: 0,
         sharp: 0,
         tough: 0,
-        weird: 0
+        weird: 0,
     };
     gear = undefined;
 
@@ -45,7 +45,7 @@ export class Hunter {
             new_id = new_id+i;
             imp_ids.add(new_id);
             improvement.id = new_id;
-        })
+        });
     }
 
     // rebuild a Hunter from its JSON form (skips the constructor)
@@ -55,7 +55,7 @@ export class Hunter {
 
     // string representation of the hunter
     toString() {
-        return `${this.name || "<Nameless>"} the ${this.playbook_name || "<Unknown Playbook>"}`;
+        return `${this.name || '<Nameless>'} the ${this.playbook_name || '<Unknown Playbook>'}`;
     }
 
     stringToId(str) {

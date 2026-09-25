@@ -1,5 +1,5 @@
 <template>
-    <PlaybookList @select-playbook="newHunter" />
+<PlaybookList @select-playbook="newHunter" />
 </template>
 
 <script setup>

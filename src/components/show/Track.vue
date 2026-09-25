@@ -1,14 +1,14 @@
 <template>
-    <div class="track">
-        <em v-if="start">{{ start }}</em>
-        <TrackButton minus @click="change(-1)" />
-        <span v-for="i in max" :key="i">
-            <span v-if="i === dividerAt">|</span>
-            <TrackBox :filled="model >= i" />
-        </span>
-        <TrackButton plus @click="change(1)" />
-        <em v-if="end">{{ end }}</em>
-    </div>
+<div class="track">
+    <em v-if="start">{{ start }}</em>
+    <TrackButton minus @click="change(-1)" />
+    <span v-for="i in max" :key="i">
+        <span v-if="i === dividerAt">|</span>
+        <TrackBox :filled="model >= i" />
+    </span>
+    <TrackButton plus @click="change(1)" />
+    <em v-if="end">{{ end }}</em>
+</div>
 </template>
 
 <script setup>

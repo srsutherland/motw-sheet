@@ -22,7 +22,7 @@
 
 <script setup>
 const props = defineProps({
-    move: Object
+    move: Object,
 });
 
 </script>

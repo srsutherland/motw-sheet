@@ -1,22 +1,22 @@
 <template>
-    <section id="main">
-        <button @click="$emit('change-view', 'new')">New Playbook</button>
-        <label class="button">
-            Import Hunter
-            <input type="file" accept=".json,application/json" @change="onImport" hidden />
-        </label>
-    </section>
-    <section id="hunters" v-if="hunters.length">
-        <h2>Hunters</h2>
-        <ul>
-            <li v-for="h in hunters" :key="h.uid">
-                <a :href="`?view=${h.uid}`" @click.prevent="$emit('change-view', 'show', h)">
-                    {{ h.playbook?.emoji }} {{ h.toString() }}
-                </a>
-                <button @click="onDelete(h)" title="Delete">🗑</button>
-            </li>
-        </ul>
-    </section>
+<section id="main">
+    <button @click="$emit('change-view', 'new')">New Playbook</button>
+    <label class="button">
+        Import Hunter
+        <input type="file" accept=".json,application/json" @change="onImport" hidden />
+    </label>
+</section>
+<section id="hunters" v-if="hunters.length">
+    <h2>Hunters</h2>
+    <ul>
+        <li v-for="h in hunters" :key="h.uid">
+            <a :href="`?view=${h.uid}`" @click.prevent="$emit('change-view', 'show', h)">
+                {{ h.playbook?.emoji }} {{ h.toString() }}
+            </a>
+            <button @click="onDelete(h)" title="Delete">🗑</button>
+        </li>
+    </ul>
+</section>
 </template>
 
 <script setup>

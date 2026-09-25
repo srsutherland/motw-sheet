@@ -1,10 +1,10 @@
 <template>
-    <span>{{ filled ? '■' : '□' }}</span>
+<span>{{ filled ? '■' : '□' }}</span>
     <!--▣-->
 </template>
 
 <script setup>
 const props = defineProps({
-    filled: Boolean
+    filled: Boolean,
 });
 </script>

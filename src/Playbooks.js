@@ -1,7 +1,7 @@
-import spellslinger from "@pb/the-spellslinger.json";
+import spellslinger from '@pb/the-spellslinger.json';
 const default_playbook_list = [
     spellslinger,
-]
+];
 
 const default_playbooks_by_name = {};
 default_playbook_list.forEach(playbook => {
