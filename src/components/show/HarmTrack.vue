@@ -18,7 +18,7 @@
                 @click="toggleUnstable"
                 :title="hunter.unstable ? 'Mark stabilized' : 'Mark unstable'"
             >
-                <Box :filled="hunter.unstable" />
+                <TrackBox :filled="hunter.unstable" />
             </button>
         </span>
     </div>
@@ -27,7 +27,7 @@
 
 <script setup>
 import { useHunter } from '@/HunterContext';
-import Box from './Box.vue';
+import TrackBox from './TrackBox.vue';
 import Track from './Track.vue';
 
 const hunter = useHunter();

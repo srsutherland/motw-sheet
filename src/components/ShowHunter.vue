@@ -13,9 +13,9 @@
         </button>
     </h1>
     <Ratings />
-    <Luck />
-    <Harm />
-    <Experience />
+    <LuckTrack />
+    <HarmTrack />
+    <ExperienceTrack />
     <Gear />
     <section class="show-moves">
         <h2>Moves</h2>
@@ -31,9 +31,9 @@
 <script setup>
 import { useHunter } from '@/HunterContext';
 import Ratings from './show/Ratings.vue';
-import Harm from './show/Harm.vue';
-import Luck from './show/Luck.vue';
-import Experience from './show/Experience.vue';
+import HarmTrack from './show/HarmTrack.vue';
+import LuckTrack from './show/LuckTrack.vue';
+import ExperienceTrack from './show/ExperienceTrack.vue';
 import Gear from './show/Gear.vue';
 import Move from './show/Move.vue';
 import { exportHunter } from '@/Storage';
