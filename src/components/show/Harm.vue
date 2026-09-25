@@ -1,22 +1,25 @@
 <template>
 <section class="show-harm">
     <div class="heading">Harm:</div>
-    <div class="indent">
-        <em>Okay</em>
-        <BoxButton minus @click="changeHarm(-1)" />
-        <span v-for="i in hunter?.harm_max" :key="i">
-            <span v-if="i === hunter?.harm_unstable">|</span>
-            <Box filled v-if="hunter?.harm >= i"/>
-            <Box v-else/>
-        </span>
-        <BoxButton plus @click="changeHarm(1)" />
-        <em>Dying</em>
-    </div>
+    <Track
+        class="indent"
+        :model-value="hunter.harm"
+        @update:model-value="setHarm"
+        :max="hunter.harm_max"
+        :divider-at="hunter.harm_unstable"
+        start="Okay"
+        end="Dying"
+    />
     <div class="indent">
         <span class="indent">
             Unstable:
-            <Box filled v-if="hunter?.unstable"/>
-            <Box v-else/>
+            <button
+                class="toggle"
+                @click="toggleUnstable"
+                :title="hunter.unstable ? 'Mark stabilized' : 'Mark unstable'"
+            >
+                <Box :filled="hunter.unstable" />
+            </button>
         </span>
     </div>
 </section>
@@ -25,25 +28,23 @@
 <script setup>
 import { useHunter } from '@/HunterContext';
 import Box from './Box.vue';
-import BoxButton from './BoxButton.vue';
+import Track from './Track.vue';
 
 const hunter = useHunter();
 
-const changeHarm = (amount) => {
+// Reaching the unstable threshold marks the wound unstable. Healing doesn't clear it;
+// the player unmarks it once the wound is stabilized.
+const setHarm = (value) => {
     const h = hunter.value;
-    h.harm += amount;
-    if (h.harm < 0) {
-        h.harm = 0;
-    }
-    if (h.harm > h.harm_max) {
-        h.harm = h.harm_max;
-    }
-    if (amount < 0) {
-        h.unstable = false;
-    }
-    else if (h.harm >= h.harm_unstable) {
+    if (value > h.harm && value >= h.harm_unstable) {
         h.unstable = true;
     }
+    h.harm = value;
+};
+
+const toggleUnstable = () => {
+    const h = hunter.value;
+    h.unstable = !h.unstable;
 };
 </script>
 
@@ -57,4 +58,13 @@ const changeHarm = (amount) => {
     /* all caps */
     text-transform: uppercase;
 }
-</style>    
+
+.toggle {
+    padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+</style>

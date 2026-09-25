@@ -1,10 +1,5 @@
 <template>
-    <span v-if="!filled">
-        □
-    </span>
-    <span v-if="filled">
-        ■
-    </span>
+    <span>{{ filled ? '■' : '□' }}</span>
     <!--▣-->
 </template>
 

@@ -1,36 +1,21 @@
 <template>
 <section class="show-luck">
     <span class="heading">Luck</span>:
-    <div class="indent">
-        <em>Okay</em>
-        <BoxButton minus @click="changeLuck(-1)" />
-        <span v-for="i in hunter?.luck_max" :key="i">
-            <Box filled v-if="hunter?.luck >= i"/>
-            <Box v-else/>
-        </span>
-        <BoxButton plus @click="changeLuck(1)" />
-        <em>Doomed</em>
-    </div>
+    <Track
+        class="indent"
+        v-model="hunter.luck"
+        :max="hunter.luck_max"
+        start="Okay"
+        end="Doomed"
+    />
 </section>
 </template>
 
 <script setup>
 import { useHunter } from '@/HunterContext';
-import Box from './Box.vue';
-import BoxButton from './BoxButton.vue';
+import Track from './Track.vue';
 
 const hunter = useHunter();
-
-const changeLuck = (amount) => {
-    const h = hunter.value;
-    h.luck += amount;
-    if (h.luck < 0) {
-        h.luck = 0;
-    }
-    if (h.luck > h.luck_max) {
-        h.luck = h.luck_max;
-    }
-};
 </script>
 
 <style scoped>
