@@ -1,106 +1,203 @@
-# Playbook schema notes (Phase 1 design work)
+# Playbook schema notes
 
-> Why this exists: only the Spell-Slinger ships at MVP, but the JSON schema and
-> the Vue renderer that consumes it must be designed so the *other 12* playbooks
-> drop in later without a rewrite. The Spell-Slinger is one of the more regular
-> playbooks — the outliers below are what break naive assumptions.
-> Source data: `playbooks/md/*.md` (all 13 extracted from the rulebook PDF).
-> Last updated: 2026-06-03.
+Design notes for step 1 of `ROADMAP.md`: a playbook JSON shape (and matching
+saved-hunter shape) that fits all 12 playbooks, so that adding the other 11
+after MVP is data entry.
 
-## The core tension
+Source material: `playbooks/md/*.md`. Survey last checked 2026-09-24.
 
-Today's `the-spellslinger.json` uses **bespoke top-level keys** for its special
-content: `pre_moves` (Combat Magic), `moves.you_get` (Tools & Techniques),
-`moves.children` (the pick-three). A renderer written against those keys is
-implicitly a Spell-Slinger renderer. The other playbooks have *differently
-named, differently shaped* special sections, so the real decision is:
+## The problem with the current shape
 
-- **Option A — bespoke keys per playbook** (status quo). Each playbook invents
-  its own keys; the renderer special-cases them. Fast for one playbook, O(n)
-  pain for thirteen, and improvements can't generically target sections.
-- **Option B — a generic recursive "sections" model** (recommended). A playbook
-  is an ordered list of typed, id'd selection blocks. The renderer recurses over
-  block `type`/`opt_type`. Improvements reference blocks by `id`. More design up
-  front, but every new playbook is *data*, not code.
+`the-spellslinger.json` puts its special content under keys named after where
+it appears on the Spell-Slinger's sheet: `pre_moves` (Combat Magic),
+`moves.you_get` (Tools & Techniques), `moves.children` (the move picks). A
+renderer that reads those keys is a Spell-Slinger renderer. Every other
+playbook has its own sections with their own selection rules, and several
+improvements reach into sections by name, including sections owned by other
+playbooks.
 
-The recommendation is **Option B**, and Phase 1's acceptance test is: can we
-express the Expert and the Monstrous (below) in it with no gaps?
+The direction: a playbook is **an ordered list of sections, each with a stable
+id and a selection rule drawn from a small shared vocabulary**. The renderer
+knows the vocabulary, not the playbooks. Improvements refer to sections by id.
 
-## Structural variety survey (the things that must fit)
+## Survey: playbook-specific sections
 
-### 1. Playbook-specific "special" sections are not uniform
-- **Spell-Slinger:** *Combat Magic* — pick 3 from two groups (Bases, Effects)
-  with a constraint "at least one Base". Plus *Tools & Techniques* — cross off 1
-  of 4.
-- **Expert:** *Haven* — pick 3 of 9 options. A whole subsystem with its own id.
-- **Monstrous:** *Monster Breed* — pick 1 Curse of 4; **and** *Natural Attacks*
-  — "pick a Base and add an Extra, **or** two Bases" (a compound either/or rule);
-  **and** *Monster Breed Suggestions* — a reference table, not interactive.
+Everything every playbook has (luck, harm, experience, ratings lines, look,
+introductions, history, improvements) is left out unless it varies.
 
-Takeaway: model these as a list of **sections**, each `{ id, heading,
-description, opt_type, options, constraint? }`. `pre_moves` should generalize to
-"sections that render before the moves block" — position is a layout concern,
-not a type.
+| Playbook | Section | Rule |
+|---|---|---|
+| Chosen | Fate: how you found out | pick 1 |
+| | Fate: heroic tags / doom tags | pick 2 from each list |
+| | Special weapon | 1 form + 3 business-end + material (free text with suggestions); tags add up into a weapon |
+| | Protective gear | optional, 1-armour |
+| Crooked | Background | pick 1 (each option is effectively a move) |
+| | Heat | pick **at least** 2, each with a name blank |
+| | Underworld | pick 1; each option has its own pick-1 sub-choice |
+| Divine | Mission | pick 1 |
+| | Divine weapon | pick 1 |
+| Expert | Haven | pick 3 of 9 |
+| Flake | Gear | 1 normal weapon + 2 hidden weapons |
+| Initiate | Sect | free-text questions; good traditions pick 2, bad traditions pick 1 |
+| | Gear | 3 old-fashioned, or 2 modern, or 2 + 1, **depending on the Sect's traditions** |
+| Monstrous | Breed | free-text origin questions; curse pick 1 (some curses have a blank: a substance, an emotion) |
+| | Natural attacks | a base + an extra, **or** two bases |
+| | Breed suggestions | reference only (preset combinations of curse, attacks, moves) |
+| | Gear | optional, pick 0–1 |
+| Mundane | Gear | 2 weapons + 1 means of transport |
+| Professional | Agency | free-text questions; resources pick 2, red tape pick 2 |
+| | Gear | 1 serious + 2 normal weapons; flak vest **or** combat armour |
+| Spell-Slinger | Combat Magic | pick 3 across bases and effects, at least 1 base |
+| | Tools & Techniques | cross off 1 of 4 |
+| Spooky | Dark side | pick 3 tags |
+| Wronged | Who you lost | pick **1 or more**, each with a name blank |
+| | My prey | free text (a monster breed) |
+| | Why couldn't you save them | pick 1 or more |
+| | Gear | 1 signature + 2 practical weapons; optional vehicle |
 
-### 2. Selection rules vary and need a principled representation
-Observed `opt_type`s and rules:
-- `pick N` (moves: pick 3; Haven: pick 3; Curse: pick 1).
-- `cross N` (Tools & Techniques: cross 1).
-- `input` (Look: choose from list **or** type your own).
-- **pick-one-from-each-of-several-lists** (Look has 2 lists for Spell-Slinger,
-  **3** for the Monstrous).
-- **constrained pick** ("pick 3 with at least one Base") — currently hacked as
-  `"pick": ">1"` (a string). Needs a real `constraint`/`min`/`group` concept.
-- **compound either/or** (Natural Attacks: "a Base + an Extra, OR two Bases").
-  This is the hardest; may warrant a `rule` expression or an explicit
-  enumeration of valid shapes.
+Moves vary too:
 
-### 3. Improvements are a mini-DSL targeting section IDs (sometimes cross-playbook)
-Current fields: `increase` / `decrease` / `special` / `amount` / `max`, keyed to
-ids like `combat_magic_picks`, `tools_and_techniques_cross_offs`, `luck_used`.
-New cases the schema must support:
-- Expert: "Add an option to your haven" → `increase: "haven_options"`.
-- Monstrous: "Take a natural attacks pick" → `increase: "natural_attacks"`;
-  **"Gain a haven, like the Expert has, with two options"** → an improvement that
-  *instantiates a section borrowed from another playbook*.
-- `special` actions already present: `change_playbook`, `second_hunter`,
-  `retire`, `advanced_moves`, `any_rating`.
+- **Granted moves** before the picks: Chosen gets 2; Initiate, Professional,
+  Spell-Slinger, and Wronged get 1 (marked `[x]` in the markdown).
+- **Moves with their own choices**: Practitioner (pick 2 of 10), Crooked's
+  Artifact (pick 1) and Deal with the Devil (pick 1 or 2), Professional's
+  Mobility (2 good things + 1 bad thing), Spooky's Hex.
+- **Moves that change ratings**: Professional's Unfazeable (+1 Cool, max +3).
+  Deal with the Devil's "skill" option adds +1 to two ratings.
 
-Implication: every selectable section needs a **stable, app-wide id** so an
-improvement (even one defined in another playbook) can target it. Consider a
-shared registry of canonical section ids (`haven`, `natural_attacks`, …) rather
-than per-playbook ad-hoc strings.
+Look has 2 lists in seven playbooks and 3 in five; every list ends in a
+free-text blank. Every playbook has a pronouns blank and a luck special.
 
-### 4. Display-only / reference content
-"Monster Breed Suggestions" (Monstrous) and "Basic Moves by Rating" (most
-playbooks) are read-only. The schema needs a non-interactive block type so these
-render without being mistaken for selections.
+## Survey: improvements that aren't boilerplate
 
-### 5. Variable counts where the current schema assumes fixed
-- **Look** lists: 2 vs 3 (and each ends with a free-input "____").
-- **Gear** `pick`: Spell-Slinger picks 1; Expert picks 3 monster-slaying
-  weapons; Monstrous takes 0-or-1 ("if you want"). So gear is just another
-  pick-N section, not special.
-- **Ratings**: uniform (5 lines of the 5 stats) — this one's safe as-is.
+Every playbook shares rating increases, extra moves, moves from other
+playbooks, and the advanced list (change playbook, second hunter, advanced
+basic moves, retire, erase luck). Beyond those:
 
-## Concrete schema directions to evaluate in Phase 1
-1. Replace `pre_moves` / `moves.you_get` / `moves.children` with a single
-   ordered `sections: [Section]` where `Section.kind ∈ {select, reference,
-   moves, gear, look, ratings, history, introductions, improvements}`.
-2. Give every `select`-kind section an `id`, `opt_type`, `pick`/`cross`/min, and
-   an optional `groups` (for Bases/Effects) + `constraint`.
-3. Define an `improvement` target vocabulary tied to those `id`s, plus the
-   `special` verbs already in use.
-4. Keep `the-spellslinger.json` as the reference implementation and re-author it
-   to the new shape; keep `playbook.schema.json` in lockstep (it's currently
-   `additionalProperties: true` everywhere, so it permits but doesn't *enforce*
-   structure — tighten it as the model firms up).
+| Kind | Examples |
+|---|---|
+| More picks in a section | Combat Magic pick (Spell-Slinger), natural attacks pick (Monstrous), haven option (Expert, Flake, Wronged), Agency resource (Professional) |
+| Cross off one more | Tools & Techniques (Spell-Slinger) |
+| **Gain another playbook's section** | "a haven, like the Expert has, with two options" (Flake, Monstrous, Wronged); "a mystical library, like the Expert's haven option" (Spooky: one specific option) |
+| Redo a choice | change mission (Divine), change dark side tags (Spooky), change prey (Wronged), change a red tape tag (Professional) |
+| Remove a choice | delete a doom tag and optionally a heroic tag (Chosen), delete a dark side tag (Spooky) |
+| Compound | Monstrous: curse no longer applies **and** lose 1 Weird |
+| Narrative only | gain an ally, stash of money, command of a team, Keeper makes the next mystery about your prey |
 
-## How this maps to the hunter's *saved state*
-Separate the **playbook definition** (immutable template) from the **hunter
-instance** (the player's choices). The hunter should store *references/ids* into
-the playbook's sections (which option(s) picked, which boxes crossed, free-text
-inputs), not copies of descriptions. `Hunter.js` currently pushes whole move
-objects into `hunter.moves` (see `addAllMoves`) — revisit so saved hunters store
-ids and rehydrate against the playbook. This matters for both localStorage size
-and for export/share encoding (Phase 4).
+Four playbooks borrow the haven, so **the haven isn't the Expert's**: it's a
+shared section definition that the Expert starts with and others can gain.
+
+## Proposed model
+
+A rough shape to test, not a final spec.
+
+### Sections
+
+```jsonc
+{
+  "id": "combat_magic",          // stable, authored, unique within the playbook
+  "heading": "Combat Magic",
+  "description": "…",            // markdown, per DESIGN.md
+  "select": { … },               // absent for display-only sections
+  "options": [ … ]               // or "groups": [ { "id", "heading", "options" } ]
+}
+```
+
+Options have their own authored `id`, display text, optional `tags`, and may
+carry a nested `select` + `options` (for Underworld, Practitioner, Artifact) or
+a `blank` (for Heat, Who You Lost, curses with a substance).
+
+Moves, gear, look, and history are sections like any other; the renderer can
+still give them a special layout by id or kind. Where a section appears on the
+page (before or after moves) is layout, not structure. `pre_moves` goes away.
+
+### Selection rules
+
+| Rule | Covers |
+|---|---|
+| `{ "pick": 3 }` | most sections |
+| `{ "min": 1 }`, `{ "min": 2 }` | "one or more" (Wronged), "at least two" (Heat) |
+| `{ "min": 0, "pick": 1 }` | optional gear |
+| `{ "cross": 1 }` | Tools & Techniques |
+| per-group counts: `{ "groups": { "form": 1, "end": 3 } }` | Chosen weapon, Flake/Mundane/Professional/Wronged gear, heroic/doom tags |
+| total plus per-group minimum: `{ "pick": 3, "groups": { "base": { "min": 1 } } }` | Combat Magic |
+| `{ "any_of": [ {…}, {…} ] }`: satisfies any one of several rules | Natural attacks (`base 1 + extra 1` or `base 2`), Professional armour, Initiate gear |
+| `{ "free_text": true }` alongside options | look, Chosen material |
+
+`any_of` is the escape hatch that keeps compound rules as data. The Initiate's
+gear is the one rule that depends on another section's choices; the simplest
+honest answer may be `any_of` with the player choosing, since the app doesn't
+need to police it.
+
+### Improvements
+
+Every improvement gets an authored `id` and a list of effects:
+
+```jsonc
+{ "id": "combat_magic_pick_1", "text": "Take another Combat Magic pick",
+  "effects": [ { "section": "combat_magic", "add_picks": 1 } ] }
+
+{ "id": "gain_haven", "text": "Gain a haven, like the Expert has, with two options",
+  "effects": [ { "add_section": "haven", "pick": 2 } ] }
+
+{ "id": "free_from_curse", "text": "Free yourself from the curse of your kind…",
+  "effects": [ { "section": "curse", "disable": true },
+               { "rating": "weird", "add": -1 } ] }
+```
+
+An improvement with no effects is narrative only and is just recorded. Effect
+kinds: `rating` (with `max`), `add_picks`, `add_cross`, `add_section`,
+`redo` (re-open a section), `remove` (drop N choices), `luck`,
+`moves_other`, plus the advanced-list specials.
+
+`add_section` needs somewhere to find the haven. Put shared sections in their
+own file (e.g. `playbooks/shared/haven.json`), referenced by id from the Expert
+and from the improvements that grant it.
+
+## Saved hunters
+
+The playbook is an immutable template; the hunter is the player's choices
+against it.
+
+```jsonc
+{
+  "version": 1,
+  "uid": "…",
+  "playbook_id": "the_spellslinger",
+  "name": "…", "pronouns": "…",
+  "ratings_line": 2,                       // index into playbook.ratings
+  "choices": {
+    "combat_magic": ["blast", "fire", "earth"],
+    "tools_and_techniques": { "crossed": ["gestures"] },
+    "moves": ["third_eye", { "id": "practitioner", "choices": ["inflict_harm", "heal"] }],
+    "look_eyes": { "text": "weary" }
+  },
+  "improvements": ["weird_1", "combat_magic_pick_1"],
+  "harm": 0, "unstable": false, "luck": 0, "experience": 0,
+  "history": [ { "name": "…", "option": "mentor", "notes": "…" } ]
+}
+```
+
+Current ratings, pick limits, and borrowed sections are all computed from
+the playbook, the ratings line, and the improvements taken, never stored.
+
+Consequences:
+- Playbook text fixes reach every existing hunter.
+- Saves shrink from ~16 KB (the embedded playbook today) to a few hundred bytes,
+  which also makes share-by-URL plausible later.
+- `version` lets the loader upgrade old saves. Hunters saved in the current
+  format (with the embedded playbook) can be upgraded by matching option names;
+  given that nothing is released, discarding them is also fine.
+- Option ids are now part of the save format: renaming one requires a
+  migration, the same as renaming a database column.
+
+## Still to decide
+
+- How strictly to validate choices. The paper sheet doesn't stop you
+  over-picking; the app could warn rather than block, which also sidesteps the
+  Initiate's conditional gear.
+- Whether "moves from another playbook" can load another playbook's JSON at
+  MVP, or waits until those playbooks exist.
+- Whether Monstrous breed suggestions become presets that fill in the choices.
+- Basic moves: their own JSON file, shared by all playbooks, including the
+  advanced versions that the "mark basic moves as advanced" improvement needs.
