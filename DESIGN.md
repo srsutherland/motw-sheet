@@ -66,16 +66,27 @@ This page has responsive columns with the following sections:
 
 # Data Model
 
+## Playbook JSON
+
 The app uses json files in `/playbooks/` as its source of truth.
 
-## Creation
+### Creation
 
 - Markdown files are created from the PDF as an intermediate, better-structured format.
 - Markdown files are converted to html to check that they look the same as the PDF
 - Markdown files are then used as a reference in creating the JSON files.
 
-## Format
+### Format
 
 - Display text is markdown, with caveats:
    - `[[wikilinks]]` to game terms that should have a dotted line and a popup.
    - `<span class='something'>` for stuff with other special tags
+
+## Hunter class/json
+
+- "Full" version (serialize objects all the way down) and a "Slim" version (references where possible)
+- Contains an schema version number, in case of future breaking changes (keep this at 0.1 for now, we're the only users).
+
+### Clarifications
+
+- Level is separate from improvements taken; "Special" improvements may require more than one unspent improvement (not in the base game).
