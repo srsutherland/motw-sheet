@@ -215,6 +215,21 @@ Not discussed yet. From the old draft (plan-slop) or from me.
 - Mythic unlock: `"requires": { "improvements": 12 }` (plus the Keeper's say-so)
 - Look lists: `{ "format": "___ clothes", "options": [...] }`
 
+## From implementation (2026-10-02, `spellslinger-mvp`)
+
+Conventions the code needed that weren't discussed. All used by the app as built; change freely.
+
+- Auto ids: lowercase, apostrophes dropped, other runs of non-alphanumerics become `_` (`Could've Been Worse` -> `couldve_been_worse`) (`PlaybookData.js: slug`)
+- A sub-list is an object with `options` and no `type` (Combat Magic's `bases`); its options are offered flattened, grouped by sub-list
+- Placeable types: `move`, `basic_move`, `feature`, `gear`; a `grant` of anything else with `options` grants all its options (`"grant": "@basic_moves"`)
+- `basic_moves.json`: `{ id: "basic_moves", options: [ { type: "basic_move", name, rating, options? } ] }`; use magic's effects are its `options`
+- Your own playbook's features are always on your sheet; others' only when granted
+- A choice's stored value is the option's absolute path (`the_spellslinger.moves.third_eye`); free text is `{ "id": "@textbox", "text": ... }`
+- Hunter: `getting_started` (one list per rule), `improvements` (`{ id, choices }` in order taken), `nested` (item path -> one list per rule on that item)
+- Sub-options of "+1 to any rating" have a `name` (Charm, Cool...) so they can be labelled
+- Improvement list unlock: `requires.level` compares with level ups completed *before* the one the improvement is for
+- An improvement being picked is stored with `"pending": true` and dropped on load
+
 # Open questions
 
 - `"type"` on every object, or only on things that can be placed on a hunter (not on options inside a feature or move)?

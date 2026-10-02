@@ -2,6 +2,8 @@ Rough order of work. The schema grows out of building the Spell-Slinger; `Schema
 
 # 1. MVP
 
+Status: built on `spellslinger-mvp` (2026-10-02), awaiting review. All six points below work and were checked in a browser.
+
 One player, in one browser, can:
 
 1. See their saved hunters on the home page
@@ -56,12 +58,12 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 
 # Known issues
 
-- `the-spellslinger.json`:
-   - first "Take a move from another playbook" has `increase: "moves"`, should be `moves_other`
-   - Combat Magic "at least one base" is `"pick": ">1"` (reads as "more than one")
-- `Hunter.stats` is dead; pages use `hunter.ratings`
-- Gear pick limit not enforced
-- "Add Move" button does nothing
-- `PreMove.vue` is a stub
-- No pronouns anywhere
-- `playbook.schema.json` enforces nothing (`additionalProperties: true` throughout) and nothing runs it
+- `playbook.schema.json` still describes the old JSON format; nothing runs it
+- Saves are always the "full" hunter JSON; the "slim" version (DESIGN.md) isn't built
+- `basic_moves.json` has names and ratings only, no descriptions (needed for popups)
+- `[[wikilinks]]` render as dotted-underline text, no popup yet
+- "Take a move from another playbook" (`@*.moves`) has nothing to offer until there are other playbooks
+- A hunter's playbook copy is indexed once; editing the copy (it's meant to be modifiable) won't re-index it. Nothing edits it yet.
+- Saves from before schema 0.1 can only be deleted
+- ESLint `max-len` with `ignoreStrings` skips any line that contains a string, so most long lines aren't reported
+- No automated tests in the repo (browser tests were run, but live outside it)
