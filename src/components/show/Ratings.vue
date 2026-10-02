@@ -1,12 +1,19 @@
 <template>
 <section id="ratings" class="show-ratings">
     <table>
-        <tr v-for="(value, key) in hunter?.ratings" :key="key">
-            <td><div :class="['stat-bubble', 'stat-bubble-'+value]">{{ value }}</div></td>
-            <td class="stat-name">{{ key }}</td>
+        <tr v-for="rating in RATINGS" :key="rating">
+            <td>
+                <div :class="['stat-bubble', 'stat-bubble-' + state.ratings[rating]]">
+                    {{ state.ratings[rating] }}
+                </div>
+            </td>
+            <td class="stat-name">{{ rating }}</td>
             <td class="basic-moves">
                 <ul>
-                    <li v-for="move in basicMovesByStat[key]" :key="move">{{ move }}</li>
+                    <li v-for="move in basicMovesByRating(rating)" :key="move.name">
+                        {{ move.name }}
+                        <em v-if="isAdvanced(move)">(advanced)</em>
+                    </li>
                 </ul>
             </td>
         </tr>
@@ -15,10 +22,13 @@
 </template>
 
 <script setup>
-import { useHunter } from '@/HunterContext';
-import { basicMovesByStat } from '@/BasicMoves';
+import { useHunterState } from '@/HunterContext';
+import { RATINGS, basicMovesByRating } from '@/HunterState';
+import { pathOf } from '@/PlaybookData';
 
-const hunter = useHunter();
+const state = useHunterState();
+
+const isAdvanced = (move) => state.value.advanced.has(pathOf(move));
 </script>
 
 <style scoped>
@@ -34,6 +44,7 @@ const hunter = useHunter();
 }
 
 .stat-name {
+    text-transform: capitalize;
     padding-left: .7em;
     font-size: 1.7em;
     font-family: 'ThirdMan', 'sans-serif';

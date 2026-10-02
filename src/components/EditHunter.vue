@@ -8,12 +8,12 @@
 <section id="edit-ratings">
     <fieldset>
         <legend>Ratings, pick one:</legend>
-        <div v-for="(rating, i) in hunter.playbook.ratings" :key="i">
+        <div v-for="(rating, i) in hunter.playbook.ratings_base.options" :key="i">
             <label>
                 <input
                     type="radio"
                     :value="rating"
-                    v-model="hunter.ratings"
+                    v-model="hunter.ratings_base"
                 />
                 <span v-html="fomatRatingRich(rating)"></span>
             </label>
@@ -25,15 +25,9 @@
 <section>
     <fieldset>
         <legend>Moves</legend>
-        <div v-if="hunter?.moves?.length">
-            <ul>
-                <li v-for="(move, i) in hunter.moves" :key="i">{{ move.name }}</li>
-            </ul>
-        </div>
-        <button>Add Move</button>
-        <button @click="addAllMoves">
-            Add ALL ({{ hunter.playbook.moves.children.options.length }}) Moves
-        </button>
+        <ul>
+            <li v-for="move in state.moves" :key="move.path">{{ move.node.name }}</li>
+        </ul>
     </fieldset>
 </section>
 
@@ -47,20 +41,6 @@
 
 <!-- Gear Section -->
 <section id="gear">
-    <fieldset>
-        <legend>Starter Gear, pick {{ hunter.playbook.gear.pick }}</legend>
-        <div v-for="(gear, index) in hunter.playbook.gear.options" :key="index">
-            <label>
-                <input type="checkbox" :value="gear" v-model="hunter.gear" />
-                <span>
-                    {{ gear.name }}
-                </span>
-                (<span v-for="tag in gear.tags" :key="tag">
-                    {{ tag }}{{ " " }}
-                </span>)
-            </label>
-        </div>
-    </fieldset>
     <fieldset>
         <legend>Other Gear</legend>
         <p>WIP: Add more gear.</p>
@@ -83,34 +63,7 @@
     </fieldset>
 </section>
 <section id="pre-moves">
-    <PreMove v-for="pm in hunter.playbook.pre_moves" :key="pm.heading" :pm="pm"/>
-</section>
-<section id="improvements">
-    <fieldset>
-        <legend>Improvements</legend>
-        <ul>
-            <li v-for="improvement in hunter.playbook.improvements.options" :key="improvement.id">
-                <label>
-                    <input type="checkbox" :value="improvement.id" v-model="hunter.improvements" />
-                    <span>
-                        {{ improvement.description }}
-                    </span>
-                    <div v-if="debug" class="debug">
-                        <div>id: {{ improvement.id }}</div>
-                        <div v-if="improvement.increase">
-                            increase: {{ improvement.increase }}
-                        </div>
-                        <div v-if="improvement.amount">
-                            amount: {{ improvement.amount }}
-                        </div>
-                        <div v-if="improvement.max">
-                            max: {{ improvement.max }}
-                        </div>
-                    </div>
-                </label>
-            </li>
-        </ul>
-    </fieldset>
+    <PreMove v-for="pm in hunter.playbook.pre_moves" :key="pm.id" :pm="pm"/>
 </section>
 <button @click="$emit('change-view', 'show', hunter)">Save</button>
 <!-- debug switch -->
@@ -122,12 +75,13 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useHunter } from '@/HunterContext';
+import { useHunter, useHunterState } from '@/HunterContext';
 // import Test from './Test.vue';
 import PreMove from './PreMove.vue';
 
 const debug = ref(false);
 const hunter = useHunter();
+const state = useHunterState();
 
 const emit = defineEmits(['change-view']);
 
@@ -150,19 +104,10 @@ const fomatRatingRich = (rating) => {
     */
     const numberspan = (value) =>
         `<span class="color-${value}">${plusOrEqualsOrNothing(value)}${value}</span>`;
+    const capitalized = (key) => key[0].toUpperCase() + key.slice(1);
     return Object.entries(rating)
-        .map(([key, value]) => `${key}${numberspan(value)}`)
+        .map(([key, value]) => `${capitalized(key)}${numberspan(value)}`)
         .join(', ');
-};
-
-const addAllMoves = () => {
-    const h = hunter.value;
-    const all_moves = h.playbook.moves.children.options;
-    for (const move of all_moves) {
-        if (!h.moves.find((m) => m.name === move.name)) {
-            h.moves.push(move);
-        }
-    }
 };
 </script>
 

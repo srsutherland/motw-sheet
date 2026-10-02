@@ -9,11 +9,18 @@
 <section id="hunters" v-if="hunters.length">
     <h2>Hunters</h2>
     <ul>
-        <li v-for="h in hunters" :key="h.uid">
-            <a :href="`?view=${h.uid}`" @click.prevent="$emit('change-view', 'show', h)">
-                {{ h.playbook?.emoji }} {{ h.toString() }}
+        <li v-for="entry in hunters" :key="entry.uid">
+            <span v-if="entry.outdated" title="Saved by an older version of the app">
+                {{ entry.label }} (old format)
+            </span>
+            <a
+                v-else
+                :href="`?view=${entry.uid}`"
+                @click.prevent="$emit('change-view', 'show', entry.hunter)"
+            >
+                {{ entry.hunter.playbook?.emoji }} {{ entry.hunter.toString() }}
             </a>
-            <button @click="onDelete(h)" title="Delete">🗑</button>
+            <button @click="onDelete(entry)" title="Delete">🗑</button>
         </li>
     </ul>
 </section>
@@ -27,9 +34,10 @@ const emit = defineEmits(['change-view']);
 
 const hunters = ref(listHunters());
 
-const onDelete = (h) => {
-    if (confirm(`Delete ${h.toString()}? This can't be undone.`)) {
-        deleteHunter(h.uid);
+const onDelete = (entry) => {
+    const label = entry.hunter?.toString() ?? entry.label;
+    if (confirm(`Delete ${label}? This can't be undone.`)) {
+        deleteHunter(entry.uid);
         hunters.value = listHunters();
     }
 };

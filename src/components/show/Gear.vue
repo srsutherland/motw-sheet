@@ -3,13 +3,11 @@
     <span class="heading">Gear</span>:
     <div class="indent">
         <ul>
-            <li v-for="gear in hunter?.gear" :key="gear.name">
+            <li v-for="(gear, i) in allGear" :key="i">
                 <span>
                     {{ gear.name }}
                 </span>
-                (<span v-for="tag in gear.tags" :key="tag" class="tag">
-                    {{ tag }}{{ " " }}
-                </span>)
+                <span v-if="gear.tags?.length">({{ gear.tags.join(' ') }})</span>
             </li>
         </ul>
     </div>
@@ -17,9 +15,17 @@
 </template>
 
 <script setup>
-import { useHunter } from '@/HunterContext';
+import { computed } from 'vue';
+import { useHunter, useHunterState } from '@/HunterContext';
 
 const hunter = useHunter();
+const state = useHunterState();
+
+// Starting gear, then gear added during play
+const allGear = computed(() => [
+    ...state.value.gear.map((item) => item.node),
+    ...hunter.value.extra_gear,
+]);
 </script>
 
 <style scoped>

@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1",
+  "id": "basic_moves",
+  "type": "basic_moves",
+  "name": "Basic Moves",
+  "options": [
+    { "type": "basic_move", "name": "Manipulate Someone", "rating": "charm" },
+    { "type": "basic_move", "name": "Act Under Pressure", "rating": "cool" },
+    { "type": "basic_move", "name": "Help Out", "rating": "cool" },
+    { "type": "basic_move", "name": "Investigate a Mystery", "rating": "sharp" },
+    { "type": "basic_move", "name": "Read a Bad Situation", "rating": "sharp" },
+    { "type": "basic_move", "name": "Kick Some Ass", "rating": "tough" },
+    { "type": "basic_move", "name": "Protect Someone", "rating": "tough" },
+    {
+      "type": "basic_move",
+      "name": "Use Magic",
+      "rating": "weird",
+      "options": [
+        { "id": "inflict_harm", "description": "Inflict harm" },
+        { "id": "enchant_weapon", "description": "Enchant a weapon" },
+        { "id": "beyond_human", "description": "Do one thing that is beyond human limitations" },
+        { "id": "bar", "description": "Bar a place or portal to a specific person or a type of creature" },
+        { "id": "trap", "description": "Trap a specific person, minion, or monster" },
+        { "id": "banish", "description": "Banish a spirit or curse from the person, object, or place it inhabits" },
+        { "id": "summon", "description": "Summon a monster into the world" },
+        { "id": "communicate", "description": "Communicate with something that you do not share a language with" },
+        { "id": "observe", "description": "Observe another place or time" },
+        { "id": "heal", "description": "Heal 1-harm from an injury, or cure a disease, or neutralize a poison" }
+      ]
+    }
+  ]
+}

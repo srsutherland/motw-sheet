@@ -1,302 +1,224 @@
 {
-  "name": "The Spell-Slinger",
+  "schema_version": "0.1",
   "id": "the_spellslinger",
+  "type": "playbook",
+  "name": "The Spell-Slinger",
   "emoji": "🔮",
-  "quote": "Fight fire with <b>fire magic</b>.",
-  "luck_max": 7,
-  "luck_special": "When you spend a point of Luck, the official council of wizards is going to poke their nose into your business...",
-  "harm_max": 7,
-  "harm_unstable": 4,
+  "quote": "Fight fire with **fire magic**.",
+  "luck": {
+    "max": 7,
+    "special": "**Spell-slinger Special:** When you spend a point of Luck, the official council of wizards is going to poke their nose into your business..."
+  },
+  "harm": { "max": 7, "unstable": 4 },
   "pre_moves": [
     {
-      "heading": "Combat Magic",
-      "description": [
-        "You have a few attack spells you can use as weapons.",
-        "When you use these spells to [[kick some ass]], roll <span class='roll'>+Weird</span> instead of +Tough.",
-        "Sometimes the situation may require you to [[act under pressure]] to cast your spell without problems.",
-        "<br>Your combat spells can combine any of your base spells with any of your effects."
-      ],
-      "children": {
-        "heading": "Combat magic, pick <span class='pick'>three</span> (with at least one base):",
-        "id": "combat_magic_picks",
-        "opt_type": "pick",
-        "pick": 3,
-        "options": [
-          {
-            "heading": "Bases:",
-            "pick": ">1",
-            "options": [
-              {
-                "name": "Blast",
-                "description": "2-harm magic close obvious loud",
-                "tags": ["2-harm", "magic", "close", "obvious", "loud"]
-              },
-              {
-                "name": "Ball",
-                "description": "1-harm magic area close obvious loud",
-                "tags": ["1-harm", "magic", "area", "close", "obvious", "loud"]
-              },
-              {
-                "name": "Missile",
-                "description": "1-harm magic far obvious loud",
-                "tags": ["1-harm", "magic", "far", "obvious", "loud"]
-              },
-              {
-                "name": "Wall",
-                "description": "1-harm magic barrier close 1-armour obvious loud",
-                "tags": ["1-harm", "magic", "barrier", "close", "1-armour", "obvious", "loud"]
-              }
-            ]
-          },
-          {
-            "heading": "Effects:",
-            "options": [
-              {
-                "name": "Fire",
-                "description": "Add '+2 harm fire' to a base. If you get a 10+ on a combat magic roll, the fire won’t spread.",
-                "tags": ["+2 harm", "fire"]
-              },
-              {
-                "name": "Force or Wind",
-                "description": "Add '+1 harm forceful' to a base, or '+1 armour' to a wall.",
-                "tags": ["+1 harm", "forceful", "+1 armour"]
-              },
-              {
-                "name": "Lightning or Entropy",
-                "description": "Add '+1 harm messy' to a base.",
-                "tags": ["+1 harm", "messy"]
-              },
-              {
-                "name": "Frost or Ice",
-                "description": "Adds '-1 harm +2 armour' to a wall, or '+1 harm restraining' to other bases.",
-                "tags": ["-1 harm", "+2 armour", "restraining"]
-              },
-              {
-                "name": "Earth",
-                "description": "Add 'forceful restraining' to a base.",
-                "tags": ["forceful", "restraining"]
-              },
-              {
-                "name": "Necromantic",
-                "description": "Add 'life-drain' to a base.",
-                "tags": ["life-drain"]
-              }
-            ]
-          }
-        ]
-      }
-    }
-  ],
-  "moves": {
-    "heading": "Moves",
-    "description": "You get all the basic moves and four Spell-slinger moves.",
-    "you_get": {
-      "description": "You have this one:",
-      "children": {
-        "name": "Tools and Techniques",
-        "id": "tools_and_techniques_cross_offs",
-        "description": "To use your combat magic effectively you rely on a collection of tools and techniques. Cross off one; you’ll need the rest.",
-        "opt_type": "cross",
-        "cross": 1,
-        "options": [
-          {
-            "name": "Consumables",
-            "description": "You need certain supplies— powders, oils, etc—on hand, some will be used up each cast. If you don’t have them, take 1-harm ignore-armour when you cast."
-          },
-          {
-            "name": "Foci",
-            "description": "You need wands, staves, and other obvious props to focus. If you don’t have what you need, your combat magic does 1 less harm."
-          },
-          {
-            "name": "Gestures",
-            "description": "You need to wave your hands around to use combat magic. If you’re restrained, take -1 ongoing for combat magic."
-          },
-          {
-            "name": "Incantations",
-            "description": "You must speak in an arcane language to control your magic. If you use combat magic without speaking, act under pressure to avoid scrambling your thoughts."
-          }
-        ]
-      }
-    },
-    "children": {
-      "heading": "Pick three of these:",
-      "opt_type": "pick",
-      "pick": 3,
+      "id": "combat_magic",
+      "type": "feature",
+      "name": "Combat Magic",
+      "description": "You have a few attack spells you can use as weapons. When you use these spells to [[kick some ass]], roll <span class='roll'>+Weird</span> instead of +Tough. Sometimes the situation may require you to [[act under pressure]] to cast your spell without problems.\n\nYour combat spells can combine any of your base spells with any of your effects.",
+      "heading": "Combat magic, pick three (with at least one base):",
       "options": [
         {
-          "name": "Advanced Arcane Training",
-          "description": "If you have two of your three Tools and Techniques at the ready, you may ignore the third one.",
-          "type":"move"
-        },
-        {
-          "name": "Arcane Reputation",
-          "description": "Pick three big organizations or groups in the supernatural community. They’ve heard of you and respect your power. With affected humans, take +1 forward when you manipulate them. You may manipulate affected monsters as if they were human, with no bonus.",
-          "type":"move"
-        },
-        {
-          "name": "Could’ve Been Worse",
-          "description": "When you miss a use magic roll, choose one of the following options instead of losing control of the magic: Fizzle or This Is Gonna Suck.",
-          "type":"move",
-          "children": [
+          "id": "bases",
+          "name": "Bases",
+          "options": [
             {
-              "name": "Fizzle",
-              "description": "The preparations and materials for the spell are ruined. You’ll have to start over from scratch with the prep time doubled."
+              "name": "Blast",
+              "description": "2-harm magic close obvious loud",
+              "tags": ["2-harm", "magic", "close", "obvious", "loud"]
             },
             {
-              "name": "This Is Gonna Suck",
-              "description": "The effect happens, but you trigger all of the listed glitches but one. You pick the one you avoid"
+              "name": "Ball",
+              "description": "1-harm magic area close obvious loud",
+              "tags": ["1-harm", "magic", "area", "close", "obvious", "loud"]
+            },
+            {
+              "name": "Missile",
+              "description": "1-harm magic far obvious loud",
+              "tags": ["1-harm", "magic", "far", "obvious", "loud"]
+            },
+            {
+              "name": "Wall",
+              "description": "1-harm magic barrier close 1-armour obvious loud",
+              "tags": ["1-harm", "magic", "barrier", "close", "1-armour", "obvious", "loud"]
             }
           ]
         },
         {
-          "name": "Enchanted Clothing",
-          "description": "Pick an article of everyday clothing — it’s enchanted without any change in appearance. Take -1 harm from any source that tries to get at you through the garment.",
-          "type":"move"
-        },
-        {
-          "name": "Forensic Divination",
-          "description": "When you successfully investigate a mystery, ask \"What magic was done here?\" as a free extra question.",
-          "type":"move"
-        },
-        {
-          "name": "Go Big or Go Home",
-          "description": "When you must use magic as a requirement for Big Magic, take +1 ongoing to those use magic rolls.",
-          "type":"move"
-        },
-        {
-          "name": "Not My Fault",
-          "description": "+1 to act under pressure when dealing with the consequences of your own spell-casting.",
-          "type":"move"
-        },
-        {
-          "name": "Practitioner",
-          "description": "Choose two effects available to you under use magic. Take +1 to use magic whenever you choose one of those effects.",
-          "type":"move",
-          "pick": 2,
+          "id": "effects",
+          "name": "Effects",
           "options": [
-            "Inflict harm",
-            "Enchant a weapon",
-            "Do one thing that is beyond human limitations",
-            "Bar a place or portal to a specific person or a type of creature",
-            "Trap a specific person, minion, or monster",
-            "Banish a spirit or curse from the person, object, or place it inhabits",
-            "Summon a monster into the world",
-            "Communicate with something that you do not share a language with",
-            "Observe another place or time",
-            "Heal 1-harm from an injury, or cure a disease, or neutralize a poison"
+            {
+              "name": "Fire",
+              "description": "Add \"+2 harm fire\" to a base. If you get a 10+ on a combat magic roll, the fire won't spread."
+            },
+            {
+              "name": "Force or Wind",
+              "description": "Add \"+1 harm forceful\" to a base, or \"+1 armour\" to a wall."
+            },
+            { "name": "Lightning or Entropy", "description": "Add \"+1 harm messy\" to a base." },
+            {
+              "name": "Frost or Ice",
+              "description": "Adds \"-1 harm +2 armour\" to a wall, or \"+1 harm restraining\" to other bases."
+            },
+            { "name": "Earth", "description": "Add \"forceful restraining\" to a base." },
+            { "name": "Necromantic", "description": "Add \"life-drain\" to a base." }
           ]
-        },
-        {
-          "name": "Shield Spell",
-          "description": "When you protect someone, gain 2-armour against any harm that is transferred to you. This doesn’t stack with your other armour, if any.",
-          "type":"move"
-        },
-        {
-          "name": "Third Eye",
-          "description": "When you read a bad situation, open up your third eye for a moment to take in extra information. Take +1 hold on any result of 7 or more. You can see invisible things. On a miss, you may still get 1 hold, but you’re exposed to supernatural danger.",
-          "type":"move"
         }
       ]
     }
-  },
-  "gear": {
-    "heading": "Gear",
-    "description": "You don’t need much—aside from any foci or consumables to power your magic. Still, it’s good to carry some backup.",
-    "opt_type": "pick",
-    "pick": 1,
+  ],
+  "moves": {
+    "id": "moves",
+    "description": "You get all the basic moves and four Spell-slinger moves.",
     "options": [
       {
-        "name": "Old revolver",
-        "tags": ["2-harm", "close", "reload", "loud"],
-        "type":"gear"
+        "id": "tools_and_techniques",
+        "type": "move",
+        "name": "Tools and Techniques",
+        "description": "To use your combat magic effectively you rely on a collection of tools and techniques. Cross off one; you'll need the rest.",
+        "choose": { "from": "@this", "cross": 1 },
+        "options": [
+          {
+            "name": "Consumables",
+            "description": "You need certain supplies— powders, oils, etc— on hand, some will be used up each cast. If you don't have them, take 1-harm ignore-armour when you cast."
+          },
+          {
+            "name": "Foci",
+            "description": "You need wands, staves, and other obvious props to focus. If you don't have what you need, your combat magic does 1 less harm."
+          },
+          {
+            "name": "Gestures",
+            "description": "You need to wave your hands around to use combat magic. If you're restrained, take -1 ongoing for combat magic."
+          },
+          {
+            "name": "Incantations",
+            "description": "You must speak in an arcane language to control your magic. If you use combat magic without speaking, [[act under pressure]] to avoid scrambling your thoughts."
+          }
+        ]
       },
       {
-        "name": "Ritual knife",
-        "tags": ["1-harm", "hand"],
-        "type":"gear"
+        "type": "move",
+        "name": "Advanced Arcane Training",
+        "description": "If you have two of your three Tools and Techniques at the ready, you may ignore the third one."
       },
       {
-        "name": "Heirloom sword",
-        "tags": ["2-harm", "hand", "messy"],
-        "type":"gear"
+        "type": "move",
+        "name": "Arcane Reputation",
+        "description": "Pick three big organizations or groups in the supernatural community. They've heard of you and respect your power. With affected humans, take +1 forward when you [[manipulate someone|manipulate]] them. You may [[manipulate someone|manipulate]] affected monsters as if they were human, with no bonus.",
+        "choose": { "from": "@this", "pick": 3 },
+        "options": ["@textbox", "@textbox", "@textbox"]
+      },
+      {
+        "id": "couldve_been_worse",
+        "type": "move",
+        "name": "Could've Been Worse",
+        "description": "When you miss a [[use magic]] roll, choose one of the following options instead of losing control of the magic: Fizzle or This Is Gonna Suck.",
+        "details": [
+          {
+            "name": "Fizzle",
+            "description": "The preparations and materials for the spell are ruined. You'll have to start over from scratch with the prep time doubled."
+          },
+          {
+            "name": "This Is Gonna Suck",
+            "description": "The effect happens, but you trigger all of the listed glitches but one. You pick the one you avoid."
+          }
+        ]
+      },
+      {
+        "type": "move",
+        "name": "Enchanted Clothing",
+        "description": "Pick an article of everyday clothing—it's enchanted without any change in appearance. Take -1 harm from any source that tries to get at you through the garment.",
+        "choose": { "from": "@this", "pick": 1 },
+        "options": ["@textbox"]
+      },
+      {
+        "type": "move",
+        "name": "Forensic Divination",
+        "description": "When you successfully [[investigate a mystery]], ask \"What magic was done here?\" as a free extra question."
+      },
+      {
+        "type": "move",
+        "name": "Go Big or Go Home",
+        "description": "When you must [[use magic]] as a requirement for [[Big Magic]], take +1 ongoing to those [[use magic]] rolls."
+      },
+      {
+        "type": "move",
+        "name": "Not My Fault",
+        "description": "+1 to [[act under pressure]] when dealing with the consequences of your own spell-casting."
+      },
+      {
+        "type": "move",
+        "name": "Practitioner",
+        "description": "Choose two effects available to you under [[use magic]]. Take +1 to [[use magic]] whenever you choose one of those effects.",
+        "choose": { "from": "@this", "pick": 2 },
+        "options": [
+          "@basic_moves.use_magic.inflict_harm",
+          "@basic_moves.use_magic.enchant_weapon",
+          "@basic_moves.use_magic.beyond_human",
+          "@basic_moves.use_magic.bar",
+          "@basic_moves.use_magic.trap",
+          "@basic_moves.use_magic.banish",
+          "@basic_moves.use_magic.summon",
+          "@basic_moves.use_magic.communicate",
+          "@basic_moves.use_magic.observe",
+          "@basic_moves.use_magic.heal"
+        ]
+      },
+      {
+        "type": "move",
+        "name": "Shield Spell",
+        "description": "When you [[protect someone]], gain 2-armour against any harm that is transferred to you. This doesn't stack with your other armour, if any."
+      },
+      {
+        "type": "move",
+        "name": "Third Eye",
+        "description": "When you [[read a bad situation]], you can **open up your third eye** for a moment to take in extra information. Take +1 hold on any result of 7 or more, plus you can see invisible things. On a miss, you may still get 1 hold, but you're exposed to supernatural danger. Unfiltered hidden reality is rough on the mind!"
       }
+    ]
+  },
+  "post_moves": [],
+  "starting_gear": {
+    "id": "starting_gear",
+    "description": "You don't need much—aside from any foci or consumables to power your magic. Still, it's good to carry some backup.",
+    "heading": "Pick one:",
+    "options": [
+      { "type": "gear", "name": "Old revolver", "tags": ["2-harm", "close", "reload", "loud"] },
+      { "type": "gear", "name": "Ritual knife", "tags": ["1-harm", "hand"] },
+      { "type": "gear", "name": "Heirloom sword", "tags": ["2-harm", "hand", "messy"] }
+    ]
+  },
+  "getting_started": {
+    "description": "To make your Spell-slinger, first pick a name. Then follow the instructions below to decide your look, ratings, Combat Magic, moves, and gear. Finally, introduce yourself and pick history.",
+    "grant": ["@basic_moves", "@moves.tools_and_techniques"],
+    "choose": [
+      { "from": "@combat_magic", "pick": 3, "limits": { "@combat_magic.bases": { "min": 1 }} },
+      { "from": "@moves", "pick": 3 },
+      { "from": "@starting_gear", "pick": 1 }
     ]
   },
   "look": {
-    "heading": "Look",
-    "children": [
-      {
-        "name": "clothes",
-        "type": "look",
-        "format": "___ clothes",
-        "opt_type": "input",
-        "options": [
-          "rumpled",
-          "stylish",
-          "goth",
-          "old-fashioned"
-        ]
-      },
-      {
-        "name": "eyes",
-        "type": "look",
-        "format": "___ eyes",
-        "opt_type": "input",
-        "options": [
-          "shadowed",
-          "fierce",
-          "weary",
-          "sparkling"
-        ]
-      }
+    "heading": "Look, pick one from each list:",
+    "clothes": {
+      "format": "___ clothes",
+      "options": ["rumpled", "stylish", "goth", "old fashioned", "@textbox"]
+    },
+    "eyes": { "format": "___ eyes", "options": ["shadowed", "fierce", "weary", "sparkling", "@textbox"] }
+  },
+  "ratings_base": {
+    "heading": "Ratings, pick one line:",
+    "options": [
+      { "charm": -1, "cool": 1, "sharp": 1, "tough": 0, "weird": 2 },
+      { "charm": 0, "cool": -1, "sharp": 1, "tough": 1, "weird": 2 },
+      { "charm": -1, "cool": 0, "sharp": 2, "tough": -1, "weird": 2 },
+      { "charm": 1, "cool": 0, "sharp": 1, "tough": -1, "weird": 2 },
+      { "charm": 0, "cool": 0, "sharp": 1, "tough": 0, "weird": 2 }
     ]
   },
-  "ratings": [
-    {
-      "Charm": -1,
-      "Cool": 1,
-      "Sharp": 1,
-      "Tough": 0,
-      "Weird": 2
-    },
-    {
-      "Charm": 0,
-      "Cool": -1,
-      "Sharp": 1,
-      "Tough": 1,
-      "Weird": 2
-    },
-    {
-      "Charm": -1,
-      "Cool": 0,
-      "Sharp": 2,
-      "Tough": -1,
-      "Weird": 2
-    },
-    {
-      "Charm": 1,
-      "Cool": 0,
-      "Sharp": 1,
-      "Tough": -1,
-      "Weird": 2
-    },
-    {
-      "Charm": 0,
-      "Cool": 0,
-      "Sharp": 1,
-      "Tough": 0,
-      "Weird": 2
-    }
-  ],
   "introductions": {
-    "heading": "Introductions",
-    "description": [
-      "When you get here, wait for everyone to catch up so you can do your introductions together.",
-      "Go around the group. On your turn, introduce your Spell-slinger by name and look, and tell the group what they know about you."
-    ]
+    "description": "When you get here, wait for everyone to catch up so you can do your introductions together.\n\nGo around the group. On your turn, introduce your Spell-slinger by name and look, and tell the group what they know about you."
   },
   "history": {
-    "heading": "History",
     "description": "Go around the group again. On your turn, pick one for each of the other hunters:",
     "options": [
       "They act as your conscience when the power goes to your head. Ask them about the last time this happened.",
@@ -304,161 +226,172 @@
       "Mentor from another life. Ask them what they taught you.",
       "Your magic-fueled rescue of them introduced them to the supernatural. Tell them what creature was after them.",
       "An old rivalry has turned into a tight friendship. Tell them what you once fought over.",
-      "You thought they were dead, and now they’re back. What “killed” them?",
-      "They’re an on-again/off-again love interest. Ask them what keeps you apart. Tell them what keeps you together.",
-      "A comrade-in-arms. You’ve faced the biggest threats together."
+      "You thought they were dead, and now they're back. What \"killed\" them?",
+      "They're an on-again/off-again love interest. Ask them what keeps you apart. Tell them what keeps you together.",
+      "A comrade-in-arms. You've faced the biggest threats together."
     ]
   },
-  "improvements":{
-    "heading": "Improvements",
+  "leveling_up": {
+    "description": "When you have filled all five experience boxes, you level up. Erase the marks and pick an improvement from the following list:"
+  },
+  "improvements": {
+    "id": "improvements",
     "options": [
       {
+        "id": "weird",
+        "type": "improvement",
         "description": "Get +1 Weird, max +3",
-        "increase": "weird",
-        "amount": 1,
-        "max": 3,
-        "type": "improvement"
+        "effects": [{ "rating": "weird", "add": 1, "max": 3 }]
       },
       {
+        "id": "cool",
+        "type": "improvement",
         "description": "Get +1 Cool, max +2",
-        "increase": "cool",
-        "amount": 1,
-        "max": 2,
-        "type": "improvement"
+        "effects": [{ "rating": "cool", "add": 1, "max": 2 }]
       },
       {
+        "id": "sharp",
+        "type": "improvement",
         "description": "Get +1 Sharp, max +2",
-        "increase": "sharp",
-        "amount": 1,
-        "max": 2,
-        "type": "improvement"
+        "effects": [{ "rating": "sharp", "add": 1, "max": 2 }]
       },
       {
+        "id": "tough",
+        "type": "improvement",
         "description": "Get +1 Tough, max +2",
-        "increase": "tough",
-        "amount": 1,
-        "max": 2,
-        "type": "improvement"
+        "effects": [{ "rating": "tough", "add": 1, "max": 2 }]
       },
       {
+        "id": "move_1",
+        "type": "improvement",
         "description": "Take another Spell-slinger move",
-        "increase": "moves",
-        "amount": 1,
-        "type": "improvement"
+        "choose": { "from": "@moves", "pick": 1 }
       },
       {
+        "id": "move_2",
+        "type": "improvement",
         "description": "Take another Spell-slinger move",
-        "increase": "moves",
-        "amount": 1,
-        "type": "improvement"
+        "choose": { "from": "@moves", "pick": 1 }
       },
       {
+        "id": "other_move_1",
+        "type": "improvement",
         "description": "Take a move from another playbook",
-        "increase": "moves",
-        "amount": 1,
-        "type": "improvement"
+        "choose": { "from": "@*.moves", "pick": 1 }
       },
       {
+        "id": "other_move_2",
+        "type": "improvement",
         "description": "Take a move from another playbook",
-        "increase": "moves_other",
-        "amount": 1,
-        "type": "improvement"
+        "choose": { "from": "@*.moves", "pick": 1 }
       },
       {
-        "description": "Take another Combat Magic pick.",
-        "increase": "combat_magic_picks",
-        "amount": 1,
-        "type": "improvement"
+        "id": "more_combat_magic",
+        "type": "improvement",
+        "description": "Take another Combat Magic pick",
+        "choose": { "from": "@combat_magic", "pick": 1 }
       }
     ]
   },
   "improvements_advanced": {
-    "heading": "Advanced Improvements",
-    "description": "Once you’ve taken five improvements from the Improvements list, you can take one of the following advanced improvements instead of an improvement.",
+    "id": "improvements_advanced",
+    "description": "After you have leveled up *five* times, you qualify for advanced improvements in addition to these. They're below.",
+    "requires": { "level": 5 },
     "options": [
       {
+        "id": "any_rating",
+        "type": "improvement",
         "description": "Get +1 to any rating, max +3",
-        "increase": "any_rating",
-        "amount": 1,
-        "max": 3,
-        "type": "improvement"
+        "choose": { "from": "@this", "pick": 1 },
+        "options": [
+          { "id": "charm", "effects": [{ "rating": "charm", "add": 1, "max": 3 }] },
+          { "id": "cool", "effects": [{ "rating": "cool", "add": 1, "max": 3 }] },
+          { "id": "sharp", "effects": [{ "rating": "sharp", "add": 1, "max": 3 }] },
+          { "id": "tough", "effects": [{ "rating": "tough", "add": 1, "max": 3 }] },
+          { "id": "weird", "effects": [{ "rating": "weird", "add": 1, "max": 3 }] }
+        ]
       },
       {
+        "id": "change_playbook",
+        "type": "improvement",
         "description": "Change this hunter to a new type",
-        "special": "change_playbook",
-        "type": "improvement"
+        "special": "change_playbook"
       },
       {
+        "id": "second_hunter",
+        "type": "improvement",
         "description": "Create a second hunter to play as well as this one",
-        "special": "second_hunter",
-        "type": "improvement"
+        "special": "second_hunter"
       },
       {
+        "id": "advanced_basic_1",
+        "type": "improvement",
         "description": "Mark two of the basic moves as advanced",
-        "increase": "advanced_moves",
-        "amount": 2,
-        "type": "improvement"
+        "choose": { "from": "@basic_moves", "pick": 2 },
+        "effects": [{ "advance_basic": true}]
       },
       {
+        "id": "advanced_basic_2",
+        "type": "improvement",
         "description": "Mark another two of the basic moves as advanced",
-        "increase": "advanced_moves",
-        "amount": 2,
-        "type": "improvement"
+        "choose": { "from": "@basic_moves", "pick": 2 },
+        "effects": [{ "advance_basic": true}]
       },
       {
+        "id": "retire",
+        "type": "improvement",
         "description": "Retire this hunter to safety",
-        "special": "retire",
-        "type": "improvement"
+        "special": "retire"
       },
       {
+        "id": "erase_luck",
+        "type": "improvement",
         "description": "Erase one used Luck mark from your playbook",
-        "decrease": "luck_used",
-        "amount": 1,
-        "type": "improvement"
+        "effects": [{ "luck": -1 }]
       },
       {
+        "id": "more_combat_magic_2",
+        "type": "improvement",
         "description": "Take another Combat Magic pick",
-        "increase": "combat_magic_picks",
-        "amount": 1,
-        "type": "improvement"
+        "choose": { "from": "@combat_magic", "pick": 1 }
       },
       {
+        "id": "cross_off_tt",
+        "type": "improvement",
         "description": "You may cross off another option from your Tools and Techniques",
-        "decrease": "tools_and_techniques_cross_offs",
-        "amount": 1,
-        "type": "improvement"
+        "choose": { "from": "@moves.tools_and_techniques", "cross": 1 }
       }
     ]
   },
   "improvements_mythic": {
-    "heading": "Mythic Improvements",
-    "description": "If you have taken at least twelve improvements, at your Keeper’s discretion, you can take one of the following improvements by spending more than one improvement.",
+    "id": "improvements_mythic",
+    "description": "If you have taken at least twelve improvements, at your Keeper's discretion, you can take one of the following improvements by spending more than one improvement.",
+    "requires": { "improvements": 12 },
     "options": [
       {
+        "id": "mythic_erase_luck",
+        "type": "improvement",
         "description": "Erase one used Luck mark from your playbook",
-        "decrease": "luck_used",
-        "amount": 1,
-        "type": "improvement"
+        "effects": [{ "luck": -1 }]
       },
       {
+        "id": "mythic_move",
+        "type": "improvement",
         "description": "Take another Spell-Slinger move.",
-        "increase": "moves",
-        "amount": 1,
-        "type": "improvement"
+        "choose": { "from": "@moves", "pick": 1 }
       },
       {
+        "id": "mythic_more_combat_magic",
+        "type": "improvement",
         "description": "Take another Combat Magic pick",
-        "increase": "combat_magic_picks",
-        "amount": 1,
-        "type": "improvement"
+        "choose": { "from": "@combat_magic", "pick": 1 }
       },
       {
+        "id": "mythic_other_move",
+        "type": "improvement",
         "description": "Take a move from another playbook",
-        "increase": "moves_other",
-        "amount": 1,
-        "type": "improvement"
+        "choose": { "from": "@*.moves", "pick": 1 }
       }
     ]
-  },
-  "end": "end"
+  }
 }

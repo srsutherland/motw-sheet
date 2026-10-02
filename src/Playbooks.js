@@ -1,14 +1,11 @@
 import spellslinger from '@pb/the-spellslinger.json';
-const default_playbook_list = [
+import basicMoves from '@pb/basic_moves.json';
+
+const playbooks = [
     spellslinger,
 ];
 
-const default_playbooks_by_name = {};
-default_playbook_list.forEach(playbook => {
-    default_playbooks_by_name[playbook.name] = playbook;
-});
+// Every data file, by id: the namespaces an absolute reference can start with.
+const files = new Map([...playbooks, basicMoves].map((file) => [file.id, file]));
 
-const playbooks = default_playbook_list;
-const playbooks_by_name = default_playbooks_by_name;
-
-export { playbooks, playbooks_by_name };
+export { playbooks, basicMoves, files };

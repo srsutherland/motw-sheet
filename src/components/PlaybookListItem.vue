@@ -7,12 +7,14 @@
         @click="$parent.$emit('select-playbook', pb)"
     >
         <h3>{{ pb.emoji }} {{ pb.name }}</h3>
-        <div class="subtitle" v-html="pb.quote"></div>
+        <MarkdownText class="subtitle" :text="pb.quote" inline />
     </div>
 </li>
 </template>
 
 <script setup>
+import MarkdownText from './MarkdownText.vue';
+
 const props = defineProps({
     pb: {
         type: Object,

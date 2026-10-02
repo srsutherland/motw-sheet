@@ -20,8 +20,8 @@
 <section class="show-moves">
     <h2>Moves</h2>
     <ul>
-        <li v-for="move in hunter?.moves" :key="move.name">
-            <Move :move="move" />
+        <li v-for="move in state.moves" :key="move.path">
+            <Move :move="move.node" :path="move.path" />
         </li>
     </ul>
 </section>
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { useHunter } from '@/HunterContext';
+import { useHunter, useHunterState } from '@/HunterContext';
 import Ratings from './show/Ratings.vue';
 import HarmTrack from './show/HarmTrack.vue';
 import LuckTrack from './show/LuckTrack.vue';
@@ -39,6 +39,7 @@ import Move from './show/Move.vue';
 import { exportHunter } from '@/Storage';
 
 const hunter = useHunter();
+const state = useHunterState();
 </script>
 
 <style scoped>

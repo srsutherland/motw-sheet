@@ -7,20 +7,33 @@ const saveHunter = (hunter) => {
     localStorage.setItem(PREFIX + hunter.uid, JSON.stringify(hunter));
 };
 
+// Null if there's no such hunter, or it was saved in an older format.
 const loadHunter = (uid) => {
     const json = localStorage.getItem(PREFIX + uid);
     return json ? Hunter.fromJSON(JSON.parse(json)) : null;
 };
 
+// Every saved hunter: { uid, hunter }, or { uid, outdated: true, label } for an older format.
+// Migrating old saves isn't MVP (plan/Roadmap.md); they can only be deleted.
 const listHunters = () => {
-    const hunters = [];
+    const entries = [];
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key.startsWith(PREFIX)) {
-            hunters.push(loadHunter(key.slice(PREFIX.length)));
+        if (!key.startsWith(PREFIX)) {
+            continue;
+        }
+        const uid = key.slice(PREFIX.length);
+        const hunter = loadHunter(uid);
+        if (hunter) {
+            entries.push({ uid, hunter });
+        } else {
+            const data = JSON.parse(localStorage.getItem(key));
+            const name = data?.name || '<Nameless>';
+            const label = `${name} the ${data?.playbook_name || '<Unknown Playbook>'}`;
+            entries.push({ uid, outdated: true, label });
         }
     }
-    return hunters;
+    return entries;
 };
 
 const deleteHunter = (uid) => {
@@ -44,6 +57,9 @@ const importHunter = async (file) => {
         throw new Error(`${file.name} is not a hunter file`);
     }
     const hunter = Hunter.fromJSON(data);
+    if (!hunter) {
+        throw new Error(`${file.name} was saved by an older version of the app`);
+    }
     const existing = loadHunter(hunter.uid);
     if (existing && !confirm(`Overwrite the saved copy of ${existing.toString()}?`)) {
         return null;

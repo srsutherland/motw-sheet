@@ -1,64 +1,62 @@
-export class Hunter {
+const SCHEMA_VERSION = '0.1';
+
+// A `choose` or `grant` may be one rule or a list of them.
+const asList = (value) => (value === undefined ? [] : [].concat(value));
+
+class Hunter {
+    schema_version = SCHEMA_VERSION;
     uid = undefined;
-    playbook = undefined;
-    name = '';
+    playbook = undefined; // the hunter's own, modifiable copy (DESIGN.md: "full" hunter JSON)
     playbook_name = '';
-    moves = undefined;
+    name = '';
+    pronouns = '';
+    look = {}; // look list key -> text
+    ratings_base = null; // a copy of the chosen ratings line
+    history = []; // { name, option, notes }
+    getting_started = []; // choices, one list per getting_started choose
+    nested = {}; // item path -> choices, one list per choose on that item
+    improvements = []; // { id, choices }, in the order taken
+    extra_gear = []; // gear added during play: { name, tags }
     harm = 0;
-    unstable = 0;
+    unstable = false;
     luck = 0;
     experience = 0;
     level = 0;
-    stats = {
-        charm: 0,
-        cool: 0,
-        sharp: 0,
-        tough: 0,
-        weird: 0,
-    };
-    gear = undefined;
 
     constructor(playbook, name) {
         this.uid = crypto.randomUUID();
-        this.playbook = playbook;
+        this.playbook = structuredClone(playbook);
         this.playbook_name = playbook.name;
         if (name) {
             this.name = name;
         }
-        this.harm_max = playbook.harm_max;
-        this.harm_unstable = playbook.harm_unstable;
-        this.luck_max = playbook.luck_max;
-        this.moves = [];
-        this.gear = [];
-        this.improvements = [];
-
-        // Add IDs to the improvements
-        const imp_ids = new Set();
-        const pb_id = this.stringToId(this.playbook_name);
-        this.playbook.improvements.options.forEach((improvement) => {
-            const escaped = this.stringToId(improvement.description);
-            let new_id = `${pb_id}-${escaped}-`;
-            let i = 1;
-            while (imp_ids.has(new_id+i)) {
-                i++;
-            }
-            new_id = new_id+i;
-            imp_ids.add(new_id);
-            improvement.id = new_id;
-        });
+        this.getting_started = asList(playbook.getting_started?.choose).map(() => []);
     }
 
-    // rebuild a Hunter from its JSON form (skips the constructor)
+    // Returns null for data saved in an older format.
     static fromJSON(data) {
+        if (data?.schema_version !== SCHEMA_VERSION) {
+            return null;
+        }
         return Object.assign(Object.create(Hunter.prototype), data);
+    }
+
+    get harm_max() {
+        return this.playbook.harm.max;
+    }
+
+    get harm_unstable() {
+        return this.playbook.harm.unstable;
+    }
+
+    get luck_max() {
+        return this.playbook.luck.max;
     }
 
     // string representation of the hunter
     toString() {
         return `${this.name || '<Nameless>'} the ${this.playbook_name || '<Unknown Playbook>'}`;
     }
-
-    stringToId(str) {
-        return str.toLowerCase().replace(/[^a-z0-9]/g, '_');
-    }
 }
+
+export { Hunter, SCHEMA_VERSION, asList };
