@@ -54,6 +54,17 @@ const ensureChoices = (h, key) => {
     return choicesFor(h, key);
 };
 
+// The getting_started rules, each with its index (for its source key) and the
+// absolute path of the container it picks from.
+const gettingStartedRules = (h) => {
+    const gs = h.playbook.getting_started;
+    return asList(gs?.choose).map((rule, index) => ({
+        rule,
+        index,
+        container: refPath(rule.from, h.playbook, gs),
+    }));
+};
+
 const sameKey = (a, b) => a.kind === b.kind && a.rule === b.rule && a.index === b.index
     && a.path === b.path;
 
@@ -220,6 +231,6 @@ const basicMovesByRating = (rating) => basicMoves.options.filter((move) => move.
 
 export {
     RATINGS, IMPROVEMENT_LISTS,
-    verbOf, countOf, findImprovement, choicesFor, ensureChoices, sameKey,
+    verbOf, countOf, findImprovement, choicesFor, ensureChoices, sameKey, gettingStartedRules,
     hunterState, picksUnder, crossedUnder, basicMovesByRating,
 };

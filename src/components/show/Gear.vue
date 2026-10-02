@@ -4,10 +4,8 @@
     <div class="indent">
         <ul>
             <li v-for="(gear, i) in allGear" :key="i">
-                <span>
-                    {{ gear.name }}
-                </span>
-                <span v-if="gear.tags?.length">({{ gear.tags.join(' ') }})</span>
+                {{ gear.name }}
+                <span v-if="gear.tags?.length" class="tags">({{ gear.tags.join(' ') }})</span>
             </li>
         </ul>
     </div>
