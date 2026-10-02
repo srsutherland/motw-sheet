@@ -7,6 +7,7 @@
 :root {
     --color-button-background: #ffffff;
     --color-button-border: #333333;
+    --color-dialog-background: #ffffff;
 }
 
 header h1 {
@@ -32,6 +33,7 @@ header h1 {
     :root {
         --color-button-background: #333333;
         --color-button-border: #666666;
+        --color-dialog-background: #1a1a1a;
     }
     
     /* Example: Change the color of headings */

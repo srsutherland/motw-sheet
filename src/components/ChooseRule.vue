@@ -39,6 +39,7 @@
                         </span>
                     </span>
                     <span v-if="takenElsewhere(entry)" class="note">(already have)</span>
+                    <span v-else-if="atMax(entry)" class="note">(already at max)</span>
                 </label>
                 <!-- an option with its own choice: Practitioner, Arcane Reputation... -->
                 <div v-if="isChosen(entry) && verb === 'pick' && entry.node?.choose" class="nested">
@@ -65,7 +66,7 @@ import { computed, inject, ref } from 'vue';
 import { asList } from '@/Hunter';
 import { useHunter, useHunterState } from '@/HunterContext';
 import { TEXTBOX, optionsOf, pathOf, refPath } from '@/PlaybookData';
-import { choicesFor, countOf, ensureChoices, sameKey, verbOf } from '@/HunterState';
+import { choicesFor, countOf, ensureChoices, overMax, sameKey, verbOf } from '@/HunterState';
 import MarkdownText from './MarkdownText.vue';
 
 const props = defineProps({
@@ -149,11 +150,15 @@ const unmetLimits = computed(() => limits.value
     .filter((limit) => limit.min !== undefined && limit.inGroup < limit.min)
     .map((limit) => `at least ${limit.min} from ${limit.name}`));
 
+// An option whose effect would push a rating past its max ("+1 to any rating, max +3")
+const atMax = (entry) => !isChosen(entry)
+    && (entry.node?.effects ?? []).some((effect) => overMax(effect, state.value));
+
 const isDisabled = (entry) => {
     if (isChosen(entry) || bendRules.value) {
         return false;
     }
-    if (takenElsewhere(entry) || chosen.value.length >= count.value) {
+    if (takenElsewhere(entry) || atMax(entry) || chosen.value.length >= count.value) {
         return true;
     }
     const groupPath = entry.group ? pathOf(entry.group, hunter.value.playbook) : null;

@@ -226,6 +226,60 @@ const crossedUnder = (state, path) => new Set(state.crosses
     .filter((c) => c.path.startsWith(`${path}.`))
     .map((c) => c.path));
 
+// Improvements taken (not counting one being picked right now).
+const takenImprovements = (h) => h.improvements.filter((taken) => !taken.pending);
+
+// Each level up earns one improvement (DESIGN.md: level is separate from improvements).
+const unspentImprovements = (h) => Math.max(0, h.level - takenImprovements(h).length);
+
+// Would this effect push a rating past its max? ("Get +1 Weird, max +3")
+const overMax = (effect, state) => effect.rating !== undefined && effect.max !== undefined
+    && state.ratings[effect.rating] + (effect.add ?? 0) > effect.max;
+
+// The improvement lists, each with whether it's unlocked yet.
+// `levelsBefore`: level ups completed before the one this improvement is for.
+const improvementLists = (h, levelsBefore) => IMPROVEMENT_LISTS
+    .filter((key) => h.playbook[key])
+    .map((key) => {
+        const list = h.playbook[key];
+        const requires = list.requires ?? {};
+        const unlocked = (requires.level === undefined || levelsBefore >= requires.level)
+            && (requires.improvements === undefined
+                || takenImprovements(h).length >= requires.improvements);
+        return { key, list, unlocked };
+    });
+
+// Why an improvement can't be taken right now, or null if it can.
+const improvementBlocked = (h, improvement, state) => {
+    if (takenImprovements(h).some((taken) => taken.id === improvement.id)) {
+        return 'already taken';
+    }
+    if ((improvement.effects ?? []).some((effect) => overMax(effect, state))) {
+        return 'rating already at max';
+    }
+    for (const rule of asList(improvement.choose)) {
+        const options = optionsOf(rule.from, h.playbook, improvement)
+            .filter((entry) => entry.textbox || !(entry.node?.effects ?? [])
+                .some((effect) => overMax(effect, state)));
+        if (!options.length) {
+            return rule.from.startsWith('@*.')
+                ? 'no other playbooks yet'
+                : 'nothing left to choose';
+        }
+    }
+    return null;
+};
+
+// One-off effects, applied once when the improvement is taken ("Erase one used Luck mark").
+// Ongoing effects (ratings) are computed in hunterState instead.
+const applyOneOffEffects = (h, improvement) => {
+    for (const effect of improvement.effects ?? []) {
+        if (effect.luck) {
+            h.luck = Math.min(h.luck_max, Math.max(0, h.luck + effect.luck));
+        }
+    }
+};
+
 // Basic moves by the rating they roll, for the ratings table.
 const basicMovesByRating = (rating) => basicMoves.options.filter((move) => move.rating === rating);
 
@@ -233,4 +287,6 @@ export {
     RATINGS, IMPROVEMENT_LISTS,
     verbOf, countOf, findImprovement, choicesFor, ensureChoices, sameKey, gettingStartedRules,
     hunterState, picksUnder, crossedUnder, basicMovesByRating,
+    takenImprovements, unspentImprovements, overMax, improvementLists, improvementBlocked,
+    applyOneOffEffects,
 };

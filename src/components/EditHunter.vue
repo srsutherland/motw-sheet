@@ -145,6 +145,36 @@
     </fieldset>
 </section>
 
+<!-- Improvements Section (taken on the view page, when leveling up) -->
+<section v-if="takenWithIndex.length" id="improvements">
+    <fieldset>
+        <legend>Improvements</legend>
+        <div
+            v-for="{ taken, index, improvement } in takenWithIndex"
+            :key="taken.id"
+            class="improvement"
+        >
+            <p>
+                <MarkdownText :text="improvement.description" inline />
+                <button
+                    class="small"
+                    title="Remove (leaves an improvement unspent)"
+                    @click="hunter.improvements.splice(index, 1)"
+                >
+                    ✕
+                </button>
+            </p>
+            <ChooseRule
+                v-for="(rule, i) in asList(improvement.choose)"
+                :key="i"
+                :rule="rule"
+                :self="improvement"
+                :source-key="{ kind: 'improvement', index, rule: i }"
+            />
+        </div>
+    </fieldset>
+</section>
+
 <button @click="$emit('change-view', 'show', hunter)">Save</button>
 <!-- escape valve: lift pick limits -->
 <label class="bend-rules" title="Lift pick limits, e.g. for house rules or Keeper rulings">
@@ -157,7 +187,7 @@
 import { computed, provide, ref } from 'vue';
 import { asList } from '@/Hunter';
 import { useHunter, useHunterState } from '@/HunterContext';
-import { gettingStartedRules } from '@/HunterState';
+import { findImprovement, gettingStartedRules } from '@/HunterState';
 import { TEXTBOX } from '@/PlaybookData';
 import ChooseRule from './ChooseRule.vue';
 import MarkdownText from './MarkdownText.vue';
@@ -183,6 +213,15 @@ const lookLists = computed(() => Object.fromEntries(Object.entries(hunter.value.
 const grantedMoves = computed(() => state.value.moves
     .filter((move) => move.source === 'getting_started'
         && !state.value.picks.some((p) => p.path === move.path)));
+
+// Taken improvements with their index in hunter.improvements (for their source keys)
+const takenWithIndex = computed(() => hunter.value.improvements
+    .map((taken, index) => ({
+        taken,
+        index,
+        improvement: findImprovement(hunter.value.playbook, taken.id)?.improvement,
+    }))
+    .filter(({ taken, improvement }) => improvement && !taken.pending));
 
 const otherRules = computed(() => {
     const id = playbookId.value;

@@ -44,7 +44,10 @@ class Hunter {
         if (data?.schema_version !== SCHEMA_VERSION) {
             return null;
         }
-        return Object.assign(Object.create(Hunter.prototype), data);
+        const hunter = Object.assign(Object.create(Hunter.prototype), data);
+        // an improvement still being picked when the page was closed
+        hunter.improvements = hunter.improvements.filter((taken) => !taken.pending);
+        return hunter;
     }
 
     get harm_max() {

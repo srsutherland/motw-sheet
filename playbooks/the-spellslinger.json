@@ -304,11 +304,11 @@
         "description": "Get +1 to any rating, max +3",
         "choose": { "from": "@this", "pick": 1 },
         "options": [
-          { "id": "charm", "effects": [{ "rating": "charm", "add": 1, "max": 3 }] },
-          { "id": "cool", "effects": [{ "rating": "cool", "add": 1, "max": 3 }] },
-          { "id": "sharp", "effects": [{ "rating": "sharp", "add": 1, "max": 3 }] },
-          { "id": "tough", "effects": [{ "rating": "tough", "add": 1, "max": 3 }] },
-          { "id": "weird", "effects": [{ "rating": "weird", "add": 1, "max": 3 }] }
+          { "id": "charm", "name": "Charm", "effects": [{ "rating": "charm", "add": 1, "max": 3 }] },
+          { "id": "cool", "name": "Cool", "effects": [{ "rating": "cool", "add": 1, "max": 3 }] },
+          { "id": "sharp", "name": "Sharp", "effects": [{ "rating": "sharp", "add": 1, "max": 3 }] },
+          { "id": "tough", "name": "Tough", "effects": [{ "rating": "tough", "add": 1, "max": 3 }] },
+          { "id": "weird", "name": "Weird", "effects": [{ "rating": "weird", "add": 1, "max": 3 }] }
         ]
       },
       {
