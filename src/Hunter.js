@@ -3,6 +3,12 @@ const SCHEMA_VERSION = '0.1';
 // A `choose` or `grant` may be one rule or a list of them.
 const asList = (value) => (value === undefined ? [] : [].concat(value));
 
+// "{name} the {playbook}"; playbook names already start with "The"
+const hunterTitle = (name, playbookName) => {
+    const playbook = (playbookName || '<Unknown Playbook>').replace(/^the\s+/i, '');
+    return `${name || '<Nameless>'} the ${playbook}`;
+};
+
 class Hunter {
     schema_version = SCHEMA_VERSION;
     uid = undefined;
@@ -53,10 +59,10 @@ class Hunter {
         return this.playbook.luck.max;
     }
 
-    // string representation of the hunter
+    // string representation of the hunter: "Alice the Spell-Slinger"
     toString() {
-        return `${this.name || '<Nameless>'} the ${this.playbook_name || '<Unknown Playbook>'}`;
+        return hunterTitle(this.name, this.playbook_name);
     }
 }
 
-export { Hunter, SCHEMA_VERSION, asList };
+export { Hunter, SCHEMA_VERSION, asList, hunterTitle };

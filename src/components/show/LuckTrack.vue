@@ -8,11 +8,17 @@
         start="Okay"
         end="Doomed"
     />
+    <MarkdownText
+        v-if="hunter.playbook.luck.special"
+        class="indent special"
+        :text="hunter.playbook.luck.special"
+    />
 </section>
 </template>
 
 <script setup>
 import { useHunter } from '@/HunterContext';
+import MarkdownText from '../MarkdownText.vue';
 import Track from './Track.vue';
 
 const hunter = useHunter();

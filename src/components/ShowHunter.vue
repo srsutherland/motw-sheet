@@ -1,7 +1,6 @@
 <template>
 <h1 class="hunter-name">
-    {{ hunter?.name || "NoName" }}
-    {{ hunter?.playbook_name ||  "The Unknown" }}
+    {{ hunter.toString() }}
     <button
         @click="$emit('change-view', 'edit', hunter)"
         title="Edit"
@@ -12,11 +11,15 @@
         ⭳
     </button>
 </h1>
+<p v-if="hunter.pronouns || look" class="subtitle">
+    <span v-if="hunter.pronouns">({{ hunter.pronouns }})</span>
+    {{ look }}
+</p>
 <Ratings />
 <LuckTrack />
 <HarmTrack />
 <ExperienceTrack />
-<Gear />
+<Feature v-for="feature in features('pre_moves')" :key="feature.path" :feature="feature" />
 <section class="show-moves">
     <h2>Moves</h2>
     <ul>
@@ -25,21 +28,34 @@
         </li>
     </ul>
 </section>
-
+<Gear />
+<Feature v-for="feature in features('post_moves')" :key="feature.path" :feature="feature" />
+<History />
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { useHunter, useHunterState } from '@/HunterContext';
 import Ratings from './show/Ratings.vue';
 import HarmTrack from './show/HarmTrack.vue';
 import LuckTrack from './show/LuckTrack.vue';
 import ExperienceTrack from './show/ExperienceTrack.vue';
+import Feature from './show/Feature.vue';
 import Gear from './show/Gear.vue';
+import History from './show/History.vue';
 import Move from './show/Move.vue';
 import { exportHunter } from '@/Storage';
 
 const hunter = useHunter();
 const state = useHunterState();
+
+const features = (area) => state.value.features.filter((feature) => feature.area === area);
+
+// "rumpled clothes, weary eyes"
+const look = computed(() => Object.entries(hunter.value.playbook.look)
+    .filter(([key]) => key !== 'heading' && hunter.value.look[key])
+    .map(([key, list]) => list.format.replace('___', hunter.value.look[key]))
+    .join(', '));
 </script>
 
 <style scoped>

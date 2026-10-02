@@ -1,4 +1,4 @@
-import { Hunter } from '@/Hunter';
+import { Hunter, hunterTitle } from '@/Hunter';
 
 // Each hunter is stored under its own key, so saving one doesn't rewrite the rest.
 const PREFIX = 'motw-sheet.hunter.';
@@ -28,8 +28,7 @@ const listHunters = () => {
             entries.push({ uid, hunter });
         } else {
             const data = JSON.parse(localStorage.getItem(key));
-            const name = data?.name || '<Nameless>';
-            const label = `${name} the ${data?.playbook_name || '<Unknown Playbook>'}`;
+            const label = hunterTitle(data?.name, data?.playbook_name);
             entries.push({ uid, outdated: true, label });
         }
     }
