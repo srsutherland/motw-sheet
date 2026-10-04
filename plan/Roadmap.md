@@ -66,4 +66,3 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - A hunter's playbook copy is indexed once; editing the copy (it's meant to be modifiable) won't re-index it. Nothing edits it yet.
 - Saves from before schema 0.1 can only be deleted
 - ESLint `max-len` with `ignoreStrings` skips any line that contains a string, so most long lines aren't reported
-- No automated tests in the repo (browser tests were run, but live outside it)
