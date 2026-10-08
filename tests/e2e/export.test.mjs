@@ -18,7 +18,9 @@ const [download] = await Promise.all([a.waitForEvent('download'), a.getByTitle('
 check('file name', download.suggestedFilename(), 'Exported the Spell-Slinger.json');
 const file = await download.path();
 const data = JSON.parse(fs.readFileSync(file, 'utf8'));
-check('exported format', [data.schema_version, data.name, data.playbook.id, data.getting_started[1]], ['0.1', 'Exported', 'the_spellslinger', ['the_spellslinger.moves.third_eye']]);
+check('exported format', [data.schema_version, data.name, data.playbook.id, data.playbook_updated], ['0.1.2026.10.07', 'Exported', 'the_spellslinger', '2026-10-07']);
+check('exported choices', data.getting_started.choose[1], { from: '@moves', choices: ['@the_spellslinger.moves.third_eye'] });
+check('exported ratings and moves', [data.ratings, data.moves.map((m) => m.name)], [{ charm: -1, cool: 0, sharp: 2, tough: -1, weird: 2 }, ['Tools and Techniques', 'Third Eye']]);
 
 // Import into a fresh browser (empty localStorage)
 const b = await watchedPage(await browser.newContext(), errors);
@@ -27,6 +29,12 @@ await b.locator('input[type=file]').setInputFiles(file);
 await b.waitForURL(/\?view=/);
 check('imported view', [(await b.locator('h1.hunter-name').innerText()).includes('Exported'), await b.locator('.stat-bubble').allInnerTexts()], [true, ['-1', '0', '2', '-1', '2']]);
 check('imported moves', (await b.locator('.show-move .move-name').allInnerTexts()).map((t) => t.trim()), ['Tools and Techniques:', 'Third Eye:']);
+
+// The converted sample hunter loads
+await b.locator('header a').click();
+await b.locator('input[type=file]').setInputFiles('samples/Dave Johnson the Spell-Slinger.json');
+await b.waitForURL(/view=39e87fd3/);
+check('sample hunter', [(await b.locator('h1.hunter-name').innerText()).includes('Dave Johnson the Spell-Slinger'), await b.locator('.stat-bubble').allInnerTexts()], [true, ['-1', '2', '2', '0', '3']]);
 
 // An old-format file is refused, and an old save is listed as old
 const old = file + '.old.json';

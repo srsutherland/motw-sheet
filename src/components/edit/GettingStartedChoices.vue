@@ -1,10 +1,10 @@
 <template>
 <ChooseRule
-    v-for="{ rule, index } in rules"
+    v-for="{ rule, index, set } in rules"
     :key="index"
     :rule="rule"
     :self="hunter.playbook.getting_started"
-    :source-key="{ kind: 'getting_started', rule: index }"
+    :set="set"
 />
 </template>
 

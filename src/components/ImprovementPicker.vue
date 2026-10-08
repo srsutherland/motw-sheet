@@ -33,6 +33,7 @@
                 </li>
             </ul>
         </section>
+        <button v-if="levelUp" @click="skip">Skip: level up, take an improvement later</button>
         <button @click="cancel">Cancel</button>
     </template>
 
@@ -46,10 +47,12 @@
             :key="i"
             :rule="rule"
             :self="pending"
-            :source-key="{ kind: 'improvement', index: pendingIndex, rule: i }"
+            :set="choiceSet(hunter.improvements[pendingIndex], pending, i)"
         />
-        <p v-if="!complete" class="note">Make every choice to take this improvement.</p>
-        <button :disabled="!complete" @click="confirm">Take it</button>
+        <p v-if="!complete" class="note">
+            Not every choice is made yet; you can finish them later on the edit page.
+        </p>
+        <button @click="confirm">Take it</button>
         <button @click="back">Back</button>
     </template>
 </dialog>
@@ -60,11 +63,11 @@
 // The improvement being picked is added to the hunter right away (marked pending),
 // so its choices are stored like any other and previewed live on the sheet.
 import { computed, onMounted, ref } from 'vue';
-import { asList } from '@/Hunter';
+import { asList, makeChoose } from '@/Hunter';
 import { useHunter, useHunterState } from '@/HunterContext';
 import {
-    applyOneOffEffects, choicesFor, countOf, findImprovement, improvementBlocked, improvementLists,
-    unspentImprovements,
+    applyOneOffEffects, choiceSet, costOf, countOf, findImprovement, improvementBlocked,
+    improvementLists, unspentImprovements,
 } from '@/HunterState';
 import ChooseRule from './ChooseRule.vue';
 import MarkdownText from './MarkdownText.vue';
@@ -94,7 +97,11 @@ const levelsBefore = computed(() => {
 });
 
 const lists = computed(() => improvementLists(hunter.value, levelsBefore.value));
-const blocked = (improvement) => improvementBlocked(hunter.value, improvement, state.value);
+// Improvements available to spend, counting the one this level up earns
+const points = computed(() => unspentImprovements(hunter.value) + (props.levelUp ? 1 : 0));
+const blocked = (improvement) => improvementBlocked(
+    hunter.value, improvement, state.value, points.value,
+);
 
 const pendingIndex = computed(() => hunter.value.improvements.findIndex((taken) => taken.pending));
 const pending = computed(() => {
@@ -103,14 +110,16 @@ const pending = computed(() => {
 });
 
 const complete = computed(() => asList(pending.value?.choose).every((rule, i) => {
-    const key = { kind: 'improvement', index: pendingIndex.value, rule: i };
-    return (choicesFor(hunter.value, key) ?? []).length >= (rule.min ?? countOf(rule));
+    const set = choiceSet(hunter.value.improvements[pendingIndex.value], pending.value, i);
+    return (set?.choices ?? []).length >= (rule.min ?? countOf(rule));
 }));
 
 const choose = (improvement) => {
+    const cost = costOf(hunter.value.playbook, improvement.id);
     hunter.value.improvements.push({
         id: improvement.id,
-        choices: asList(improvement.choose).map(() => []),
+        ...(cost > 1 ? { cost } : {}),
+        choose: makeChoose(improvement),
         pending: true,
     });
 };
@@ -128,6 +137,14 @@ const confirm = () => {
         h.level += 1;
         h.experience = 0;
     }
+    close();
+};
+
+// Level up without taking an improvement; it stays unspent (e.g. to save for a mythic one)
+const skip = () => {
+    const h = hunter.value;
+    h.level += 1;
+    h.experience = 0;
     close();
 };
 

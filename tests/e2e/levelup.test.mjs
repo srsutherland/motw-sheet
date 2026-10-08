@@ -48,7 +48,7 @@ await fillXp();
 await page.getByRole('button', { name: 'Level up' }).click();
 check('taken improvement blocked', await option('Get +1 Weird, max +3').isDisabled(), true);
 await option('Take another Spell-slinger move').first().click();
-check('take it needs a choice', await dialog.getByRole('button', { name: 'Take it' }).isDisabled(), true);
+check('unfinished choices allowed, with a note', [await dialog.getByRole('button', { name: 'Take it' }).isDisabled(), (await dialog.innerText()).includes('finish them later')], [false, true]);
 await dialog.getByRole('checkbox', { name: /^Practitioner\b/ }).check();
 await dialog.getByRole('checkbox', { name: /^Heal\b/ }).check();
 await dialog.getByRole('checkbox', { name: /^Summon\b/ }).check();

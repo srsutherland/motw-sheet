@@ -1,10 +1,31 @@
 import { Hunter, hunterTitle } from '@/Hunter';
+import { hunterState } from '@/HunterState';
 
 // Each hunter is stored under its own key, so saving one doesn't rewrite the rest.
 const PREFIX = 'motw-sheet.hunter.';
 
+// The hunter as saved: its own data, plus `ratings` and `moves` computed for anyone reading
+// the file (DESIGN.md: "full" version, so moves are full objects). Ignored when loading.
+const toSaved = (hunter) => {
+    const state = hunterState(hunter);
+    const computed = {
+        ratings: state.ratings,
+        moves: state.moves.map((move) => move.node),
+    };
+    const saved = {};
+    for (const [key, value] of Object.entries(JSON.parse(JSON.stringify(hunter)))) {
+        saved[key] = value;
+        if (key === 'ratings_base') {
+            saved.ratings = computed.ratings;
+        } else if (key === 'improvements') {
+            saved.moves = computed.moves;
+        }
+    }
+    return saved;
+};
+
 const saveHunter = (hunter) => {
-    localStorage.setItem(PREFIX + hunter.uid, JSON.stringify(hunter));
+    localStorage.setItem(PREFIX + hunter.uid, JSON.stringify(toSaved(hunter)));
 };
 
 // Null if there's no such hunter, or it was saved in an older format.
@@ -40,7 +61,7 @@ const deleteHunter = (uid) => {
 };
 
 const exportHunter = (hunter) => {
-    const blob = new Blob([JSON.stringify(hunter, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(toSaved(hunter), null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `${hunter.toString()}.json`;
@@ -67,4 +88,4 @@ const importHunter = async (file) => {
     return hunter;
 };
 
-export { saveHunter, loadHunter, listHunters, deleteHunter, exportHunter, importHunter };
+export { toSaved, saveHunter, loadHunter, listHunters, deleteHunter, exportHunter, importHunter };

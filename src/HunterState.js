@@ -1,11 +1,12 @@
-import { asList } from '@/Hunter';
+import { toRaw } from 'vue';
+import { asList, makeRecord } from '@/Hunter';
 import { basicMoves } from '@/Playbooks';
 import {
     TEXTBOX, PLACEABLE, isContainer, lookup, optionsOf, pathOf, refPath, resolve,
 } from '@/PlaybookData';
 
 // Everything about a hunter that's computed from its choices rather than stored
-// (see plan/Schema Notes.md: "Getting started", "Choosing", "Placement").
+// (see plan/Schema Notes.md: "Getting started", "Choosing", "Placement", "Hunter JSON").
 
 const RATINGS = ['charm', 'cool', 'sharp', 'tough', 'weird'];
 const VERBS = ['pick', 'cross', 'remove'];
@@ -27,68 +28,88 @@ const findImprovement = (playbook, id) => {
     return null;
 };
 
-// Where a source's choices are stored on the hunter.
-//   { kind: 'getting_started', rule: i }
-//   { kind: 'improvement', index: k, rule: i }
-//   { kind: 'nested', path, rule: i }
-const choicesFor = (h, key) => {
-    if (key.kind === 'getting_started') {
-        return h.getting_started[key.rule];
-    }
-    if (key.kind === 'improvement') {
-        return h.improvements[key.index]?.choices[key.rule];
-    }
-    return h.nested[key.path]?.[key.rule];
+// Stored choices are references ("@the_spellslinger.moves.third_eye"), records with their
+// own choices ({ ref, choose }), or free text ({ id: "@textbox", text }).
+const refOf = (choice) => (typeof choice === 'string' ? choice : choice?.ref);
+const pathOfChoice = (choice) => refOf(choice)?.slice(1);
+
+// The hunter's { from, choices } for rule i of `holder`, inside `record` (the hunter-side
+// object that mirrors the holder). Matched by `from`: the nth rule with a given `from`
+// goes with the nth entry with that `from`.
+const choiceSet = (record, holder, i) => {
+    const rules = asList(holder?.choose);
+    const from = rules[i]?.from;
+    const nth = rules.slice(0, i).filter((rule) => rule.from === from).length;
+    return (record?.choose ?? []).filter((set) => set.from === from)[nth] ?? null;
 };
 
-// Same, creating the list if needed (call when changing choices, not while rendering).
-const ensureChoices = (h, key) => {
-    if (key.kind === 'getting_started') {
-        h.getting_started[key.rule] ??= [];
-    } else if (key.kind === 'improvement') {
-        h.improvements[key.index].choices[key.rule] ??= [];
+// The hunter-side record of something granted by `holder` (e.g. Tools and Techniques).
+const grantRecord = (record, ref) => (record?.grant ?? []).find((g) => refOf(g) === ref);
+
+// The record a picked option is stored as, inside a choice set (for its own choices).
+const pickRecord = (set, path) => set?.choices.find((c) => typeof c === 'object'
+    && c.ref === `@${path}`) ?? null;
+
+// Pick or unpick an option. Options with their own choices are stored as { ref, choose }.
+const toggleChoice = (set, path, node) => {
+    const ref = `@${path}`;
+    const at = set.choices.findIndex((choice) => refOf(choice) === ref);
+    if (at >= 0) {
+        set.choices.splice(at, 1);
     } else {
-        h.nested[key.path] ??= [];
-        h.nested[key.path][key.rule] ??= [];
+        set.choices.push(makeRecord(ref, node));
     }
-    return choicesFor(h, key);
 };
 
-// The getting_started rules, each with its index (for its source key) and the
-// absolute path of the container it picks from.
+// Set the nth free-text choice in a set ("" removes it).
+const setTextChoice = (set, n, text) => {
+    const existing = set.choices.filter((c) => c?.id === TEXTBOX)[n];
+    text = text.trim();
+    if (existing && text) {
+        existing.text = text;
+    } else if (existing) {
+        set.choices.splice(set.choices.indexOf(existing), 1);
+    } else if (text) {
+        set.choices.push({ id: TEXTBOX, text });
+    }
+};
+
+// The getting_started rules, each with the hunter's choice set and the absolute path of
+// the container it picks from.
 const gettingStartedRules = (h) => {
     const gs = h.playbook.getting_started;
     return asList(gs?.choose).map((rule, index) => ({
         rule,
         index,
+        set: choiceSet(h.getting_started, gs, index),
         container: refPath(rule.from, h.playbook, gs),
     }));
 };
 
-const sameKey = (a, b) => a.kind === b.kind && a.rule === b.rule && a.index === b.index
-    && a.path === b.path;
+const advancesBasicMoves = (holder) => (holder?.effects ?? []).some((e) => e.advance_basic);
 
 // Replay every source of choices, in order: getting_started, each improvement in the
 // order taken, then the choices that belong to items the hunter has gained.
 const hunterState = (h) => {
     const root = h.playbook;
-    const picks = []; // { path, node, text, container, source, key }
-    const crosses = []; // { path, container, source }
-    const gained = new Map(); // path -> { node, source }
+    const picks = []; // { path, node, text, container, source, set, advance }
+    const crosses = []; // { path, container, source, set }
+    const gained = new Map(); // path -> { node, source, record }
     const effects = []; // { effect, source }
 
-    const gain = (node, source) => {
+    const gain = (node, source, record) => {
         const path = pathOf(node, root);
         if (path && !gained.has(path)) {
-            gained.set(path, { node, source });
+            gained.set(path, { node, source, record: typeof record === 'object' ? record : null });
         }
     };
 
-    const process = ({ holder, self, keyBase, source }) => {
+    // `holder`: the playbook object with grant/choose/effects; `record`: the hunter's side
+    const process = ({ holder, record, self, source }) => {
         for (const ref of asList(holder.grant)) {
             const node = resolve(ref, root, self);
             if (PLACEABLE.has(node?.type)) {
-                gain(node, source);
+                gain(node, source, grantRecord(record, ref));
             } else if (isContainer(node)) {
                 // granting a list grants everything in it (e.g. @basic_moves)
                 for (const entry of optionsOf(ref, root, self)) {
@@ -98,79 +119,74 @@ const hunterState = (h) => {
                 }
             }
         }
+        const advance = advancesBasicMoves(holder);
         asList(holder.choose).forEach((rule, i) => {
-            const key = { ...keyBase, rule: i };
+            const set = choiceSet(record, holder, i);
             const verb = verbOf(rule);
             const container = rule.from.startsWith('@*.')
                 ? rule.from
                 : refPath(rule.from, root, self);
-            for (const choice of choicesFor(h, key) ?? []) {
+            for (const choice of set?.choices ?? []) {
                 if (choice?.id === TEXTBOX) {
-                    picks.push({ text: choice.text, container, source, key });
+                    picks.push({ text: choice.text, container, source, set: toRaw(set) });
                     continue;
                 }
-                const node = lookup(choice, root);
+                const path = pathOfChoice(choice);
+                const node = lookup(path, root);
                 if (verb === 'cross') {
-                    crosses.push({ path: choice, container, source, key });
+                    crosses.push({ path, container, source, set: toRaw(set) });
                 } else if (verb === 'remove') {
-                    const at = picks.findIndex((p) => p.path === choice);
+                    const at = picks.findIndex((p) => p.path === path);
                     if (at >= 0) {
                         picks.splice(at, 1);
                     }
-                    gained.delete(choice);
+                    gained.delete(path);
                 } else if (node) {
-                    picks.push({ path: choice, node, container, source, key });
-                    if (PLACEABLE.has(node.type)) {
-                        gain(node, source);
+                    picks.push({ path, node, container, source, set: toRaw(set), advance });
+                    // marking a basic move advanced doesn't gain it
+                    if (PLACEABLE.has(node.type) && !advance) {
+                        gain(node, source, choice);
                     }
                     for (const effect of node.effects ?? []) {
-                        effects.push({ effect, source, key });
+                        effects.push({ effect, source });
                     }
                 }
             }
         });
         for (const effect of holder.effects ?? []) {
-            effects.push({ effect, source, keyBase });
+            effects.push({ effect, source });
         }
     };
 
     process({
         holder: root.getting_started ?? {},
+        record: h.getting_started,
         self: root.getting_started,
-        keyBase: { kind: 'getting_started' },
         source: 'getting_started',
     });
-    h.improvements.forEach((taken, index) => {
+    for (const taken of h.improvements) {
         const found = findImprovement(root, taken.id);
         if (found) {
-            process({
-                holder: found.improvement,
-                self: found.improvement,
-                keyBase: { kind: 'improvement', index },
-                source: taken.id,
-            });
+            const improvement = found.improvement;
+            process({ holder: improvement, record: taken, self: improvement, source: taken.id });
         }
-    });
+    }
     // Choices belonging to a gained item (Practitioner, Tools and Techniques, ...).
     // Gaining more items while doing this adds them to the end of the queue.
     const done = new Set();
     for (let more = true; more;) {
         more = false;
-        for (const [path, { node }] of [...gained]) {
+        for (const [path, { node, record }] of [...gained]) {
             if (!done.has(path) && node.choose) {
                 done.add(path);
                 more = true;
-                process({
-                    holder: { choose: node.choose },
-                    self: node,
-                    keyBase: { kind: 'nested', path },
-                    source: path,
-                });
+                process({ holder: { choose: node.choose }, record, self: node, source: path });
             }
         }
     }
 
-    const all = [...gained.entries()].map(([path, { node, source }]) => ({ path, node, source }));
+    const all = [...gained.entries()]
+        .map(([path, { node, source, record }]) => ({ path, node, source, record }));
     const ofType = (type) => all.filter((item) => item.node.type === type);
 
     // Your own playbook's features are always on your sheet; others' only when gained.
@@ -187,13 +203,8 @@ const hunterState = (h) => {
         }
     }
 
-    const advanced = new Set();
-    for (const { effect, source } of effects) {
-        if (effect.advance_basic) {
-            picks.filter((p) => p.source === source && p.node?.type === 'basic_move')
-                .forEach((p) => advanced.add(p.path));
-        }
-    }
+    const advanced = new Set(picks.filter((p) => p.advance && p.node?.type === 'basic_move')
+        .map((p) => p.path));
 
     return {
         picks,
@@ -229,8 +240,15 @@ const crossedUnder = (state, path) => new Set(state.crosses
 // Improvements taken (not counting one being picked right now).
 const takenImprovements = (h) => h.improvements.filter((taken) => !taken.pending);
 
+// What an improvement costs, in improvements (mythic: more than one).
+const costOf = (playbook, id) => {
+    const found = findImprovement(playbook, id);
+    return found?.improvement.cost ?? found?.list.cost ?? 1;
+};
+
 // Each level up earns one improvement (DESIGN.md: level is separate from improvements).
-const unspentImprovements = (h) => Math.max(0, h.level - takenImprovements(h).length);
+const unspentImprovements = (h) => Math.max(0, h.level - takenImprovements(h)
+    .reduce((sum, taken) => sum + (taken.cost ?? costOf(h.playbook, taken.id)), 0));
 
 // Would this effect push a rating past its max? ("Get +1 Weird, max +3")
 const overMax = (effect, state) => effect.rating !== undefined && effect.max !== undefined
@@ -250,9 +268,14 @@ const improvementLists = (h, levelsBefore) => IMPROVEMENT_LISTS
     });
 
 // Why an improvement can't be taken right now, or null if it can.
-const improvementBlocked = (h, improvement, state) => {
+// `points`: improvements available to spend.
+const improvementBlocked = (h, improvement, state, points) => {
     if (takenImprovements(h).some((taken) => taken.id === improvement.id)) {
         return 'already taken';
+    }
+    const cost = costOf(h.playbook, improvement.id);
+    if (cost > points) {
+        return `costs ${cost} improvements; you have ${points}`;
     }
     if ((improvement.effects ?? []).some((effect) => overMax(effect, state))) {
         return 'rating already at max';
@@ -285,8 +308,9 @@ const basicMovesByRating = (rating) => basicMoves.options.filter((move) => move.
 
 export {
     RATINGS, IMPROVEMENT_LISTS,
-    verbOf, countOf, findImprovement, choicesFor, ensureChoices, sameKey, gettingStartedRules,
+    verbOf, countOf, findImprovement, refOf, pathOfChoice, choiceSet, grantRecord, pickRecord,
+    toggleChoice, setTextChoice, gettingStartedRules, advancesBasicMoves,
     hunterState, picksUnder, crossedUnder, basicMovesByRating,
-    takenImprovements, unspentImprovements, overMax, improvementLists, improvementBlocked,
+    takenImprovements, costOf, unspentImprovements, overMax, improvementLists, improvementBlocked,
     applyOneOffEffects,
 };

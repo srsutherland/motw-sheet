@@ -38,7 +38,9 @@
                             ({{ entry.node.tags.join(' ') }})
                         </span>
                     </span>
-                    <span v-if="takenElsewhere(entry)" class="note">(already have)</span>
+                    <span v-if="takenElsewhere(entry)" class="note">
+                        ({{ advancing ? 'already advanced' : 'already have' }})
+                    </span>
                     <span v-else-if="atMax(entry)" class="note">(already at max)</span>
                 </label>
                 <!-- an option with its own choice: Practitioner, Arcane Reputation... -->
@@ -48,7 +50,7 @@
                         :key="i"
                         :rule="nested"
                         :self="entry.node"
-                        :source-key="{ kind: 'nested', path: entry.path, rule: i }"
+                        :set="choiceSet(pickRecord(set, entry.path), entry.node, i)"
                     />
                 </div>
             </li>
@@ -62,17 +64,20 @@
 // One `choose` rule (plan/Schema Notes.md: "Choosing"): its options, the hunter's
 // choices for it, and its limits. Fewer than the full count is always allowed;
 // going over a limit needs "bend the rules" (provided by the edit page).
-import { computed, inject, ref } from 'vue';
+import { computed, inject, ref, toRaw } from 'vue';
 import { asList } from '@/Hunter';
 import { useHunter, useHunterState } from '@/HunterContext';
 import { TEXTBOX, optionsOf, pathOf, refPath } from '@/PlaybookData';
-import { choicesFor, countOf, ensureChoices, overMax, sameKey, verbOf } from '@/HunterState';
+import {
+    advancesBasicMoves, choiceSet, countOf, overMax, pickRecord, refOf, setTextChoice, toggleChoice,
+    verbOf,
+} from '@/HunterState';
 import MarkdownText from './MarkdownText.vue';
 
 const props = defineProps({
     rule: { type: Object, required: true },
     self: Object, // the object the rule is written in, for @this
-    sourceKey: { type: Object, required: true }, // where the choices are stored (HunterState.js)
+    set: Object, // the hunter's { from, choices } for this rule (HunterState.js: choiceSet)
 });
 
 const hunter = useHunter();
@@ -84,6 +89,10 @@ const count = computed(() => countOf(props.rule));
 const VERB_LABELS = { pick: 'Pick', cross: 'Cross off', remove: 'Remove' };
 const verbLabel = computed(() => VERB_LABELS[verb.value]);
 
+// "Mark two basic moves as advanced": picks moves you already have
+const advancing = computed(() => advancesBasicMoves(props.self));
+const isThisSet = (set) => set === toRaw(props.set);
+
 const containerPath = computed(() => refPath(props.rule.from, hunter.value.playbook, props.self));
 
 // For "remove", the options are the hunter's current picks from the container.
@@ -91,8 +100,7 @@ const entries = computed(() => {
     const root = hunter.value.playbook;
     if (verb.value === 'remove') {
         return state.value.picks
-            .filter((p) => p.path && p.container === containerPath.value
-                && !sameKey(p.key, props.sourceKey))
+            .filter((p) => p.path && p.container === containerPath.value && !isThisSet(p.set))
             .map((p) => ({ key: p.path, path: p.path, node: p.node, group: null }));
     }
     return optionsOf(props.rule.from, root, props.self);
@@ -113,7 +121,7 @@ const groups = computed(() => {
     return list;
 });
 
-const chosen = computed(() => choicesFor(hunter.value, props.sourceKey) ?? []);
+const chosen = computed(() => props.set?.choices ?? []);
 const remaining = computed(() => Math.max(0, count.value - chosen.value.length));
 
 // The nth @textbox option holds the nth free-text choice.
@@ -123,7 +131,7 @@ const textOf = (entry) => textboxChoices()[textboxIndex(entry)]?.text ?? '';
 
 const isChosen = (entry) => (entry.textbox
     ? textOf(entry) !== ''
-    : chosen.value.includes(entry.path));
+    : chosen.value.some((choice) => refOf(choice) === `@${entry.path}`));
 
 // Picked or gained through another source (another improvement, a grant...).
 const takenElsewhere = (entry) => {
@@ -132,10 +140,13 @@ const takenElsewhere = (entry) => {
     }
     const s = state.value;
     if (verb.value === 'cross') {
-        return s.crosses.some((c) => c.path === entry.path && !sameKey(c.key, props.sourceKey));
+        return s.crosses.some((c) => c.path === entry.path && !isThisSet(c.set));
+    }
+    if (advancing.value) {
+        return s.picks.some((p) => p.advance && p.path === entry.path && !isThisSet(p.set));
     }
     return s.gained.some((g) => g.path === entry.path)
-        || s.picks.some((p) => p.path === entry.path && !sameKey(p.key, props.sourceKey));
+        || s.picks.some((p) => p.path === entry.path && !p.advance && !isThisSet(p.set));
 };
 
 // Per sub-list limits, e.g. { "@combat_magic.bases": { "min": 1 } }
@@ -158,6 +169,9 @@ const isDisabled = (entry) => {
     if (isChosen(entry) || bendRules.value) {
         return false;
     }
+    if (!props.set) {
+        return true;
+    }
     if (takenElsewhere(entry) || atMax(entry) || chosen.value.length >= count.value) {
         return true;
     }
@@ -166,28 +180,9 @@ const isDisabled = (entry) => {
         && limit.inGroup >= limit.max);
 };
 
-const toggle = (entry) => {
-    const list = ensureChoices(hunter.value, props.sourceKey);
-    const at = list.indexOf(entry.path);
-    if (at >= 0) {
-        list.splice(at, 1);
-    } else {
-        list.push(entry.path);
-    }
-};
+const toggle = (entry) => toggleChoice(props.set, entry.path, entry.node);
 
-const setText = (entry, text) => {
-    const list = ensureChoices(hunter.value, props.sourceKey);
-    const existing = list.filter((c) => c?.id === TEXTBOX)[textboxIndex(entry)];
-    text = text.trim();
-    if (existing && text) {
-        existing.text = text;
-    } else if (existing) {
-        list.splice(list.indexOf(existing), 1);
-    } else if (text) {
-        list.push({ id: TEXTBOX, text });
-    }
-};
+const setText = (entry, text) => setTextChoice(props.set, textboxIndex(entry), text);
 </script>
 
 <style scoped>

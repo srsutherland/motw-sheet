@@ -1,5 +1,6 @@
 {
-  "schema_version": "0.1",
+  "schema_version": "0.1.2026.10.02",
+  "updated": "2026-10-07",
   "id": "the_spellslinger",
   "type": "playbook",
   "name": "The Spell-Slinger",
@@ -367,6 +368,7 @@
     "id": "improvements_mythic",
     "description": "If you have taken at least twelve improvements, at your Keeper's discretion, you can take one of the following improvements by spending more than one improvement.",
     "requires": { "improvements": 12 },
+    "cost": 2,
     "options": [
       {
         "id": "mythic_erase_luck",

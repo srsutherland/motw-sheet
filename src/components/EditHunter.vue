@@ -53,7 +53,7 @@
                 :key="i"
                 :rule="rule"
                 :self="move.node"
-                :source-key="{ kind: 'nested', path: move.path, rule: i }"
+                :set="choiceSet(move.record, move.node, i)"
             />
         </div>
         <GettingStartedChoices :from="`${playbookId}.moves`" />
@@ -70,11 +70,11 @@
     <fieldset>
         <legend>Other choices</legend>
         <ChooseRule
-            v-for="{ rule, index } in otherRules"
+            v-for="{ rule, index, set } in otherRules"
             :key="index"
             :rule="rule"
             :self="hunter.playbook.getting_started"
-            :source-key="{ kind: 'getting_started', rule: index }"
+            :set="set"
         />
     </fieldset>
 </section>
@@ -169,7 +169,7 @@
                 :key="i"
                 :rule="rule"
                 :self="improvement"
-                :source-key="{ kind: 'improvement', index, rule: i }"
+                :set="choiceSet(taken, improvement, i)"
             />
         </div>
     </fieldset>
@@ -187,7 +187,7 @@
 import { computed, provide, ref } from 'vue';
 import { asList } from '@/Hunter';
 import { useHunter, useHunterState } from '@/HunterContext';
-import { findImprovement, gettingStartedRules } from '@/HunterState';
+import { choiceSet, findImprovement, gettingStartedRules } from '@/HunterState';
 import { TEXTBOX } from '@/PlaybookData';
 import ChooseRule from './ChooseRule.vue';
 import MarkdownText from './MarkdownText.vue';
