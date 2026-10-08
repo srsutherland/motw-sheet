@@ -85,7 +85,7 @@ The app uses json files in `/playbooks/` as its source of truth.
 ## Hunter class/json
 
 - "Full" version (serialize objects all the way down) and a "Slim" version (references where possible)
-- Contains an schema version number, in case of future breaking changes (keep this at 0.1 for now, we're the only users).
+- Contains a schema version number, in case of future breaking changes: `0.1.yyyy.mm.dd`, the date of the last breaking change (`.1` added if it breaks more than once in a day, but only after a push).
 
 ### Clarifications
 

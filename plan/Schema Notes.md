@@ -1,4 +1,4 @@
-Working notes on the playbook data design (not a schema file). See `Playbook Survey.md` for what the 12 playbooks need, and `playbooks/proposal/the-spellslinger.json` for the Spell-Slinger written to these notes.
+Working notes on the playbook data design (not a schema file). See `Playbook Survey.md` for what the 12 playbooks need, and `playbooks/the-spellslinger.json` for the Spell-Slinger written to these notes.
 
 Sections: **Decided** (with where it was decided), **Needs** (from the playbook data), **Proposals** (not yet discussed; don't treat as decided), **Open questions**.
 
@@ -59,7 +59,7 @@ Sections: **Decided** (with where it was decided), **Needs** (from the playbook 
    - One form only; no explicit `.options`
 - `"grant"` takes the thing itself: you gain it
 - `"choose"` can be a list, for improvements that do more than one thing
-- One verb per `choose`; the hunter's stored choices are plain ids, their meaning comes from the verb:
+- One verb per `choose`; the hunter's stored choices are references, their meaning comes from the verb:
 
 | Verb     | Meaning                                    | Choosing from |
 | -------- | ------------------------------------------ | --- |
@@ -156,6 +156,10 @@ Limits on a `choose` (exact syntax not final):
 - "Mark two basic moves as advanced": a pick plus an effect, `advance_basic`
 - Advanced improvements unlock at level 5 (the paper: "after you have leveled up five times"): `"requires": { "level": 5 }`
 - Mythic improvements are **homebrew**: not on the paper playbook
+   - For now they cost 2 (`"cost": 2` on the list)
+   - Intended (post-MVP): the Keeper picks how they cost; the hunter enters it. A starting cost plus a scaling rule (fixed, linear, maybe others), or entering the cost each time
+- Leveling up can be skipped; the improvement stays unspent (e.g. to save up for a mythic one)
+- An improvement can be taken before all its choices are made
 
 ## Rules enforcement
 
@@ -172,8 +176,33 @@ Limits on a `choose` (exact syntax not final):
 - "Full" version (objects serialized all the way down) and "slim" version (references where possible) (DESIGN.md)
    - Full: the hunter keeps its own copy of the playbook, modifiable
    - Slim: needs a stable id on everything it references
-- Schema version number; 0.1 for now (DESIGN.md)
+- Schema version: `0.1.yyyy.mm.dd`, the date of the last breaking change (`.1`, `.2`... if it breaks again on a day it was already pushed)
+   - Hunter and playbooks have separate schema versions
+   - Playbooks also have an `updated` date; the hunter keeps it as `playbook_updated`
 - Level is separate from improvements taken (DESIGN.md)
+- Nothing is indexed by array position alone, unless order doesn't matter or the array records the order things were added
+- Choices are stored under what made you choose them, mirroring the playbook:
+   - `getting_started`: `{ grant: [...], choose: [{ from, choices }] }`
+   - `improvements`: `[{ id, choose: [{ from, choices }] }]`, in the order taken
+   - A pick or grant with its own choices is `{ ref, choose: [{ from, choices }] }` (Practitioner's effects live under the Practitioner pick)
+   - A `{ from, choices }` goes with the rule with that `from` (the nth of several with the same `from`)
+- Stored choices are references, with `@`: `"@the_spellslinger.moves.third_eye"`
+- Saved files include `ratings` and `moves` (references in slim, full move objects in full); computed, ignored on load
+
+```jsonc
+"getting_started": {
+  "grant": ["@basic_moves",
+    { "ref": "@moves.tools_and_techniques",
+      "choose": [{ "from": "@this", "choices": ["@the_spellslinger.moves.tools_and_techniques.consumables"] }] }],
+  "choose": [
+    { "from": "@combat_magic", "choices": ["@the_spellslinger.combat_magic.bases.blast"] },
+    { "from": "@moves", "choices": [
+      { "ref": "@the_spellslinger.moves.practitioner",
+        "choose": [{ "from": "@this", "choices": ["@basic_moves.use_magic.heal"] }] }] }
+  ]
+},
+"improvements": [{ "id": "move_1", "choose": [{ "from": "@moves", "choices": ["@the_spellslinger.moves.third_eye"] }] }]
+```
 
 ## Other content
 
@@ -224,8 +253,10 @@ Conventions the code needed that weren't discussed. All used by the app as built
 - Placeable types: `move`, `basic_move`, `feature`, `gear`; a `grant` of anything else with `options` grants all its options (`"grant": "@basic_moves"`)
 - `basic_moves.json`: `{ id: "basic_moves", options: [ { type: "basic_move", name, rating, options? } ] }`; use magic's effects are its `options`
 - Your own playbook's features are always on your sheet; others' only when granted
-- A choice's stored value is the option's absolute path (`the_spellslinger.moves.third_eye`); free text is `{ "id": "@textbox", "text": ... }`
-- Hunter: `getting_started` (one list per rule), `improvements` (`{ id, choices }` in order taken), `nested` (item path -> one list per rule on that item)
+- Stored choices are absolute references, even where the playbook's `from` is root-relative (`"from": "@moves"`, choice `"@the_spellslinger.moves.third_eye"`)
+- Free text is still `{ "id": "@textbox", "text": ... }` (not `ref`)
+- Improvements with no choices still store `"choose": []`
+- An improvement that costs more than 1 stores `"cost"` on its record
 - Sub-options of "+1 to any rating" have a `name` (Charm, Cool...) so they can be labelled
 - Improvement list unlock: `requires.level` compares with level ups completed *before* the one the improvement is for
 - An improvement being picked is stored with `"pending": true` and dropped on load

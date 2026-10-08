@@ -41,7 +41,7 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 
 - A second playbook, picked to stress the schema (Expert, Monstrous, Chosen, or Wronged)
 - Settle the schema
-   - Tighten `playbook.schema.json`; `npm run validate` checks every playbook
+   - A playbook schema file; `npm run validate` checks every playbook
 - Saved hunter `version` + loader that upgrades old saves
 - Remaining playbooks
 - Basic move popups (needs basic rules JSON)
@@ -58,11 +58,12 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 
 # Known issues
 
-- `playbook.schema.json` still describes the old JSON format; nothing runs it
+- Edit page is too cluttered; more should be in popups
+- Mythic improvement costs are fixed at 2 (Keeper-chosen schemes are post-MVP)
+- Saves from the old "0.1" format can only be deleted (the sample was converted with a one-off script)
 - Saves are always the "full" hunter JSON; the "slim" version (DESIGN.md) isn't built
 - `basic_moves.json` has names and ratings only, no descriptions (needed for popups)
 - `[[wikilinks]]` render as dotted-underline text, no popup yet
 - "Take a move from another playbook" (`@*.moves`) has nothing to offer until there are other playbooks
 - A hunter's playbook copy is indexed once; editing the copy (it's meant to be modifiable) won't re-index it. Nothing edits it yet.
-- Saves from before schema 0.1 can only be deleted
 - ESLint `max-len` with `ignoreStrings` skips any line that contains a string, so most long lines aren't reported
