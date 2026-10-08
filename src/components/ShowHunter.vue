@@ -19,6 +19,7 @@
 <LuckTrack />
 <HarmTrack />
 <ExperienceTrack />
+<Gear />
 <Feature v-for="feature in features('pre_moves')" :key="feature.path" :feature="feature" />
 <section class="show-moves">
     <h2>Moves</h2>
@@ -28,9 +29,9 @@
         </li>
     </ul>
 </section>
-<Gear />
 <Feature v-for="feature in features('post_moves')" :key="feature.path" :feature="feature" />
 <History />
+<Improvements />
 </template>
 
 <script setup>
@@ -43,6 +44,7 @@ import ExperienceTrack from './show/ExperienceTrack.vue';
 import Feature from './show/Feature.vue';
 import Gear from './show/Gear.vue';
 import History from './show/History.vue';
+import Improvements from './show/Improvements.vue';
 import Move from './show/Move.vue';
 import { exportHunter } from '@/Storage';
 

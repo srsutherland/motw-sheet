@@ -96,6 +96,9 @@ check('view: luck special', (await page.locator('.show-luck .special').innerText
 const feature = page.locator('.show-feature', { has: page.locator('h2:text-is("Combat Magic")') });
 check('view: combat magic groups', (await feature.locator('.group-name').allInnerTexts()), ['Bases:', 'Effects:']);
 check('view: combat magic picks', (await feature.locator('li strong').allInnerTexts()), ['Blast', 'Fire', 'Earth']);
+check('view: feature description', (await feature.locator('.description').innerText()).startsWith('You have a few attack spells'), true);
+const order = await page.locator('main > section').evaluateAll((els) => els.map((el) => el.className.split(' ')[0]));
+check('view: gear before features and moves', order.indexOf('show-gear') < order.indexOf('show-feature') && order.indexOf('show-feature') < order.indexOf('show-moves'), true);
 const moveOf = (name) => page.locator('.show-move', { has: page.locator(`.move-name:text-is("${name}:")`) });
 check('view: crossed T&T', await moveOf('Tools and Techniques').locator('li.crossed strong').allInnerTexts(), ['Gestures']);
 check('view: practitioner effects', (await moveOf('Practitioner').locator('.choices li').allInnerTexts()).map((t) => t.split(' ')[0]), ['Heal', 'Banish']);

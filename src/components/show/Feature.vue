@@ -1,6 +1,7 @@
 <template>
 <section class="show-feature">
     <h2>{{ feature.node.name }}</h2>
+    <MarkdownText :text="feature.node.description" class="description" />
     <p v-if="!chosenGroups.length" class="none"><em>Nothing chosen yet.</em></p>
     <div v-for="group in chosenGroups" :key="group.name ?? ''">
         <span v-if="group.name" class="group-name">{{ group.name }}:</span>

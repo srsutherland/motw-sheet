@@ -11,11 +11,6 @@
             </button>
         </span>
     </div>
-    <ul v-if="taken.length" class="indent improvements">
-        <li v-for="improvement in taken" :key="improvement.id">
-            <MarkdownText :text="improvement.description" inline />
-        </li>
-    </ul>
     <ImprovementPicker v-if="picking" :level-up="picking === 'level'" @done="picking = null" />
 </section>
 </template>
@@ -23,19 +18,14 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useHunter } from '@/HunterContext';
-import { findImprovement, takenImprovements, unspentImprovements } from '@/HunterState';
+import { unspentImprovements } from '@/HunterState';
 import ImprovementPicker from '../ImprovementPicker.vue';
-import MarkdownText from '../MarkdownText.vue';
 import Track from './Track.vue';
 
 const hunter = useHunter();
 const picking = ref(null); // 'level' | 'unspent' | null
 
 const unspent = computed(() => unspentImprovements(hunter.value));
-
-const taken = computed(() => takenImprovements(hunter.value)
-    .map((t) => findImprovement(hunter.value.playbook, t.id)?.improvement)
-    .filter(Boolean));
 </script>
 
 <style scoped>
@@ -49,8 +39,4 @@ const taken = computed(() => takenImprovements(hunter.value)
     text-transform: uppercase;
 }
 
-.improvements {
-    margin: 0.25em 0 0 1em;
-    font-size: 0.9em;
-}
 </style>

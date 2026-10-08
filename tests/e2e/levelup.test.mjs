@@ -34,7 +34,7 @@ check('other playbook move blocked', await option('Take a move from another play
 await option('Take another Spell-slinger move').first().click();
 await dialog.getByRole('button', { name: 'Back' }).click();
 await dialog.getByRole('button', { name: 'Cancel' }).click();
-check('cancel changes nothing', [await dialog.isVisible(), await level(), await page.locator('.show-experience .improvements li').count()], [false, 'Level 0', 0]);
+check('cancel changes nothing', [await dialog.isVisible(), await level(), await page.locator('.show-improvements li').count()], [false, 'Level 0', 0]);
 
 // A fixed effect
 await page.getByRole('button', { name: 'Level up' }).click();
@@ -89,8 +89,32 @@ await dialog.getByRole('button', { name: 'Take it' }).click();
 check('re-taken without leveling', [(await ratings())[2], await level()], ['2', 'Level 7']);
 check('no unspent left', await page.getByRole('button', { name: /unspent/ }).count(), 0);
 
+// Advanced: mark basic moves as advanced (they're already yours)
+await fillXp();
+await page.getByRole('button', { name: 'Level up' }).click();
+await option('Mark two of the basic moves as advanced').click();
+check('basic moves selectable', await dialog.getByRole('checkbox', { name: /^Kick Some Ass\b/ }).isDisabled(), false);
+await dialog.getByRole('checkbox', { name: /^Kick Some Ass\b/ }).check();
+await dialog.getByRole('checkbox', { name: /^Use Magic\b/ }).check();
+await dialog.getByRole('button', { name: 'Take it' }).click();
+check('advanced on the ratings table', (await page.locator('.basic-moves li', { hasText: '(advanced)' }).allInnerTexts()).map((t) => t.trim()), ['Kick Some Ass (advanced)', 'Use Magic (advanced)']);
+check('not added as moves', await page.locator('.show-move .move-name', { hasText: 'Kick Some Ass' }).count(), 0);
+
+// Skip a level up: the improvement stays unspent
+await fillXp();
+await page.getByRole('button', { name: 'Level up' }).click();
+await dialog.getByRole('button', { name: /^Skip/ }).click();
+check('skip levels up', [await level(), await page.getByRole('button', { name: 'Take an improvement (1 unspent)' }).count()], ['Level 9', 1]);
+
+// Improvements at the bottom of the sheet, with what was chosen
+const taken = await page.locator('.show-improvements li').allInnerTexts();
+check('improvements list', taken.length, 8);
+check('improvement with its choice', taken.find((t) => t.startsWith('Take another Spell-slinger move')), 'Take another Spell-slinger move: Practitioner');
+check('any rating shows the rating', taken.find((t) => t.startsWith('Get +1 to any rating')), 'Get +1 to any rating, max +3: Charm');
+check('improvements are last', await page.locator('main > :last-child').getAttribute('class'), 'show-improvements');
+
 await page.reload();
-check('after reload', [await ratings(), await level(), await page.locator('.show-experience .improvements li').count()], [['0', '2', '2', '1', '3'], 'Level 7', 7]);
+check('after reload', [await ratings(), await level(), await page.locator('.show-improvements li').count()], [['0', '2', '2', '1', '3'], 'Level 9', 8]);
 
 check('console errors', errors, []);
 await browser.close();
