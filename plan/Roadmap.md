@@ -46,9 +46,18 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - Remaining playbooks
 - Basic move popups (needs basic rules JSON)
 - Responsive columns (DESIGN.md)
-- Replace `confirm`/`alert` in `ActionList.vue` and `Storage.js`
+- Replace `confirm`/`alert` in `ActionList.vue`, `Storage.js`, and leveling down
 - Reconcile DESIGN.md with what shipped
 - Pick the app name
+- Hunter name buttons (DESIGN.md): currently Edit and Export icons inside the title
+   - Move them to a buttons section under the hunter name
+   - Export as a popup (now a direct download)
+   - Add a Share button
+- History: the other hunter picks from *their* playbook how they know you (DESIGN.md); needs their playbook's history list
+- Rating colors: check them in light and dark mode
+- `computed.moves`: a `source` on each move (which level / improvement it came from); `h.moves` is display-only for now
+- Talk through `ref` (references in saved files: naming, relative vs absolute forms)
+- "Bend the rules": temporary/debug for now; decide what it becomes
 
 # Later
 
@@ -60,7 +69,7 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 
 - Edit page is too cluttered; more should be in popups
 - Mythic improvement costs are fixed at 2 (Keeper-chosen schemes are post-MVP)
-- Saves from the old "0.1" format can only be deleted (the sample was converted with a one-off script)
+- Saves from older formats ("0.1", "0.1.2026.10.07") can only be deleted (the sample was converted with one-off scripts)
 - Saves are always the "full" hunter JSON; the "slim" version (DESIGN.md) isn't built
 - `basic_moves.json` has names and ratings only, no descriptions (needed for popups)
 - `[[wikilinks]]` render as dotted-underline text, no popup yet
