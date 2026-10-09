@@ -49,6 +49,10 @@ const taken = computed(() => takenImprovements(hunter.value)
 </script>
 
 <style scoped>
+.show-improvements {
+    max-width: 40em;
+}
+
 .disabled {
     opacity: 0.6;
 }

@@ -18,6 +18,10 @@ const hunter = useHunter();
 </script>
 
 <style scoped>
+.show-history {
+    max-width: 40em;
+}
+
 .notes {
     opacity: 0.8;
     font-style: italic;

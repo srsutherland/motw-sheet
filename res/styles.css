@@ -12,6 +12,7 @@
 
 header h1 {
     font-family: 'ThirdMan', sans-serif;
+    letter-spacing: 0.1em;
     font-size: 2em;
     margin: 0;
     font-weight: normal;

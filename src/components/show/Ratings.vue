@@ -48,6 +48,7 @@ const isAdvanced = (move) => state.value.advanced.has(pathOf(move));
     padding-left: .7em;
     font-size: 1.7em;
     font-family: 'ThirdMan', 'sans-serif';
+    letter-spacing: 0.1em;
     font-weight: normal;
 }
 

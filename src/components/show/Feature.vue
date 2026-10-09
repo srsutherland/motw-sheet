@@ -57,6 +57,10 @@ const chosenGroups = computed(() => {
 </script>
 
 <style scoped>
+.show-feature {
+    max-width: 40em;
+}
+
 .show-feature h2 {
     margin-bottom: 0.25em;
 }

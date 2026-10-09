@@ -63,6 +63,8 @@ const look = computed(() => Object.entries(hunter.value.playbook.look)
 <style scoped>
 .hunter-name {
     font-family: 'ThirdMan', 'sans-serif';
+    letter-spacing: 0.1em;
+    font-variant: small-caps;
     font-weight: normal;
 }
 
