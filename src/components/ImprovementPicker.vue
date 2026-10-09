@@ -62,10 +62,11 @@
 // The improvement being picked is added to the hunter right away (marked pending),
 // so its choices are stored like any other and previewed live on the sheet.
 import { computed, onMounted, ref } from 'vue';
-import { asList, makeChoose } from '@/Hunter';
+import { asList, makeChoices } from '@/Hunter';
 import { useHunter, useHunterState } from '@/HunterContext';
 import {
-    applyOneOffEffects, choiceSet, costOf, countOf, findImprovement, improvementBlocked,
+    applyOneOffEffects, choiceSet, costOf, countOf, improvementBlocked, improvementOf,
+    improvementRef,
     improvementLists, unspentImprovements,
 } from '@/HunterState';
 import ChooseRule from './ChooseRule.vue';
@@ -102,7 +103,7 @@ const blocked = (improvement) => improvementBlocked(
 const pendingIndex = computed(() => hunter.value.improvements.findIndex((taken) => taken.pending));
 const pending = computed(() => {
     const taken = hunter.value.improvements[pendingIndex.value];
-    return taken ? findImprovement(hunter.value.playbook, taken.id)?.improvement : null;
+    return taken ? improvementOf(hunter.value.playbook, taken)?.improvement : null;
 });
 
 const complete = computed(() => asList(pending.value?.choose).every((rule, i) => {
@@ -113,9 +114,9 @@ const complete = computed(() => asList(pending.value?.choose).every((rule, i) =>
 const choose = (improvement) => {
     const cost = costOf(hunter.value.playbook, improvement.id);
     hunter.value.improvements.push({
-        id: improvement.id,
+        ref: improvementRef(hunter.value.playbook, improvement),
         ...(cost > 1 ? { cost } : {}),
-        ...(improvement.choose ? { choose: makeChoose(improvement) } : {}),
+        ...makeChoices(improvement),
         pending: true,
     });
 };
@@ -127,7 +128,10 @@ const back = () => {
 const confirm = () => {
     const h = hunter.value;
     const improvement = pending.value;
-    delete h.improvements[pendingIndex.value].pending;
+    const index = pendingIndex.value;
+    const { pending: _, ...taken } = h.improvements[index]; // eslint-disable-line no-unused-vars
+    // nothing attached: just the reference
+    h.improvements[index] = Object.keys(taken).length === 1 ? taken.ref : taken;
     applyOneOffEffects(h, improvement);
     close();
 };

@@ -28,49 +28,65 @@ const findImprovement = (playbook, id) => {
     return null;
 };
 
-// Stored choices are references ("@the_spellslinger.moves.third_eye"), records with their
-// own choices ({ ref, choose }), or free text ({ id: "@textbox", text }).
-const refOf = (choice) => (typeof choice === 'string' ? choice : choice?.ref);
-const pathOfChoice = (choice) => refOf(choice)?.slice(1);
+// Stored references: a string ("@third_eye"), or a record with something attached:
+// { ref, choices }, { ref, cost }, or free text { ref: "@textbox", text }.
+const refOf = (stored) => (typeof stored === 'string' ? stored : stored?.ref);
+const isText = (stored) => stored?.ref === TEXTBOX;
 
-// The hunter's { from, choices } for rule i of `holder`, inside `record` (the hunter-side
-// object that mirrors the holder). Matched by `from`: the nth rule with a given `from`
-// goes with the nth entry with that `from`.
+// A taken improvement's playbook definition, from its reference ("@improvements.weird").
+const improvementOf = (playbook, taken) => {
+    const node = resolve(refOf(taken), playbook);
+    return node ? findImprovement(playbook, node.id) : null;
+};
+
+// How the hunter refers to an improvement: root-relative ("@improvements_advanced.any_rating")
+const improvementRef = (playbook, improvement) => `@${pathOf(improvement, playbook)
+    .slice(playbook.id.length + 1)}`;
+
+// The hunter's choices for rule i of `holder`, inside `record` (the hunter's side of it).
+// One rule: the record itself holds `choices`. Several: `choose: [{ from, choices }]`, and the
+// nth rule with a given `from` goes with the nth entry with that `from`.
 const choiceSet = (record, holder, i) => {
+    if (!record || typeof record !== 'object') {
+        return null;
+    }
     const rules = asList(holder?.choose);
+    if (rules.length === 1) {
+        return record.choices ? record : null;
+    }
     const from = rules[i]?.from;
     const nth = rules.slice(0, i).filter((rule) => rule.from === from).length;
-    return (record?.choose ?? []).filter((set) => set.from === from)[nth] ?? null;
+    return (record.choose ?? []).filter((set) => set.from === from)[nth] ?? null;
 };
 
 // The hunter-side record of something granted by `holder` (e.g. Tools and Techniques).
 const grantRecord = (record, ref) => (record?.grant ?? []).find((g) => refOf(g) === ref);
 
 // The record a picked option is stored as, inside a choice set (for its own choices).
-const pickRecord = (set, path) => set?.choices.find((c) => typeof c === 'object'
-    && c.ref === `@${path}`) ?? null;
+const pickRecord = (set, written) => set?.choices.find((c) => typeof c === 'object'
+    && c.ref === written) ?? null;
 
-// Pick or unpick an option. Options with their own choices are stored as { ref, choose }.
-const toggleChoice = (set, path, node) => {
-    const ref = `@${path}`;
-    const at = set.choices.findIndex((choice) => refOf(choice) === ref);
+// Pick or unpick an option (an entry from optionsOf). Options with their own choices are
+// stored as { ref, choices }.
+const toggleChoice = (set, entry) => {
+    const at = set.choices.findIndex((choice) => refOf(choice) === entry.written);
     if (at >= 0) {
         set.choices.splice(at, 1);
     } else {
-        set.choices.push(makeRecord(ref, node));
+        set.choices.push(makeRecord(entry.written, entry.node));
     }
 };
 
 // Set the nth free-text choice in a set ("" removes it).
 const setTextChoice = (set, n, text) => {
-    const existing = set.choices.filter((c) => c?.id === TEXTBOX)[n];
+    const existing = set.choices.filter(isText)[n];
     text = text.trim();
     if (existing && text) {
         existing.text = text;
     } else if (existing) {
         set.choices.splice(set.choices.indexOf(existing), 1);
     } else if (text) {
-        set.choices.push({ id: TEXTBOX, text });
+        set.choices.push({ ref: TEXTBOX, text });
     }
 };
 
@@ -85,6 +101,15 @@ const gettingStartedRules = (h) => {
         container: refPath(rule.from, h.playbook, gs),
     }));
 };
+
+// What was chosen for a holder's rules, resolved: [{ node, path, written } | { text }]
+const chosenFor = (playbook, holder, record) => asList(holder?.choose).flatMap((rule, i) => {
+    const options = new Map(optionsOf(rule.from, playbook, holder)
+        .map((entry) => [entry.written, entry]));
+    return (choiceSet(record, holder, i)?.choices ?? [])
+        .map((choice) => (isText(choice) ? { text: choice.text } : options.get(refOf(choice))))
+        .filter(Boolean);
+});
 
 const advancesBasicMoves = (holder) => (holder?.effects ?? []).some((e) => e.advance_basic);
 
@@ -122,17 +147,26 @@ const hunterState = (h) => {
         const advance = advancesBasicMoves(holder);
         asList(holder.choose).forEach((rule, i) => {
             const set = choiceSet(record, holder, i);
+            if (!set) {
+                return;
+            }
             const verb = verbOf(rule);
             const container = rule.from.startsWith('@*.')
                 ? rule.from
                 : refPath(rule.from, root, self);
-            for (const choice of set?.choices ?? []) {
-                if (choice?.id === TEXTBOX) {
+            // stored choices are matched to options by how they're written
+            const options = new Map(optionsOf(rule.from, root, self)
+                .map((entry) => [entry.written, entry]));
+            for (const choice of set.choices) {
+                if (isText(choice)) {
                     picks.push({ text: choice.text, container, source, set: toRaw(set) });
                     continue;
                 }
-                const path = pathOfChoice(choice);
-                const node = lookup(path, root);
+                const entry = options.get(refOf(choice));
+                if (!entry?.node) {
+                    continue;
+                }
+                const { path, node } = entry;
                 if (verb === 'cross') {
                     crosses.push({ path, container, source, set: toRaw(set) });
                 } else if (verb === 'remove') {
@@ -141,7 +175,7 @@ const hunterState = (h) => {
                         picks.splice(at, 1);
                     }
                     gained.delete(path);
-                } else if (node) {
+                } else {
                     picks.push({ path, node, container, source, set: toRaw(set), advance });
                     // marking a basic move advanced doesn't gain it
                     if (PLACEABLE.has(node.type) && !advance) {
@@ -166,11 +200,12 @@ const hunterState = (h) => {
     });
     const { disabled } = improvementBudget(h);
     for (const taken of h.improvements) {
-        const found = findImprovement(root, taken.id);
+        const found = improvementOf(root, taken);
         // improvements beyond the hunter's level keep their choices but do nothing
         if (found && !disabled.has(toRaw(taken))) {
             const improvement = found.improvement;
-            process({ holder: improvement, record: taken, self: improvement, source: taken.id });
+            const source = refOf(taken);
+            process({ holder: improvement, record: taken, self: improvement, source });
         }
     }
     // Choices belonging to a gained item (Practitioner, Tools and Techniques, ...).
@@ -240,13 +275,16 @@ const crossedUnder = (state, path) => new Set(state.crosses
     .map((c) => c.path));
 
 // Improvements taken (not counting one being picked right now).
-const takenImprovements = (h) => h.improvements.filter((taken) => !taken.pending);
+const takenImprovements = (h) => h.improvements.filter((taken) => !taken?.pending);
 
 // What an improvement costs, in improvements (mythic: more than one).
 const costOf = (playbook, id) => {
     const found = findImprovement(playbook, id);
     return found?.improvement.cost ?? found?.list.cost ?? 1;
 };
+
+const costOfTaken = (playbook, taken) => taken?.cost
+    ?? costOf(playbook, improvementOf(playbook, taken)?.improvement.id);
 
 // Each level up earns one improvement (DESIGN.md: level is separate from improvements).
 // Leveling down leaves improvements the level no longer pays for: the most recently taken
@@ -255,7 +293,7 @@ const improvementBudget = (h) => {
     let spent = 0;
     const disabled = new Set();
     for (const taken of takenImprovements(h)) {
-        const cost = taken.cost ?? costOf(h.playbook, taken.id);
+        const cost = costOfTaken(h.playbook, taken);
         if (disabled.size || spent + cost > h.level) {
             disabled.add(toRaw(taken));
         } else {
@@ -288,7 +326,8 @@ const improvementLists = (h, levelsBefore) => IMPROVEMENT_LISTS
 // Why an improvement can't be taken right now, or null if it can.
 // `points`: improvements available to spend.
 const improvementBlocked = (h, improvement, state, points) => {
-    if (takenImprovements(h).some((taken) => taken.id === improvement.id)) {
+    if (takenImprovements(h).some((taken) => improvementOf(h.playbook, taken)?.improvement
+        === toRaw(improvement))) {
         return 'already taken';
     }
     const cost = costOf(h.playbook, improvement.id);
@@ -326,8 +365,9 @@ const basicMovesByRating = (rating) => basicMoves.options.filter((move) => move.
 
 export {
     RATINGS, IMPROVEMENT_LISTS,
-    verbOf, countOf, findImprovement, refOf, pathOfChoice, choiceSet, grantRecord, pickRecord,
-    toggleChoice, setTextChoice, gettingStartedRules, advancesBasicMoves,
+    verbOf, countOf, findImprovement, improvementOf, improvementRef, refOf, isText,
+    choiceSet, grantRecord, pickRecord, toggleChoice, setTextChoice, gettingStartedRules, chosenFor,
+    advancesBasicMoves,
     hunterState, picksUnder, crossedUnder, basicMovesByRating,
     takenImprovements, costOf, improvementBudget, unspentImprovements, isDisabled,
     overMax, improvementLists, improvementBlocked,

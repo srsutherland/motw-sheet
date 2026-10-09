@@ -2,19 +2,27 @@ import { resolve } from '@/PlaybookData';
 
 // Date of the last breaking change to the hunter format (0.1.yyyy.mm.dd, plus .1, .2...
 // if it breaks again on a day it was already pushed).
-const SCHEMA_VERSION = '0.1.2026.10.09';
+const SCHEMA_VERSION = '0.1.2026.10.09.1';
 
 // A `choose` or `grant` may be one rule or a list of them.
 const asList = (value) => (value === undefined ? [] : [].concat(value));
 
-// The hunter's side of a playbook object's `choose`: one { from, choices } per rule,
-// mirroring the playbook (see plan/Schema Notes.md: "Hunter JSON").
-const makeChoose = (holder) => asList(holder?.choose)
-    .map((rule) => ({ from: rule.from, choices: [] }));
+// The hunter's side of a playbook object's `choose` (plan/Schema Notes.md: "Hunter JSON"):
+// one rule -> { choices }; several -> { choose: [{ from, choices }] }, mirroring the playbook.
+const makeChoices = (holder) => {
+    const rules = asList(holder?.choose);
+    if (rules.length === 0) {
+        return {};
+    }
+    if (rules.length === 1) {
+        return { choices: [] };
+    }
+    return { choose: rules.map((rule) => ({ from: rule.from, choices: [] })) };
+};
 
-// A pick or grant that has its own choices (Practitioner, Tools and Techniques) is stored
-// as { ref, choose }; anything else is just its reference.
-const makeRecord = (ref, node) => (node?.choose ? { ref, choose: makeChoose(node) } : ref);
+// A pick or grant with its own choices (Practitioner, Tools and Techniques) is stored as
+// { ref, choices }; anything else is just its reference, a string.
+const makeRecord = (ref, node) => (node?.choose ? { ref, ...makeChoices(node) } : ref);
 
 // "{name} the {playbook}"; playbook names already start with "The"
 const hunterTitle = (name, playbookName) => {
@@ -35,7 +43,7 @@ class Hunter {
     ratings_base = null; // a copy of the chosen ratings line
     history = []; // { name, option, notes }
     getting_started = undefined; // { grant, choose }, mirroring the playbook's getting_started
-    improvements = []; // { id, choose }, in the order taken
+    improvements = []; // references, or { ref, choices, cost }, in the order taken
     extra_gear = []; // gear added during play: { name, tags }
     harm = 0;
     unstable = false;
@@ -55,7 +63,7 @@ class Hunter {
         const gs = this.playbook.getting_started;
         this.getting_started = {
             grant: asList(gs?.grant).map((ref) => makeRecord(ref, resolve(ref, this.playbook, gs))),
-            choose: makeChoose(gs),
+            ...makeChoices(gs),
         };
     }
 
@@ -68,7 +76,7 @@ class Hunter {
         const { computed, ...stored } = data; // eslint-disable-line no-unused-vars
         const hunter = Object.assign(Object.create(Hunter.prototype), stored);
         // an improvement still being picked when the page was closed
-        hunter.improvements = hunter.improvements.filter((taken) => !taken.pending);
+        hunter.improvements = hunter.improvements.filter((taken) => !taken?.pending);
         return hunter;
     }
 
@@ -90,4 +98,4 @@ class Hunter {
     }
 }
 
-export { Hunter, SCHEMA_VERSION, asList, makeChoose, makeRecord, hunterTitle };
+export { Hunter, SCHEMA_VERSION, asList, makeChoices, makeRecord, hunterTitle };

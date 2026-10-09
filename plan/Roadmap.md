@@ -42,7 +42,7 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - A second playbook, picked to stress the schema (Expert, Monstrous, Chosen, or Wronged)
 - Settle the schema
    - A playbook schema file; `npm run validate` checks every playbook
-- Saved hunter `version` + loader that upgrades old saves
+- Migrating hunters from old versions (a loader that upgrades old saves)
 - Remaining playbooks
 - Basic move popups (needs basic rules JSON)
 - Responsive columns (DESIGN.md)

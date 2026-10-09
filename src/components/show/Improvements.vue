@@ -22,30 +22,26 @@
 import { computed } from 'vue';
 import { useHunter } from '@/HunterContext';
 import {
-    findImprovement, isDisabled, pathOfChoice, refOf, takenImprovements,
+    chosenFor, improvementOf, isDisabled, refOf, takenImprovements,
 } from '@/HunterState';
-import { TEXTBOX, lookup } from '@/PlaybookData';
 import MarkdownText from '../MarkdownText.vue';
 
 const hunter = useHunter();
 
 // Read from the improvement's own record, so disabled improvements show their choices too
-const nameOf = (choice) => {
-    if (choice?.id === TEXTBOX) {
-        return choice.text;
-    }
-    const node = lookup(pathOfChoice(choice), hunter.value.playbook);
-    return node?.name ?? node?.description ?? refOf(choice);
-};
-
 const taken = computed(() => takenImprovements(hunter.value)
     .map((record) => ({
-        id: record.id,
+        id: refOf(record),
         disabled: isDisabled(hunter.value, record),
-        improvement: findImprovement(hunter.value.playbook, record.id)?.improvement,
-        chosen: (record.choose ?? []).flatMap((set) => set.choices).map(nameOf),
+        improvement: improvementOf(hunter.value.playbook, record)?.improvement,
+        record,
     }))
-    .filter(({ improvement }) => improvement));
+    .filter(({ improvement }) => improvement)
+    .map((item) => ({
+        ...item,
+        chosen: chosenFor(hunter.value.playbook, item.improvement, item.record)
+            .map((c) => c.text ?? c.node.name ?? c.node.description),
+    })));
 </script>
 
 <style scoped>

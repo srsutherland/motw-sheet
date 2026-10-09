@@ -104,7 +104,10 @@ const isContainer = (node) => node && typeof node === 'object' && Array.isArray(
     && !PLACEABLE.has(node.type);
 
 // The options a `from` reference offers, flattened, each with the sub-list it came from.
-// Entries: { key, path, node, group } or { key, textbox: true, group }
+// Entries: { key, path, node, group, written } or { key, textbox: true, group, written }
+// `written` is how a choice of it is stored (plan/Schema Notes.md: "Hunter JSON"): relative
+// to the container ("@bases.blast"), or as written in the container if the option is itself
+// a reference ("@basic_moves.use_magic.heal"), or absolute for "@*." lists.
 const optionsOf = (ref, root, self) => {
     if (ref.startsWith('@*.')) {
         // e.g. "@*.moves": that list in every other playbook
@@ -112,30 +115,38 @@ const optionsOf = (ref, root, self) => {
         return [...files.values()]
             .filter((file) => file.type === 'playbook' && file.id !== root.id)
             .flatMap((file) => optionsOf(`@${file.id}.${id}`, root, self)
-                .map((entry) => ({ ...entry, group: entry.group ?? file.name })));
+                .map((entry) => ({
+                    ...entry,
+                    group: entry.group ?? file.name,
+                    written: entry.path ? `@${entry.path}` : entry.written,
+                })));
     }
     const container = resolve(ref, root, self);
     if (!container?.options) {
         return [];
     }
+    const containerPath = pathOf(container, root);
+    const relative = (path) => (path.startsWith(`${containerPath}.`)
+        ? `@${path.slice(containerPath.length + 1)}`
+        : `@${path}`);
     const entries = [];
     let textboxes = 0;
     const add = (options, group) => {
         for (const option of options) {
             if (option === TEXTBOX) {
-                entries.push({ key: `${TEXTBOX}#${textboxes++}`, textbox: true, group });
+                entries.push({ key: `${TEXTBOX}#${textboxes++}`, textbox: true, group, written: TEXTBOX });
             } else if (typeof option === 'string') {
                 const node = resolve(option, root, self);
                 if (node) {
                     const path = refPath(option, root, self);
-                    entries.push({ key: path, path, node, group });
+                    entries.push({ key: path, path, node, group, written: option });
                 }
             } else if (option.type === undefined && Array.isArray(option.options)) {
                 // a sub-list, e.g. Combat Magic's bases
                 add(option.options, option);
             } else {
                 const path = pathOf(option, root);
-                entries.push({ key: path, path, node: option, group });
+                entries.push({ key: path, path, node: option, group, written: relative(path) });
             }
         }
     };

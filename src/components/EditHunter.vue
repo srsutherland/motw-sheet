@@ -152,7 +152,7 @@
         <p><em>Level {{ hunter.level }}</em><AdvancementButton /></p>
         <div
             v-for="{ taken, index, improvement } in takenWithIndex"
-            :key="taken.id"
+            :key="refOf(taken)"
             class="improvement"
         >
             <p :class="{ 'disabled-improvement': isDisabled(hunter, taken) }">
@@ -189,7 +189,9 @@
 import { computed, provide, ref } from 'vue';
 import { asList } from '@/Hunter';
 import { useHunter, useHunterState } from '@/HunterContext';
-import { choiceSet, findImprovement, gettingStartedRules, isDisabled } from '@/HunterState';
+import {
+    choiceSet, gettingStartedRules, improvementOf, isDisabled, refOf,
+} from '@/HunterState';
 import { TEXTBOX } from '@/PlaybookData';
 import { parseTags } from '@/Tags';
 import AdvancementButton from './AdvancementButton.vue';
@@ -223,7 +225,7 @@ const takenWithIndex = computed(() => hunter.value.improvements
     .map((taken, index) => ({
         taken,
         index,
-        improvement: findImprovement(hunter.value.playbook, taken.id)?.improvement,
+        improvement: improvementOf(hunter.value.playbook, taken)?.improvement,
     }))
     .filter(({ taken, improvement }) => improvement && !taken.pending));
 

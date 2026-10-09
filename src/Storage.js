@@ -6,7 +6,8 @@ import { TEXTBOX } from '@/PlaybookData';
 const PREFIX = 'motw-sheet.hunter.';
 
 // A pick as it's stored: a reference, or free text.
-const storedPick = (pick) => (pick.path ? `@${pick.path}` : { id: TEXTBOX, text: pick.text });
+// (absolute here: the computed view is for reading on its own)
+const storedPick = (pick) => (pick.path ? `@${pick.path}` : { ref: TEXTBOX, text: pick.text });
 
 // What the sheet shows, for anyone reading the file (DESIGN.md: "full" version, so full
 // objects). Each move or feature gets a `chosen` list: its own choices (Tools and

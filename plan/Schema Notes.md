@@ -122,7 +122,7 @@ Limits on a `choose` (exact syntax not final):
 ## Free text
 
 - A free-text entry is an option like any other: `@textbox`, inline with the rest (look, Chosen material)
-- Once filled in: `{ "id": "@textbox", "text": "weary" }`
+- Once filled in: `{ "ref": "@textbox", "text": "weary" }`
 - Each `@textbox` is picked at most once; for several entries, list it several times (Arcane Reputation: three)
 
 ## Look, ratings, history
@@ -181,27 +181,36 @@ Limits on a `choose` (exact syntax not final):
    - Playbooks also have an `updated` date; the hunter keeps it as `playbook_updated`
 - Level is separate from improvements taken (DESIGN.md)
 - Nothing is indexed by array position alone, unless order doesn't matter or the array records the order things were added
-- Choices are stored under what made you choose them, mirroring the playbook:
-   - `getting_started`: `{ grant: [...], choose: [{ from, choices }] }`
-   - `improvements`: `[{ id, choose: [{ from, choices }] }]`, in the order taken
-   - A pick or grant with its own choices is `{ ref, choose: [{ from, choices }] }` (Practitioner's effects live under the Practitioner pick)
-   - A `{ from, choices }` goes with the rule with that `from` (the nth of several with the same `from`)
-- Stored choices are references, with `@`: `"@the_spellslinger.moves.third_eye"`
-- Saved files include `ratings` and `moves` (references in slim, full move objects in full); computed, ignored on load
+- `id` defines (playbook); `ref` points (hunter)
+   - A reference with nothing attached is just the string: `"@improvements.weird"`
+   - With something attached: `{ ref, choices }`, `{ ref, cost }`, `{ ref: "@textbox", text }`
+- Choices are stored under what made you choose them:
+   - One rule: `choices` directly (`{ ref: "@practitioner", choices: [...] }`)
+   - Several rules: `choose: [{ from, choices }]`, mirroring the playbook (`getting_started`, Divine's redo)
+      - The nth rule with a given `from` goes with the nth entry with that `from`
+      - Shape depends on the rule count; a playbook update that changes it needs a hunter migration
+   - `improvements`: in the order taken
+- Choices are relative to the container they're chosen from: `"@bases.blast"`, `"@consumables"`
+   - An option that's itself a reference keeps it: `"@basic_moves.use_magic.heal"`
+   - Known first segment = absolute (`@basic_moves...`, `@the_expert...`); if a relative name collides, escape hatch: `"@.rel_ref"`
+   - `ref`s on improvements and grants are root-relative, as in playbooks
+- Saved files include `computed` (ratings, moves, gear, features; absolute refs); ignored on load
+- Playbook copy last in the file
 
 ```jsonc
 "getting_started": {
-  "grant": ["@basic_moves",
-    { "ref": "@moves.tools_and_techniques",
-      "choose": [{ "from": "@this", "choices": ["@the_spellslinger.moves.tools_and_techniques.consumables"] }] }],
+  "grant": ["@basic_moves", { "ref": "@moves.tools_and_techniques", "choices": ["@consumables"] }],
   "choose": [
-    { "from": "@combat_magic", "choices": ["@the_spellslinger.combat_magic.bases.blast"] },
+    { "from": "@combat_magic", "choices": ["@bases.blast", "@effects.fire"] },
     { "from": "@moves", "choices": [
-      { "ref": "@the_spellslinger.moves.practitioner",
-        "choose": [{ "from": "@this", "choices": ["@basic_moves.use_magic.heal"] }] }] }
+      "@third_eye",
+      { "ref": "@practitioner", "choices": ["@basic_moves.use_magic.heal"] }] }
   ]
 },
-"improvements": [{ "id": "move_1", "choose": [{ "from": "@moves", "choices": ["@the_spellslinger.moves.third_eye"] }] }]
+"improvements": [
+  "@improvements.weird",
+  { "ref": "@improvements.move_1", "choices": ["@shield_spell"] }
+]
 ```
 
 ## Other content
@@ -253,9 +262,6 @@ Conventions the code needed that weren't discussed. All used by the app as built
 - Placeable types: `move`, `basic_move`, `feature`, `gear`; a `grant` of anything else with `options` grants all its options (`"grant": "@basic_moves"`)
 - `basic_moves.json`: `{ id: "basic_moves", options: [ { type: "basic_move", name, rating, options? } ] }`; use magic's effects are its `options`
 - Your own playbook's features are always on your sheet; others' only when granted
-- Stored choices are absolute references, even where the playbook's `from` is root-relative (`"from": "@moves"`, choice `"@the_spellslinger.moves.third_eye"`)
-- Free text is still `{ "id": "@textbox", "text": ... }` (not `ref`)
-- Improvements with no choices still store `"choose": []`
 - An improvement that costs more than 1 stores `"cost"` on its record
 - Sub-options of "+1 to any rating" have a `name` (Charm, Cool...) so they can be labelled
 - Improvement list unlock: `requires.level` compares with level ups completed *before* the one the improvement is for

@@ -50,7 +50,7 @@
                         :key="i"
                         :rule="nested"
                         :self="entry.node"
-                        :set="choiceSet(pickRecord(set, entry.path), entry.node, i)"
+                        :set="choiceSet(pickRecord(set, entry.written), entry.node, i)"
                     />
                 </div>
             </li>
@@ -67,10 +67,10 @@
 import { computed, inject, ref, toRaw } from 'vue';
 import { asList } from '@/Hunter';
 import { useHunter, useHunterState } from '@/HunterContext';
-import { TEXTBOX, optionsOf, pathOf, refPath } from '@/PlaybookData';
+import { optionsOf, pathOf, refPath } from '@/PlaybookData';
 import {
-    advancesBasicMoves, choiceSet, countOf, overMax, pickRecord, refOf, setTextChoice, toggleChoice,
-    verbOf,
+    advancesBasicMoves, choiceSet, countOf, isText, overMax, pickRecord, refOf, setTextChoice,
+    toggleChoice, verbOf,
 } from '@/HunterState';
 import MarkdownText from './MarkdownText.vue';
 
@@ -97,13 +97,14 @@ const containerPath = computed(() => refPath(props.rule.from, hunter.value.playb
 
 // For "remove", the options are the hunter's current picks from the container.
 const entries = computed(() => {
-    const root = hunter.value.playbook;
+    const options = optionsOf(props.rule.from, hunter.value.playbook, props.self);
     if (verb.value === 'remove') {
-        return state.value.picks
+        const picked = new Set(state.value.picks
             .filter((p) => p.path && p.container === containerPath.value && !isThisSet(p.set))
-            .map((p) => ({ key: p.path, path: p.path, node: p.node, group: null }));
+            .map((p) => p.path));
+        return options.filter((entry) => picked.has(entry.path));
     }
-    return optionsOf(props.rule.from, root, props.self);
+    return options;
 });
 
 const groups = computed(() => {
@@ -126,12 +127,12 @@ const remaining = computed(() => Math.max(0, count.value - chosen.value.length))
 
 // The nth @textbox option holds the nth free-text choice.
 const textboxIndex = (entry) => Number(entry.key.split('#')[1]);
-const textboxChoices = () => chosen.value.filter((c) => c?.id === TEXTBOX);
+const textboxChoices = () => chosen.value.filter(isText);
 const textOf = (entry) => textboxChoices()[textboxIndex(entry)]?.text ?? '';
 
 const isChosen = (entry) => (entry.textbox
     ? textOf(entry) !== ''
-    : chosen.value.some((choice) => refOf(choice) === `@${entry.path}`));
+    : chosen.value.some((choice) => refOf(choice) === entry.written));
 
 // Picked or gained through another source (another improvement, a grant...).
 const takenElsewhere = (entry) => {
@@ -180,7 +181,7 @@ const isDisabled = (entry) => {
         && limit.inGroup >= limit.max);
 };
 
-const toggle = (entry) => toggleChoice(props.set, entry.path, entry.node);
+const toggle = (entry) => toggleChoice(props.set, entry);
 
 const setText = (entry, text) => setTextChoice(props.set, textboxIndex(entry), text);
 </script>

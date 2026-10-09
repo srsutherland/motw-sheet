@@ -18,8 +18,8 @@ const [download] = await Promise.all([a.waitForEvent('download'), a.getByTitle('
 check('file name', download.suggestedFilename(), 'Exported the Spell-Slinger.json');
 const file = await download.path();
 const data = JSON.parse(fs.readFileSync(file, 'utf8'));
-check('exported format', [data.schema_version, data.name, data.playbook.id, data.playbook_updated], ['0.1.2026.10.09', 'Exported', 'the_spellslinger', '2026-10-07']);
-check('exported choices', data.getting_started.choose[1], { from: '@moves', choices: ['@the_spellslinger.moves.third_eye'] });
+check('exported format', [data.schema_version, data.name, data.playbook.id, data.playbook_updated], ['0.1.2026.10.09.1', 'Exported', 'the_spellslinger', '2026-10-07']);
+check('exported choices', data.getting_started.choose[1], { from: '@moves', choices: ['@third_eye'] });
 check('exported computed', [data.computed.ratings, data.computed.moves.map((m) => m.name), Object.keys(data).at(-1)], [{ charm: -1, cool: 0, sharp: 2, tough: -1, weird: 2 }, ['Tools and Techniques', 'Third Eye'], 'playbook']);
 
 // Import into a fresh browser (empty localStorage)
