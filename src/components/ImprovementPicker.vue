@@ -119,7 +119,7 @@ const choose = (improvement) => {
     hunter.value.improvements.push({
         id: improvement.id,
         ...(cost > 1 ? { cost } : {}),
-        choose: makeChoose(improvement),
+        ...(improvement.choose ? { choose: makeChoose(improvement) } : {}),
         pending: true,
     });
 };

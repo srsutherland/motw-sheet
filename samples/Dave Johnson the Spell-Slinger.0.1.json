@@ -1,9 +1,8 @@
 {
-  "schema_version": "0.1.2026.10.07",
+  "schema_version": "0.1",
   "uid": "39e87fd3-0bda-456c-b659-6f672d508cc5",
   "playbook": {
-    "schema_version": "0.1.2026.10.02",
-    "updated": "2026-10-07",
+    "schema_version": "0.1",
     "id": "the_spellslinger",
     "type": "playbook",
     "name": "The Spell-Slinger",
@@ -634,7 +633,6 @@
       "requires": {
         "improvements": 12
       },
-      "cost": 2,
       "options": [
         {
           "id": "mythic_erase_luck",
@@ -677,7 +675,6 @@
     }
   },
   "playbook_name": "The Spell-Slinger",
-  "playbook_updated": "2026-10-07",
   "name": "Dave Johnson",
   "pronouns": "He/Him",
   "look": {
@@ -691,13 +688,6 @@
     "tough": -1,
     "weird": 2
   },
-  "ratings": {
-    "charm": -1,
-    "cool": 2,
-    "sharp": 2,
-    "tough": 0,
-    "weird": 3
-  },
   "history": [
     {
       "name": "Brick Hardcastle",
@@ -710,202 +700,85 @@
       "notes": ""
     }
   ],
-  "getting_started": {
-    "grant": [
-      "@basic_moves",
-      {
-        "ref": "@moves.tools_and_techniques",
-        "choose": [
-          {
-            "from": "@this",
-            "choices": [
-              "@the_spellslinger.moves.tools_and_techniques.consumables"
-            ]
-          }
-        ]
-      }
+  "getting_started": [
+    [
+      "the_spellslinger.combat_magic.bases.blast",
+      "the_spellslinger.combat_magic.effects.fire",
+      "the_spellslinger.combat_magic.effects.frost_or_ice"
     ],
-    "choose": [
-      {
-        "from": "@combat_magic",
-        "choices": [
-          "@the_spellslinger.combat_magic.bases.blast",
-          "@the_spellslinger.combat_magic.effects.fire",
-          "@the_spellslinger.combat_magic.effects.frost_or_ice"
-        ]
-      },
-      {
-        "from": "@moves",
-        "choices": [
-          "@the_spellslinger.moves.forensic_divination",
-          "@the_spellslinger.moves.go_big_or_go_home",
-          {
-            "ref": "@the_spellslinger.moves.practitioner",
-            "choose": [
-              {
-                "from": "@this",
-                "choices": [
-                  "@basic_moves.use_magic.heal",
-                  "@basic_moves.use_magic.observe"
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "from": "@starting_gear",
-        "choices": [
-          "@the_spellslinger.starting_gear.heirloom_sword"
-        ]
-      }
+    [
+      "the_spellslinger.moves.forensic_divination",
+      "the_spellslinger.moves.go_big_or_go_home",
+      "the_spellslinger.moves.practitioner"
+    ],
+    [
+      "the_spellslinger.starting_gear.heirloom_sword"
+    ]
+  ],
+  "nested": {
+    "the_spellslinger.moves.tools_and_techniques": [
+      [
+        "the_spellslinger.moves.tools_and_techniques.consumables"
+      ]
+    ],
+    "the_spellslinger.moves.practitioner": [
+      [
+        "basic_moves.use_magic.heal",
+        "basic_moves.use_magic.observe"
+      ]
     ]
   },
   "improvements": [
     {
-      "id": "weird"
+      "id": "weird",
+      "choices": []
     },
     {
-      "id": "cool"
+      "id": "cool",
+      "choices": []
     },
     {
-      "id": "tough"
+      "id": "tough",
+      "choices": []
     },
     {
       "id": "more_combat_magic",
-      "choose": [
-        {
-          "from": "@combat_magic",
-          "choices": [
-            "@the_spellslinger.combat_magic.bases.wall"
-          ]
-        }
+      "choices": [
+        [
+          "the_spellslinger.combat_magic.bases.wall"
+        ]
       ]
     },
     {
       "id": "move_1",
-      "choose": [
-        {
-          "from": "@moves",
-          "choices": [
-            "@the_spellslinger.moves.third_eye"
-          ]
-        }
+      "choices": [
+        [
+          "the_spellslinger.moves.third_eye"
+        ]
       ]
     },
     {
       "id": "move_2",
-      "choose": [
-        {
-          "from": "@moves",
-          "choices": [
-            "@the_spellslinger.moves.couldve_been_worse"
-          ]
-        }
+      "choices": [
+        [
+          "the_spellslinger.moves.couldve_been_worse"
+        ]
       ]
     },
     {
       "id": "any_rating",
-      "choose": [
-        {
-          "from": "@this",
-          "choices": [
-            "@the_spellslinger.improvements_advanced.any_rating.cool"
-          ]
-        }
+      "choices": [
+        [
+          "the_spellslinger.improvements_advanced.any_rating.cool"
+        ]
       ]
     },
     {
       "id": "more_combat_magic_2",
-      "choose": [
-        {
-          "from": "@combat_magic",
-          "choices": [
-            "@the_spellslinger.combat_magic.effects.force_or_wind"
-          ]
-        }
-      ]
-    }
-  ],
-  "moves": [
-    {
-      "id": "tools_and_techniques",
-      "type": "move",
-      "name": "Tools and Techniques",
-      "description": "To use your combat magic effectively you rely on a collection of tools and techniques. Cross off one; you'll need the rest.",
-      "choose": {
-        "from": "@this",
-        "cross": 1
-      },
-      "options": [
-        {
-          "name": "Consumables",
-          "description": "You need certain supplies— powders, oils, etc— on hand, some will be used up each cast. If you don't have them, take 1-harm ignore-armour when you cast."
-        },
-        {
-          "name": "Foci",
-          "description": "You need wands, staves, and other obvious props to focus. If you don't have what you need, your combat magic does 1 less harm."
-        },
-        {
-          "name": "Gestures",
-          "description": "You need to wave your hands around to use combat magic. If you're restrained, take -1 ongoing for combat magic."
-        },
-        {
-          "name": "Incantations",
-          "description": "You must speak in an arcane language to control your magic. If you use combat magic without speaking, [[act under pressure]] to avoid scrambling your thoughts."
-        }
-      ]
-    },
-    {
-      "type": "move",
-      "name": "Forensic Divination",
-      "description": "When you successfully [[investigate a mystery]], ask \"What magic was done here?\" as a free extra question."
-    },
-    {
-      "type": "move",
-      "name": "Go Big or Go Home",
-      "description": "When you must [[use magic]] as a requirement for [[Big Magic]], take +1 ongoing to those [[use magic]] rolls."
-    },
-    {
-      "type": "move",
-      "name": "Practitioner",
-      "description": "Choose two effects available to you under [[use magic]]. Take +1 to [[use magic]] whenever you choose one of those effects.",
-      "choose": {
-        "from": "@this",
-        "pick": 2
-      },
-      "options": [
-        "@basic_moves.use_magic.inflict_harm",
-        "@basic_moves.use_magic.enchant_weapon",
-        "@basic_moves.use_magic.beyond_human",
-        "@basic_moves.use_magic.bar",
-        "@basic_moves.use_magic.trap",
-        "@basic_moves.use_magic.banish",
-        "@basic_moves.use_magic.summon",
-        "@basic_moves.use_magic.communicate",
-        "@basic_moves.use_magic.observe",
-        "@basic_moves.use_magic.heal"
-      ]
-    },
-    {
-      "type": "move",
-      "name": "Third Eye",
-      "description": "When you [[read a bad situation]], you can **open up your third eye** for a moment to take in extra information. Take +1 hold on any result of 7 or more, plus you can see invisible things. On a miss, you may still get 1 hold, but you're exposed to supernatural danger. Unfiltered hidden reality is rough on the mind!"
-    },
-    {
-      "id": "couldve_been_worse",
-      "type": "move",
-      "name": "Could've Been Worse",
-      "description": "When you miss a [[use magic]] roll, choose one of the following options instead of losing control of the magic: Fizzle or This Is Gonna Suck.",
-      "details": [
-        {
-          "name": "Fizzle",
-          "description": "The preparations and materials for the spell are ruined. You'll have to start over from scratch with the prep time doubled."
-        },
-        {
-          "name": "This Is Gonna Suck",
-          "description": "The effect happens, but you trigger all of the listed glitches but one. You pick the one you avoid."
-        }
+      "choices": [
+        [
+          "the_spellslinger.combat_magic.effects.force_or_wind"
+        ]
       ]
     }
   ],

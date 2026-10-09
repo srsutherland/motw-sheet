@@ -67,6 +67,12 @@ class Hunter {
         const hunter = Object.assign(Object.create(Hunter.prototype), stored);
         // an improvement still being picked when the page was closed
         hunter.improvements = hunter.improvements.filter((taken) => !taken.pending);
+        // improvements without choices have no `choose` (files from 2026-10-07 had "choose": [])
+        for (const taken of hunter.improvements) {
+            if (taken.choose?.length === 0) {
+                delete taken.choose;
+            }
+        }
         return hunter;
     }
 

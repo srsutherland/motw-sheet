@@ -65,12 +65,12 @@ check('ratings base', st.ratings, { charm: -1, cool: 1, sharp: 1, tough: 0, weir
 
 const take = (id, picks = []) => {
     const imp = S.findImprovement(pb, id).improvement;
-    const record = { id, choose: makeChoose(imp) };
+    const record = { id, ...(imp.choose ? { choose: makeChoose(imp) } : {}) };
     h.improvements.push(record);
     picks.forEach((p) => pick(set(record, imp, 0), p));
     return record;
 };
-take('weird');
+check('no empty choose', 'choose' in take('weird'), false);
 take('any_rating', ['the_spellslinger.improvements_advanced.any_rating.cool']);
 take('move_1', ['the_spellslinger.moves.shield_spell']);
 take('advanced_basic_1', ['basic_moves.kick_some_ass', 'basic_moves.use_magic']);
