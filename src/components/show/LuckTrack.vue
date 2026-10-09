@@ -1,6 +1,11 @@
 <template>
 <section class="show-luck">
-    <span class="heading">Luck</span>:
+    <!-- the playbook's luck special pops up from the heading -->
+    <HoverPopup v-if="hunter.playbook.luck.special">
+        <template #trigger><span class="heading">Luck</span></template>
+        <MarkdownText class="special" :text="hunter.playbook.luck.special" />
+    </HoverPopup>
+    <span v-else class="heading">Luck</span>:
     <Track
         class="indent"
         v-model="hunter.luck_used"
@@ -8,16 +13,12 @@
         start="Okay"
         end="Doomed"
     />
-    <MarkdownText
-        v-if="hunter.playbook.luck.special"
-        class="indent special"
-        :text="hunter.playbook.luck.special"
-    />
 </section>
 </template>
 
 <script setup>
 import { useHunter } from '@/HunterContext';
+import HoverPopup from '../HoverPopup.vue';
 import MarkdownText from '../MarkdownText.vue';
 import Track from './Track.vue';
 

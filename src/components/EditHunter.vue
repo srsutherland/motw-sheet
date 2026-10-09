@@ -145,17 +145,19 @@
     </fieldset>
 </section>
 
-<!-- Improvements Section (taken on the view page, when leveling up) -->
-<section v-if="takenWithIndex.length" id="improvements">
+<!-- Improvements Section: manage those taken; Advancement takes new ones -->
+<section v-if="takenWithIndex.length || hunter.level" id="improvements">
     <fieldset>
         <legend>Improvements</legend>
+        <p><em>Level {{ hunter.level }}</em><AdvancementButton /></p>
         <div
             v-for="{ taken, index, improvement } in takenWithIndex"
             :key="taken.id"
             class="improvement"
         >
-            <p>
+            <p :class="{ 'disabled-improvement': isDisabled(hunter, taken) }">
                 <MarkdownText :text="improvement.description" inline />
+                <em v-if="isDisabled(hunter, taken)"> (disabled: above your current level)</em>
                 <button
                     class="small"
                     title="Remove (leaves an improvement unspent)"
@@ -187,9 +189,10 @@
 import { computed, provide, ref } from 'vue';
 import { asList } from '@/Hunter';
 import { useHunter, useHunterState } from '@/HunterContext';
-import { choiceSet, findImprovement, gettingStartedRules } from '@/HunterState';
+import { choiceSet, findImprovement, gettingStartedRules, isDisabled } from '@/HunterState';
 import { TEXTBOX } from '@/PlaybookData';
 import { parseTags } from '@/Tags';
+import AdvancementButton from './AdvancementButton.vue';
 import ChooseRule from './ChooseRule.vue';
 import MarkdownText from './MarkdownText.vue';
 import EditFeature from './edit/EditFeature.vue';
@@ -330,6 +333,10 @@ ul.plain {
 
 .granted {
     margin-bottom: 1em;
+}
+
+.disabled-improvement {
+    opacity: 0.6;
 }
 
 .bend-rules {

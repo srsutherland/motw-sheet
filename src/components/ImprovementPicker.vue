@@ -1,8 +1,8 @@
 <template>
 <dialog ref="dialog" class="improvement-picker" @cancel.prevent="cancel">
-    <h2>{{ levelUp ? 'Level up' : 'Take an improvement' }}</h2>
+    <h2>Advancement</h2>
     <MarkdownText
-        v-if="levelUp && hunter.playbook.leveling_up"
+        v-if="hunter.playbook.leveling_up"
         :text="hunter.playbook.leveling_up.description"
     />
 
@@ -33,7 +33,6 @@
                 </li>
             </ul>
         </section>
-        <button v-if="levelUp" @click="skip">Skip: level up, take an improvement later</button>
         <button @click="cancel">Cancel</button>
     </template>
 
@@ -59,7 +58,7 @@
 </template>
 
 <script setup>
-// Pick an improvement: on level up, or to spend an unspent one.
+// Advancement: spend an unspent improvement (each level up earns one).
 // The improvement being picked is added to the hunter right away (marked pending),
 // so its choices are stored like any other and previewed live on the sheet.
 import { computed, onMounted, ref } from 'vue';
@@ -72,9 +71,6 @@ import {
 import ChooseRule from './ChooseRule.vue';
 import MarkdownText from './MarkdownText.vue';
 
-const props = defineProps({
-    levelUp: Boolean, // true: this improvement comes with a new level
-});
 const emit = defineEmits(['done']);
 
 const hunter = useHunter();
@@ -93,12 +89,12 @@ const listNames = {
 // leveled up five times").
 const levelsBefore = computed(() => {
     const h = hunter.value;
-    return props.levelUp ? h.level : h.level - unspentImprovements(h);
+    return h.level - unspentImprovements(h);
 });
 
 const lists = computed(() => improvementLists(hunter.value, levelsBefore.value));
-// Improvements available to spend, counting the one this level up earns
-const points = computed(() => unspentImprovements(hunter.value) + (props.levelUp ? 1 : 0));
+// Improvements available to spend
+const points = computed(() => unspentImprovements(hunter.value));
 const blocked = (improvement) => improvementBlocked(
     hunter.value, improvement, state.value, points.value,
 );
@@ -133,18 +129,6 @@ const confirm = () => {
     const improvement = pending.value;
     delete h.improvements[pendingIndex.value].pending;
     applyOneOffEffects(h, improvement);
-    if (props.levelUp) {
-        h.level += 1;
-        h.experience = 0;
-    }
-    close();
-};
-
-// Level up without taking an improvement; it stays unspent (e.g. to save for a mythic one)
-const skip = () => {
-    const h = hunter.value;
-    h.level += 1;
-    h.experience = 0;
     close();
 };
 

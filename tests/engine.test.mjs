@@ -71,6 +71,7 @@ const take = (id, picks = []) => {
     picks.forEach((p) => pick(set(record, imp, 0), p));
     return record;
 };
+h.level = 4;
 check('no empty choose', 'choose' in take('weird'), false);
 take('any_rating', ['the_spellslinger.improvements_advanced.any_rating.cool']);
 take('move_1', ['the_spellslinger.moves.shield_spell']);
@@ -82,6 +83,12 @@ check('advanced basic', [...st.advanced], ['basic_moves.kick_some_ass', 'basic_m
 check('advancing does not add moves', st.moves.length, 5);
 check('find improvement', S.findImprovement(pb, 'cross_off_tt')?.list.id, 'improvements_advanced');
 
+h.level = 3;
+const down = S.hunterState(h);
+check('level down: newest improvement disabled', [...S.improvementBudget(h).disabled].map((t) => t.id), ['advanced_basic_1']);
+check('level down: its effect is gone', [...down.advanced], []);
+check('level down: choices kept', h.improvements.at(-1).choose[0].choices.length, 2);
+check('level down: nothing unspent', S.unspentImprovements(h), 0);
 h.level = 6;
 check('unspent', S.unspentImprovements(h), 2);
 check('mythic cost', S.costOf(pb, 'mythic_move'), 2);

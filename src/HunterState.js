@@ -164,9 +164,11 @@ const hunterState = (h) => {
         self: root.getting_started,
         source: 'getting_started',
     });
+    const { disabled } = improvementBudget(h);
     for (const taken of h.improvements) {
         const found = findImprovement(root, taken.id);
-        if (found) {
+        // improvements beyond the hunter's level keep their choices but do nothing
+        if (found && !disabled.has(toRaw(taken))) {
             const improvement = found.improvement;
             process({ holder: improvement, record: taken, self: improvement, source: taken.id });
         }
@@ -247,8 +249,24 @@ const costOf = (playbook, id) => {
 };
 
 // Each level up earns one improvement (DESIGN.md: level is separate from improvements).
-const unspentImprovements = (h) => Math.max(0, h.level - takenImprovements(h)
-    .reduce((sum, taken) => sum + (taken.cost ?? costOf(h.playbook, taken.id)), 0));
+// Leveling down leaves improvements the level no longer pays for: the most recently taken
+// are disabled (choices kept, no effect) until the hunter levels back up.
+const improvementBudget = (h) => {
+    let spent = 0;
+    const disabled = new Set();
+    for (const taken of takenImprovements(h)) {
+        const cost = taken.cost ?? costOf(h.playbook, taken.id);
+        if (disabled.size || spent + cost > h.level) {
+            disabled.add(toRaw(taken));
+        } else {
+            spent += cost;
+        }
+    }
+    return { unspent: disabled.size ? 0 : h.level - spent, disabled };
+};
+
+const unspentImprovements = (h) => improvementBudget(h).unspent;
+const isDisabled = (h, taken) => improvementBudget(h).disabled.has(toRaw(taken));
 
 // Would this effect push a rating past its max? ("Get +1 Weird, max +3")
 const overMax = (effect, state) => effect.rating !== undefined && effect.max !== undefined
@@ -311,6 +329,7 @@ export {
     verbOf, countOf, findImprovement, refOf, pathOfChoice, choiceSet, grantRecord, pickRecord,
     toggleChoice, setTextChoice, gettingStartedRules, advancesBasicMoves,
     hunterState, picksUnder, crossedUnder, basicMovesByRating,
-    takenImprovements, costOf, unspentImprovements, overMax, improvementLists, improvementBlocked,
+    takenImprovements, costOf, improvementBudget, unspentImprovements, isDisabled,
+    overMax, improvementLists, improvementBlocked,
     applyOneOffEffects,
 };

@@ -55,9 +55,7 @@ check('harm clamps at max, re-marks unstable', [await filled('.show-harm'), awai
 // Experience
 await click('.show-experience', 'plus', 5);
 check('xp 5', await filled('.show-experience'), 5);
-await page.getByRole('button', { name: 'Level up' }).click();
-await page.locator('dialog').getByRole('button', { name: 'Get +1 Weird, max +3', exact: true }).click();
-await page.locator('dialog').getByRole('button', { name: 'Take it' }).click();
+await page.getByRole('button', { name: 'Level Up' }).click();
 check('level up resets xp', [await filled('.show-experience'), await page.locator('.show-experience em').innerText()], [0, 'Level 1']);
 
 // Second hunter, then back to the first via the browser history

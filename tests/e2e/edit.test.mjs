@@ -92,7 +92,13 @@ check('view: protect someone listed', (await page.locator('.basic-moves').allInn
 
 check('view: title', (await page.locator('h1.hunter-name').innerText()).replace(/[🖉⭳]/gu, '').trim(), 'Alice the Spell-Slinger');
 check('view: pronouns and look', await page.locator('p.subtitle').innerText(), '(they/them) rumpled clothes, glowing eyes');
-check('view: luck special', (await page.locator('.show-luck .special').innerText()).startsWith('Spell-slinger Special:'), true);
+check('view: luck special hidden', await page.locator('.show-luck .popup').count(), 0);
+await page.locator('.show-luck .popup-trigger').hover();
+check('view: luck special on hover', (await page.locator('.show-luck .popup').innerText()).startsWith('Spell-slinger Special:'), true);
+await page.mouse.move(0, 0);
+await page.locator('.show-luck .popup-trigger').click();
+await page.mouse.move(0, 0);
+check('view: luck special pinned by click', await page.locator('.show-luck .popup').isVisible(), true);
 const feature = page.locator('.show-feature', { has: page.locator('h2:text-is("Combat Magic")') });
 check('view: combat magic groups', (await feature.locator('.group-name').allInnerTexts()), ['Bases:', 'Effects:']);
 check('view: combat magic picks', (await feature.locator('li strong').allInnerTexts()), ['Blast', 'Fire', 'Earth']);

@@ -1,31 +1,55 @@
 <template>
 <section class="show-experience">
     <span class="heading">Experience</span>:
-    <Track class="indent" v-model="hunter.experience" :max="5" />
+    <Track class="indent" v-model="hunter.experience" :max="5" @below-min="levelDown">
+        <template #after-plus>
+            <button v-if="hunter.experience >= 5" class="level-up" @click="levelUp">
+                Level Up
+            </button>
+        </template>
+    </Track>
     <div class="indent">
         <span class="indent">
-            <em>Level {{ hunter?.level }}</em>
-            <button v-if="hunter?.experience >= 5" @click="picking = 'level'">Level up</button>
-            <button v-else-if="unspent" @click="picking = 'unspent'">
-                Take an improvement ({{ unspent }} unspent)
-            </button>
+            <em>Level {{ hunter.level }}</em>
+            <AdvancementButton />
         </span>
     </div>
-    <ImprovementPicker v-if="picking" :level-up="picking === 'level'" @done="picking = null" />
 </section>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+// Experience: Level Up at 5; - at 0 levels down (after confirming). Improvements are taken
+// separately, through Advancement, so leveling up mid-session never blocks the sheet.
 import { useHunter } from '@/HunterContext';
-import { unspentImprovements } from '@/HunterState';
-import ImprovementPicker from '../ImprovementPicker.vue';
+import { improvementBudget, takenImprovements } from '@/HunterState';
+import AdvancementButton from '../AdvancementButton.vue';
 import Track from './Track.vue';
 
 const hunter = useHunter();
-const picking = ref(null); // 'level' | 'unspent' | null
 
-const unspent = computed(() => unspentImprovements(hunter.value));
+const levelUp = () => {
+    const h = hunter.value;
+    h.level += 1;
+    h.experience = 0;
+};
+
+const levelDown = () => {
+    const h = hunter.value;
+    if (h.level <= 0) {
+        return;
+    }
+    // how many improvements the lower level would leave unpaid for
+    const lower = { ...h, level: h.level - 1, improvements: takenImprovements(h) };
+    const disabling = improvementBudget(lower).disabled.size - improvementBudget(h).disabled.size;
+    const plural = disabling > 1 ? 's' : '';
+    const warning = disabling > 0
+        ? `\n\n${disabling} improvement${plural} will be disabled (choices kept) until you level up again.`
+        : '';
+    if (confirm(`Level down to level ${h.level - 1}?${warning}`)) {
+        h.level -= 1;
+        h.experience = 4;
+    }
+};
 </script>
 
 <style scoped>
@@ -39,4 +63,7 @@ const unspent = computed(() => unspentImprovements(hunter.value));
     text-transform: uppercase;
 }
 
+.level-up {
+    margin-left: 0.5em;
+}
 </style>
