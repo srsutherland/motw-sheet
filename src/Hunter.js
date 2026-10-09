@@ -2,7 +2,7 @@ import { resolve } from '@/PlaybookData';
 
 // Date of the last breaking change to the hunter format (0.1.yyyy.mm.dd, plus .1, .2...
 // if it breaks again on a day it was already pushed).
-const SCHEMA_VERSION = '0.1.2026.10.07';
+const SCHEMA_VERSION = '0.1.2026.10.09';
 
 // A `choose` or `grant` may be one rule or a list of them.
 const asList = (value) => (value === undefined ? [] : [].concat(value));
@@ -25,6 +25,7 @@ const hunterTitle = (name, playbookName) => {
 class Hunter {
     schema_version = SCHEMA_VERSION;
     uid = undefined;
+    created = ''; // ISO timestamp; "updated" is added when saved (Storage.js)
     playbook = undefined; // the hunter's own, modifiable copy (DESIGN.md: "full" hunter JSON)
     playbook_name = '';
     playbook_updated = ''; // the playbook's "updated" date when this hunter was made
@@ -38,12 +39,13 @@ class Hunter {
     extra_gear = []; // gear added during play: { name, tags }
     harm = 0;
     unstable = false;
-    luck = 0;
+    luck_used = 0; // luck marks used
     experience = 0;
     level = 0;
 
     constructor(playbook, name) {
         this.uid = crypto.randomUUID();
+        this.created = new Date().toISOString();
         this.playbook = structuredClone(playbook);
         this.playbook_name = playbook.name;
         this.playbook_updated = playbook.updated ?? '';
@@ -63,16 +65,10 @@ class Hunter {
             return null;
         }
         // computed on save, for readers of the file; recomputed here
-        const { ratings, moves, ...stored } = data; // eslint-disable-line no-unused-vars
+        const { computed, ...stored } = data; // eslint-disable-line no-unused-vars
         const hunter = Object.assign(Object.create(Hunter.prototype), stored);
         // an improvement still being picked when the page was closed
         hunter.improvements = hunter.improvements.filter((taken) => !taken.pending);
-        // improvements without choices have no `choose` (files from 2026-10-07 had "choose": [])
-        for (const taken of hunter.improvements) {
-            if (taken.choose?.length === 0) {
-                delete taken.choose;
-            }
-        }
         return hunter;
     }
 

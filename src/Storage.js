@@ -1,26 +1,45 @@
 import { Hunter, hunterTitle } from '@/Hunter';
-import { hunterState } from '@/HunterState';
+import { hunterState, picksUnder } from '@/HunterState';
+import { TEXTBOX } from '@/PlaybookData';
 
 // Each hunter is stored under its own key, so saving one doesn't rewrite the rest.
 const PREFIX = 'motw-sheet.hunter.';
 
-// The hunter as saved: its own data, plus `ratings` and `moves` computed for anyone reading
-// the file (DESIGN.md: "full" version, so moves are full objects). Ignored when loading.
-const toSaved = (hunter) => {
+// A pick as it's stored: a reference, or free text.
+const storedPick = (pick) => (pick.path ? `@${pick.path}` : { id: TEXTBOX, text: pick.text });
+
+// What the sheet shows, for anyone reading the file (DESIGN.md: "full" version, so full
+// objects). Each move or feature gets a `chosen` list: its own choices (Tools and
+// Techniques' cross-off, Practitioner's effects, Combat Magic's picks). Ignored when loading.
+const computedFor = (hunter) => {
     const state = hunterState(hunter);
-    const computed = {
-        ratings: state.ratings,
-        moves: state.moves.map((move) => move.node),
+    const withChosen = ({ node, path }) => {
+        const chosen = [...picksUnder(state, path), ...state.crosses
+            .filter((c) => c.path.startsWith(`${path}.`))].map(storedPick);
+        return chosen.length ? { ...node, chosen } : node;
     };
+    return {
+        ratings: state.ratings,
+        moves: state.moves.map(withChosen),
+        gear: [...state.gear.map((item) => item.node), ...hunter.extra_gear],
+        features: state.features.map(withChosen),
+    };
+};
+
+// The hunter as saved: its own data, `updated`, the computed view, then the playbook copy
+// last (it's most of the file).
+const toSaved = (hunter) => {
+    // eslint-disable-next-line no-unused-vars
+    const { playbook, updated, ...own } = JSON.parse(JSON.stringify(hunter));
     const saved = {};
-    for (const [key, value] of Object.entries(JSON.parse(JSON.stringify(hunter)))) {
+    for (const [key, value] of Object.entries(own)) {
         saved[key] = value;
-        if (key === 'ratings_base') {
-            saved.ratings = computed.ratings;
-        } else if (key === 'improvements') {
-            saved.moves = computed.moves;
+        if (key === 'created') {
+            saved.updated = new Date().toISOString();
         }
     }
+    saved.computed = computedFor(hunter);
+    saved.playbook = playbook;
     return saved;
 };
 

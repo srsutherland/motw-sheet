@@ -24,8 +24,8 @@
                 <input v-model="item.name" placeholder="name" />
                 <input
                     :value="item.tags.join(' ')"
-                    placeholder="tags (space separated)"
-                    @change="item.tags = $event.target.value.split(/\s+/).filter(Boolean)"
+                    placeholder="tags, e.g. 1-harm close"
+                    @change="item.tags = parseTags($event.target.value)"
                 />
                 <button class="small" title="Remove" @click="hunter.extra_gear.splice(i, 1)">
                     ✕
@@ -189,6 +189,7 @@ import { asList } from '@/Hunter';
 import { useHunter, useHunterState } from '@/HunterContext';
 import { choiceSet, findImprovement, gettingStartedRules } from '@/HunterState';
 import { TEXTBOX } from '@/PlaybookData';
+import { parseTags } from '@/Tags';
 import ChooseRule from './ChooseRule.vue';
 import MarkdownText from './MarkdownText.vue';
 import EditFeature from './edit/EditFeature.vue';

@@ -3,7 +3,7 @@
     <span class="heading">Luck</span>:
     <Track
         class="indent"
-        v-model="hunter.luck"
+        v-model="hunter.luck_used"
         :max="hunter.luck_max"
         start="Okay"
         end="Doomed"

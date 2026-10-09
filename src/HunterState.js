@@ -298,7 +298,7 @@ const improvementBlocked = (h, improvement, state, points) => {
 const applyOneOffEffects = (h, improvement) => {
     for (const effect of improvement.effects ?? []) {
         if (effect.luck) {
-            h.luck = Math.min(h.luck_max, Math.max(0, h.luck + effect.luck));
+            h.luck_used = Math.min(h.luck_max, Math.max(0, h.luck_used + effect.luck));
         }
     }
 };
