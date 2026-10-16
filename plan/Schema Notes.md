@@ -20,7 +20,8 @@ Sections: **Decided** (with where it was decided), **Needs** (from the playbook 
 
 - **Feature**: a playbook-specific thing that isn't a move (Haven, Combat Magic, Background, Fate, Heat, Agency, Breed); goes in pre-moves or post-moves
 - **Options**: what the playbook offers
-- **Choices**: what the hunter picked
+- **Chosen**: what the hunter picked; stored with the `choose` rule's object
+- **Selected**: computed, on the object that has the `options` (from any source)
 - Objects get an explicit `"type"`: `move`, `gear`, `feature`, `improvement`, etc.
    - Plain values (look, ratings lines, history) are implicitly typed by their key
 
@@ -183,10 +184,10 @@ Limits on a `choose` (exact syntax not final):
 - Nothing is indexed by array position alone, unless order doesn't matter or the array records the order things were added
 - `id` defines (playbook); `ref` points (hunter)
    - A reference with nothing attached is just the string: `"@improvements.weird"`
-   - With something attached: `{ ref, choices }`, `{ ref, cost }`, `{ ref: "@textbox", text }`
+   - With something attached: `{ ref, chosen }`, `{ ref, cost }`, `{ ref: "@textbox", text }`
 - Choices are stored under what made you choose them:
-   - One rule: `choices` directly (`{ ref: "@practitioner", choices: [...] }`)
-   - Several rules: `choose: [{ from, choices }]`, mirroring the playbook (`getting_started`, Divine's redo)
+   - One rule: `chosen` directly (`{ ref: "@practitioner", chosen: [...] }`)
+   - Several rules: `choose: [{ from, chosen }]`, mirroring the playbook (`getting_started`, Divine's redo)
       - The nth rule with a given `from` goes with the nth entry with that `from`
       - Shape depends on the rule count; a playbook update that changes it needs a hunter migration
    - `improvements`: in the order taken
@@ -194,22 +195,23 @@ Limits on a `choose` (exact syntax not final):
    - An option that's itself a reference keeps it: `"@basic_moves.use_magic.heal"`
    - Known first segment = absolute (`@basic_moves...`, `@the_expert...`); if a relative name collides, escape hatch: `"@.rel_ref"`
    - `ref`s on improvements and grants are root-relative, as in playbooks
-- Saved files include `computed` (ratings, moves, gear, features; absolute refs); ignored on load
+- Saved files include `computed` (ratings, moves, gear, features); ignored on load
+   - Moves and features with options get `selected`, written like `chosen` (relative to the object)
 - Playbook copy last in the file
 
 ```jsonc
 "getting_started": {
-  "grant": ["@basic_moves", { "ref": "@moves.tools_and_techniques", "choices": ["@consumables"] }],
+  "grant": ["@basic_moves", { "ref": "@moves.tools_and_techniques", "chosen": ["@consumables"] }],
   "choose": [
-    { "from": "@combat_magic", "choices": ["@bases.blast", "@effects.fire"] },
-    { "from": "@moves", "choices": [
+    { "from": "@combat_magic", "chosen": ["@bases.blast", "@effects.fire"] },
+    { "from": "@moves", "chosen": [
       "@third_eye",
-      { "ref": "@practitioner", "choices": ["@basic_moves.use_magic.heal"] }] }
+      { "ref": "@practitioner", "chosen": ["@basic_moves.use_magic.heal"] }] }
   ]
 },
 "improvements": [
   "@improvements.weird",
-  { "ref": "@improvements.move_1", "choices": ["@shield_spell"] }
+  { "ref": "@improvements.move_1", "chosen": ["@shield_spell"] }
 ]
 ```
 

@@ -2,26 +2,26 @@ import { resolve } from '@/PlaybookData';
 
 // Date of the last breaking change to the hunter format (0.1.yyyy.mm.dd, plus .1, .2...
 // if it breaks again on a day it was already pushed).
-const SCHEMA_VERSION = '0.1.2026.10.09.1';
+const SCHEMA_VERSION = '0.1.2026.10.16';
 
 // A `choose` or `grant` may be one rule or a list of them.
 const asList = (value) => (value === undefined ? [] : [].concat(value));
 
 // The hunter's side of a playbook object's `choose` (plan/Schema Notes.md: "Hunter JSON"):
-// one rule -> { choices }; several -> { choose: [{ from, choices }] }, mirroring the playbook.
+// one rule -> { chosen }; several -> { choose: [{ from, chosen }] }, mirroring the playbook.
 const makeChoices = (holder) => {
     const rules = asList(holder?.choose);
     if (rules.length === 0) {
         return {};
     }
     if (rules.length === 1) {
-        return { choices: [] };
+        return { chosen: [] };
     }
-    return { choose: rules.map((rule) => ({ from: rule.from, choices: [] })) };
+    return { choose: rules.map((rule) => ({ from: rule.from, chosen: [] })) };
 };
 
 // A pick or grant with its own choices (Practitioner, Tools and Techniques) is stored as
-// { ref, choices }; anything else is just its reference, a string.
+// { ref, chosen }; anything else is just its reference, a string.
 const makeRecord = (ref, node) => (node?.choose ? { ref, ...makeChoices(node) } : ref);
 
 // "{name} the {playbook}"; playbook names already start with "The"
@@ -43,7 +43,7 @@ class Hunter {
     ratings_base = null; // a copy of the chosen ratings line
     history = []; // { name, option, notes }
     getting_started = undefined; // { grant, choose }, mirroring the playbook's getting_started
-    improvements = []; // references, or { ref, choices, cost }, in the order taken
+    improvements = []; // references, or { ref, chosen, cost }, in the order taken
     extra_gear = []; // gear added during play: { name, tags }
     harm = 0;
     unstable = false;

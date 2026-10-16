@@ -77,7 +77,7 @@ import MarkdownText from './MarkdownText.vue';
 const props = defineProps({
     rule: { type: Object, required: true },
     self: Object, // the object the rule is written in, for @this
-    set: Object, // the hunter's { from, choices } for this rule (HunterState.js: choiceSet)
+    set: Object, // the hunter's { from, chosen } for this rule (HunterState.js: choiceSet)
 });
 
 const hunter = useHunter();
@@ -122,7 +122,7 @@ const groups = computed(() => {
     return list;
 });
 
-const chosen = computed(() => props.set?.choices ?? []);
+const chosen = computed(() => props.set?.chosen ?? []);
 const remaining = computed(() => Math.max(0, count.value - chosen.value.length));
 
 // The nth @textbox option holds the nth free-text choice.

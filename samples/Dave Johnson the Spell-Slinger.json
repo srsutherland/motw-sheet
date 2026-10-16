@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.1.2026.10.09.1",
+  "schema_version": "0.1.2026.10.16",
   "uid": "39e87fd3-0bda-456c-b659-6f672d508cc5",
   "created": "",
   "updated": "2026-10-09T21:18:06.045Z",
@@ -35,7 +35,7 @@
       "@basic_moves",
       {
         "ref": "@moves.tools_and_techniques",
-        "choices": [
+        "chosen": [
           "@consumables"
         ]
       }
@@ -43,7 +43,7 @@
     "choose": [
       {
         "from": "@combat_magic",
-        "choices": [
+        "chosen": [
           "@bases.blast",
           "@effects.fire",
           "@effects.frost_or_ice"
@@ -51,12 +51,12 @@
       },
       {
         "from": "@moves",
-        "choices": [
+        "chosen": [
           "@forensic_divination",
           "@go_big_or_go_home",
           {
             "ref": "@practitioner",
-            "choices": [
+            "chosen": [
               "@basic_moves.use_magic.heal",
               "@basic_moves.use_magic.observe"
             ]
@@ -65,7 +65,7 @@
       },
       {
         "from": "@starting_gear",
-        "choices": [
+        "chosen": [
           "@heirloom_sword"
         ]
       }
@@ -77,31 +77,31 @@
     "@improvements.tough",
     {
       "ref": "@improvements.more_combat_magic",
-      "choices": [
+      "chosen": [
         "@bases.wall"
       ]
     },
     {
       "ref": "@improvements.move_1",
-      "choices": [
+      "chosen": [
         "@third_eye"
       ]
     },
     {
       "ref": "@improvements.move_2",
-      "choices": [
+      "chosen": [
         "@couldve_been_worse"
       ]
     },
     {
       "ref": "@improvements_advanced.any_rating",
-      "choices": [
+      "chosen": [
         "@cool"
       ]
     },
     {
       "ref": "@improvements_advanced.more_combat_magic_2",
-      "choices": [
+      "chosen": [
         "@effects.force_or_wind"
       ]
     }
@@ -156,8 +156,8 @@
             "description": "You must speak in an arcane language to control your magic. If you use combat magic without speaking, [[act under pressure]] to avoid scrambling your thoughts."
           }
         ],
-        "chosen": [
-          "@the_spellslinger.moves.tools_and_techniques.consumables"
+        "selected": [
+          "@consumables"
         ]
       },
       {
@@ -190,7 +190,7 @@
           "@basic_moves.use_magic.observe",
           "@basic_moves.use_magic.heal"
         ],
-        "chosen": [
+        "selected": [
           "@basic_moves.use_magic.heal",
           "@basic_moves.use_magic.observe"
         ]
@@ -327,12 +327,12 @@
             ]
           }
         ],
-        "chosen": [
-          "@the_spellslinger.combat_magic.bases.blast",
-          "@the_spellslinger.combat_magic.effects.fire",
-          "@the_spellslinger.combat_magic.effects.frost_or_ice",
-          "@the_spellslinger.combat_magic.bases.wall",
-          "@the_spellslinger.combat_magic.effects.force_or_wind"
+        "selected": [
+          "@bases.blast",
+          "@effects.fire",
+          "@effects.frost_or_ice",
+          "@bases.wall",
+          "@effects.force_or_wind"
         ]
       }
     ]

@@ -29,7 +29,7 @@ const findImprovement = (playbook, id) => {
 };
 
 // Stored references: a string ("@third_eye"), or a record with something attached:
-// { ref, choices }, { ref, cost }, or free text { ref: "@textbox", text }.
+// { ref, chosen }, { ref, cost }, or free text { ref: "@textbox", text }.
 const refOf = (stored) => (typeof stored === 'string' ? stored : stored?.ref);
 const isText = (stored) => stored?.ref === TEXTBOX;
 
@@ -44,7 +44,7 @@ const improvementRef = (playbook, improvement) => `@${pathOf(improvement, playbo
     .slice(playbook.id.length + 1)}`;
 
 // The hunter's choices for rule i of `holder`, inside `record` (the hunter's side of it).
-// One rule: the record itself holds `choices`. Several: `choose: [{ from, choices }]`, and the
+// One rule: the record itself holds `chosen`. Several: `choose: [{ from, chosen }]`, and the
 // nth rule with a given `from` goes with the nth entry with that `from`.
 const choiceSet = (record, holder, i) => {
     if (!record || typeof record !== 'object') {
@@ -52,7 +52,7 @@ const choiceSet = (record, holder, i) => {
     }
     const rules = asList(holder?.choose);
     if (rules.length === 1) {
-        return record.choices ? record : null;
+        return record.chosen ? record : null;
     }
     const from = rules[i]?.from;
     const nth = rules.slice(0, i).filter((rule) => rule.from === from).length;
@@ -63,30 +63,30 @@ const choiceSet = (record, holder, i) => {
 const grantRecord = (record, ref) => (record?.grant ?? []).find((g) => refOf(g) === ref);
 
 // The record a picked option is stored as, inside a choice set (for its own choices).
-const pickRecord = (set, written) => set?.choices.find((c) => typeof c === 'object'
+const pickRecord = (set, written) => set?.chosen.find((c) => typeof c === 'object'
     && c.ref === written) ?? null;
 
 // Pick or unpick an option (an entry from optionsOf). Options with their own choices are
-// stored as { ref, choices }.
+// stored as { ref, chosen }.
 const toggleChoice = (set, entry) => {
-    const at = set.choices.findIndex((choice) => refOf(choice) === entry.written);
+    const at = set.chosen.findIndex((choice) => refOf(choice) === entry.written);
     if (at >= 0) {
-        set.choices.splice(at, 1);
+        set.chosen.splice(at, 1);
     } else {
-        set.choices.push(makeRecord(entry.written, entry.node));
+        set.chosen.push(makeRecord(entry.written, entry.node));
     }
 };
 
 // Set the nth free-text choice in a set ("" removes it).
 const setTextChoice = (set, n, text) => {
-    const existing = set.choices.filter(isText)[n];
+    const existing = set.chosen.filter(isText)[n];
     text = text.trim();
     if (existing && text) {
         existing.text = text;
     } else if (existing) {
-        set.choices.splice(set.choices.indexOf(existing), 1);
+        set.chosen.splice(set.chosen.indexOf(existing), 1);
     } else if (text) {
-        set.choices.push({ ref: TEXTBOX, text });
+        set.chosen.push({ ref: TEXTBOX, text });
     }
 };
 
@@ -106,7 +106,7 @@ const gettingStartedRules = (h) => {
 const chosenFor = (playbook, holder, record) => asList(holder?.choose).flatMap((rule, i) => {
     const options = new Map(optionsOf(rule.from, playbook, holder)
         .map((entry) => [entry.written, entry]));
-    return (choiceSet(record, holder, i)?.choices ?? [])
+    return (choiceSet(record, holder, i)?.chosen ?? [])
         .map((choice) => (isText(choice) ? { text: choice.text } : options.get(refOf(choice))))
         .filter(Boolean);
 });
@@ -157,7 +157,7 @@ const hunterState = (h) => {
             // stored choices are matched to options by how they're written
             const options = new Map(optionsOf(rule.from, root, self)
                 .map((entry) => [entry.written, entry]));
-            for (const choice of set.choices) {
+            for (const choice of set.chosen) {
                 if (isText(choice)) {
                     picks.push({ text: choice.text, container, source, set: toRaw(set) });
                     continue;

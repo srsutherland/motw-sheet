@@ -1,29 +1,31 @@
 import { Hunter, hunterTitle } from '@/Hunter';
 import { hunterState, picksUnder } from '@/HunterState';
-import { TEXTBOX } from '@/PlaybookData';
+import { TEXTBOX, optionsOf } from '@/PlaybookData';
 
 // Each hunter is stored under its own key, so saving one doesn't rewrite the rest.
 const PREFIX = 'motw-sheet.hunter.';
 
-// A pick as it's stored: a reference, or free text.
-// (absolute here: the computed view is for reading on its own)
-const storedPick = (pick) => (pick.path ? `@${pick.path}` : { ref: TEXTBOX, text: pick.text });
-
 // What the sheet shows, for anyone reading the file (DESIGN.md: "full" version, so full
-// objects). Each move or feature gets a `chosen` list: its own choices (Tools and
-// Techniques' cross-off, Practitioner's effects, Combat Magic's picks). Ignored when loading.
+// objects). A move or feature with options gets `selected`: what's selected from those
+// options, from any source (Combat Magic: getting_started and improvements). Written like
+// stored choices, relative to the object ("@bases.blast"). Ignored when loading.
 const computedFor = (hunter) => {
     const state = hunterState(hunter);
-    const withChosen = ({ node, path }) => {
-        const chosen = [...picksUnder(state, path), ...state.crosses
-            .filter((c) => c.path.startsWith(`${path}.`))].map(storedPick);
-        return chosen.length ? { ...node, chosen } : node;
+    const withSelected = ({ node, path }) => {
+        const written = new Map(optionsOf(`@${path}`, hunter.playbook)
+            .map((entry) => [entry.path, entry.written]));
+        const selected = [...picksUnder(state, path), ...state.crosses
+            .filter((c) => c.path.startsWith(`${path}.`))]
+            .map((pick) => (pick.path
+                ? written.get(pick.path) ?? `@${pick.path}`
+                : { ref: TEXTBOX, text: pick.text }));
+        return selected.length ? { ...node, selected } : node;
     };
     return {
         ratings: state.ratings,
-        moves: state.moves.map(withChosen),
+        moves: state.moves.map(withSelected),
         gear: [...state.gear.map((item) => item.node), ...hunter.extra_gear],
-        features: state.features.map(withChosen),
+        features: state.features.map(withSelected),
     };
 };
 

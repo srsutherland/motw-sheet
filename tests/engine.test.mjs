@@ -19,8 +19,8 @@ const pb = h.playbook;
 const sp = 'the_spellslinger';
 check('copy, not shared', h.playbook !== playbooks[0], true);
 check('getting_started mirrors the playbook', h.getting_started.choose.map((c) => c.from), ['@combat_magic', '@moves', '@starting_gear']);
-check('granted records', h.getting_started.grant, ['@basic_moves', { ref: '@moves.tools_and_techniques', choices: [] }]);
-check('version', h.schema_version, '0.1.2026.10.09.1');
+check('granted records', h.getting_started.grant, ['@basic_moves', { ref: '@moves.tools_and_techniques', chosen: [] }]);
+check('version', h.schema_version, '0.1.2026.10.16');
 check('created timestamp', /^\d{4}-\d\d-\d\dT/.test(h.created), true);
 check('playbook updated', h.playbook_updated, '2026-10-07');
 check('slug', D.slug("Could've Been Worse"), 'couldve_been_worse');
@@ -58,11 +58,11 @@ pick(S.pickRecord(movesSet, '@practitioner'), practitioner, 0, 'basic_moves.use_
 pick(S.pickRecord(movesSet, '@practitioner'), practitioner, 0, 'basic_moves.use_magic.banish');
 S.setTextChoice(S.choiceSet(S.pickRecord(movesSet, '@arcane_reputation'), ar, 0), 0, 'The White Council');
 
-check('stored: relative to the container', S.choiceSet(h.getting_started, gs, 0), { from: '@combat_magic', choices: ['@bases.blast', '@effects.fire', '@effects.earth'] });
-check('stored: a grant with choices', h.getting_started.grant[1], { ref: '@moves.tools_and_techniques', choices: ['@gestures'] });
-check('stored: a pick with its own choices', movesSet.choices[0], { ref: '@practitioner', choices: ['@basic_moves.use_magic.heal', '@basic_moves.use_magic.banish'] });
-check('stored: free text', movesSet.choices[1], { ref: '@arcane_reputation', choices: [{ ref: '@textbox', text: 'The White Council' }] });
-check('stored: plain picks are strings', [movesSet.choices[2], S.choiceSet(h.getting_started, gs, 2).choices], ['@third_eye', ['@ritual_knife']]);
+check('stored: relative to the container', S.choiceSet(h.getting_started, gs, 0), { from: '@combat_magic', chosen: ['@bases.blast', '@effects.fire', '@effects.earth'] });
+check('stored: a grant with choices', h.getting_started.grant[1], { ref: '@moves.tools_and_techniques', chosen: ['@gestures'] });
+check('stored: a pick with its own choices', movesSet.chosen[0], { ref: '@practitioner', chosen: ['@basic_moves.use_magic.heal', '@basic_moves.use_magic.banish'] });
+check('stored: free text', movesSet.chosen[1], { ref: '@arcane_reputation', chosen: [{ ref: '@textbox', text: 'The White Council' }] });
+check('stored: plain picks are strings', [movesSet.chosen[2], S.choiceSet(h.getting_started, gs, 2).chosen], ['@third_eye', ['@ritual_knife']]);
 
 st = S.hunterState(h);
 check('moves', st.moves.map((m) => m.node.name), ['Tools and Techniques', 'Practitioner', 'Arcane Reputation', 'Third Eye']);
@@ -73,7 +73,7 @@ check('practitioner picks', S.picksUnder(st, `${sp}.moves.practitioner`).map((p)
 check('textbox picks', S.picksUnder(st, `${sp}.moves.arcane_reputation`).map((p) => p.text), ['The White Council']);
 check('ratings base', st.ratings, { charm: -1, cool: 1, sharp: 1, tough: 0, weird: 2 });
 
-// Improvements: a reference, or { ref, choices } when something is chosen
+// Improvements: a reference, or { ref, chosen } when something is chosen
 const take = (id, paths = []) => {
     const imp = S.findImprovement(pb, id).improvement;
     const record = { ref: S.improvementRef(pb, imp), ...makeChoices(imp) };
@@ -86,8 +86,8 @@ const take = (id, paths = []) => {
 };
 h.level = 4;
 check('improvement without choices is a string', take('weird'), '@improvements.weird');
-check('improvement with a choice', take('any_rating', [`${sp}.improvements_advanced.any_rating.cool`]), { ref: '@improvements_advanced.any_rating', choices: ['@cool'] });
-check('move from an improvement, relative to @moves', take('move_1', [`${sp}.moves.shield_spell`]), { ref: '@improvements.move_1', choices: ['@shield_spell'] });
+check('improvement with a choice', take('any_rating', [`${sp}.improvements_advanced.any_rating.cool`]), { ref: '@improvements_advanced.any_rating', chosen: ['@cool'] });
+check('move from an improvement, relative to @moves', take('move_1', [`${sp}.moves.shield_spell`]), { ref: '@improvements.move_1', chosen: ['@shield_spell'] });
 take('advanced_basic_1', ['basic_moves.kick_some_ass', 'basic_moves.use_magic']);
 st = S.hunterState(h);
 check('ratings after improvements', st.ratings, { charm: -1, cool: 2, sharp: 1, tough: 0, weird: 3 });
@@ -101,12 +101,12 @@ h.level = 3;
 const down = S.hunterState(h);
 check('level down: newest improvement disabled', [...S.improvementBudget(h).disabled].map(S.refOf), ['@improvements_advanced.advanced_basic_1']);
 check('level down: its effect is gone', [...down.advanced], []);
-check('level down: choices kept', h.improvements.at(-1).choices.length, 2);
+check('level down: choices kept', h.improvements.at(-1).chosen.length, 2);
 check('level down: nothing unspent', S.unspentImprovements(h), 0);
 h.level = 6;
 check('unspent', S.unspentImprovements(h), 2);
 check('mythic cost', S.costOf(pb, 'mythic_move'), 2);
-h.improvements.push({ ref: '@improvements_mythic.mythic_move', cost: 2, choices: [] });
+h.improvements.push({ ref: '@improvements_mythic.mythic_move', cost: 2, chosen: [] });
 check('unspent after a mythic', S.unspentImprovements(h), 0);
 h.improvements.pop();
 
@@ -126,15 +126,15 @@ check('saved: updated after created', keys.indexOf('updated') === keys.indexOf('
 check('saved: luck_used', [keys.includes('luck_used'), keys.includes('luck')], [true, false]);
 check('saved: computed keys', Object.keys(saved.computed), ['ratings', 'moves', 'gear', 'features']);
 const savedMove = (name) => saved.computed.moves.find((m) => m.name === name);
-check('saved: T&T chosen (absolute)', savedMove('Tools and Techniques').chosen, [`@${sp}.moves.tools_and_techniques.gestures`]);
-check('saved: Practitioner chosen', savedMove('Practitioner').chosen, ['@basic_moves.use_magic.heal', '@basic_moves.use_magic.banish']);
-check('saved: Arcane Reputation chosen', savedMove('Arcane Reputation').chosen, [{ ref: '@textbox', text: 'The White Council' }]);
-check('saved: no chosen on plain moves', 'chosen' in savedMove('Third Eye'), false);
+check('saved: T&T selected (relative)', savedMove('Tools and Techniques').selected, ['@gestures']);
+check('saved: Practitioner selected', savedMove('Practitioner').selected, ['@basic_moves.use_magic.heal', '@basic_moves.use_magic.banish']);
+check('saved: Arcane Reputation selected', savedMove('Arcane Reputation').selected, [{ ref: '@textbox', text: 'The White Council' }]);
+check('saved: no selected on plain moves', 'selected' in savedMove('Third Eye'), false);
 check('saved: gear', saved.computed.gear.map((g) => g.name), ['Ritual knife', 'Amulet']);
-check('saved: features', saved.computed.features.map((f) => [f.name, f.chosen.length]), [['Combat Magic', 3]]);
+check('saved: features', saved.computed.features.map((f) => [f.name, f.selected]), [['Combat Magic', ['@bases.blast', '@effects.fire', '@effects.earth']]]);
 const round = Hunter.fromJSON(JSON.parse(JSON.stringify(saved)));
 check('JSON round trip state', JSON.stringify(S.hunterState(round).ratings), JSON.stringify(st.ratings));
 check('computed ignored on load', round.computed, undefined);
-check('old save rejected', Hunter.fromJSON({ schema_version: '0.1.2026.10.09', uid: 'x', playbook: {} }), null);
+check('old save rejected', Hunter.fromJSON({ schema_version: '0.1.2026.10.09.1', uid: 'x', playbook: {} }), null);
 await server.close();
 finish();

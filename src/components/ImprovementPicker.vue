@@ -108,7 +108,7 @@ const pending = computed(() => {
 
 const complete = computed(() => asList(pending.value?.choose).every((rule, i) => {
     const set = choiceSet(hunter.value.improvements[pendingIndex.value], pending.value, i);
-    return (set?.choices ?? []).length >= (rule.min ?? countOf(rule));
+    return (set?.chosen ?? []).length >= (rule.min ?? countOf(rule));
 }));
 
 const choose = (improvement) => {
