@@ -6,13 +6,16 @@ App to create, view, and edit digital character sheets from the Monster of the W
 
 From the main page, the user can create a new character sheet or view an existing one.
 
+- Import a hunter from a file
+- Delete a hunter (with confirmation)
+
 ## ?new
 
 A list of playbooks is displayed for the user to choose one. Selecting a playbook will create a new hunter with that playbook and redirect to the ?edit page for that hunter.
 
 ## ?view={id}
 
-This page displays the given hunter. It has responsive columns with the following sections:
+This page displays the given hunter: everything needed to play, including the rules text of moves and features. It has responsive columns with the following sections:
 
 1. Hunter name (displayed as "{name} the {playbook}")
    - Pronouns

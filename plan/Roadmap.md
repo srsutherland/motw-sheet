@@ -40,36 +40,55 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 # 2. After MVP
 
 - A second playbook, picked to stress the schema (Expert, Monstrous, Chosen, or Wronged)
-- Settle the schema
-   - A playbook schema file; `npm run validate` checks every playbook
+- Draft the schema (soon)
+   - JSON Schema files in `/schema/`: playbook, hunter, probably `common.schema.json`
+   - A big comment on each: preliminary and descriptive, not prescriptive; changes if development needs it
+   - `npm run validate` (ajv) if it's worth it
+- Settle the schema (after the second playbook)
+- Discuss moving some logic to the model (mirror the schema in code)
+   - e.g. define node interface, then move some of the parsing/export logic there?
+   - Node types like "choices", "options", etc following the schema
+   - PlaybookModel.js, HunterModel.js, CommonModel.js
 - Migrating hunters from old versions (a loader that upgrades old saves)
-- Remaining playbooks
+- Remaining core playbooks
 - Basic move popups (needs basic rules JSON)
+- Add more sources, probably in a submodule (removes the issue of hosting copyrighted pdfs), and model the rest of the playbooks
+   - `/sources/` == `_motw-sources` repo
+   - `/sources/pdf`, `/sources/md`, `/sources/html`, `/sources/scripts`
+   - Playbook jsons remain in `/playbooks/` as part of the app.
+   - Don't worry about scrubbing the git history
+- List of playbooks ordered by book release date, then alphabetically (right now we only have the pdf for core)
 - Responsive columns (DESIGN.md)
 - Replace `confirm`/`alert` in `ActionList.vue`, `Storage.js`, and leveling down
-- Reconcile DESIGN.md with what shipped
+- Reconcile `DESIGN.md` with what shipped
 - Pick the app name
 - Hunter name buttons (DESIGN.md): currently Edit and Export icons inside the title
-   - Move them to a buttons section under the hunter name
+   - Move them to a buttons section next to the hunter name
    - Export as a popup (now a direct download)
    - Add a Share button
 - History: the other hunter picks from *their* playbook how they know you (DESIGN.md); needs their playbook's history list
 - Rating colors: check them in light and dark mode
 - `computed.moves`: a `source` on each move (which level / improvement it came from); `h.moves` is display-only for now
-- Talk through `ref` (references in saved files: naming, relative vs absolute forms)
 - "Bend the rules": temporary/debug for now; decide what it becomes
+- Tests in the deploy pipeline
+- Better view and filter for "take a move from another playbook" choice picker
+- Restructure `plan` > `docs` (`ARCHITECTURE.md` and `AGENTS.md` are at the root for now)
 
 # Later
 
 - Keeper view: several hunters on one page (`provideHunter` per hunter)
 - Google Drive sync
-- Share by URL?
+- Share by URL? (using a compressed, minified hunter json as a URL param)
+- Use info from the official "playbook menu" for playbook-choice workflow
 
 # Known issues
 
+- `the-spellslinger.json` text predates the md audit: 7 move descriptions differ from the corrected `playbooks/md/the-spellslinger.md` (e.g. Arcane Reputation, Tools and Techniques)
+- Initiate's and Professional's granted moves have no name; auto ids need one
+
 - Edit page is too cluttered; more should be in popups
 - Mythic improvement costs are fixed at 2 (Keeper-chosen schemes are post-MVP)
-- Saves from older formats ("0.1", "0.1.2026.10.07") can only be deleted (the sample was converted with one-off scripts)
+- Saves from older hunter formats can only be deleted (the sample was converted with one-off scripts)
 - Saves are always the "full" hunter JSON; the "slim" version (DESIGN.md) isn't built
 - `basic_moves.json` has names and ratings only, no descriptions (needed for popups)
 - `[[wikilinks]]` render as dotted-underline text, no popup yet

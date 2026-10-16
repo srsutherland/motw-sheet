@@ -53,6 +53,7 @@ Sections: **Decided** (with where it was decided), **Needs** (from the playbook 
 - Every choice has a source: `getting_started`, or a specific improvement
 - The choice is stored with its source
 - A hunter's state = `getting_started`, then each improvement **in the order taken**
+- `getting_started` belongs to the hunter's *current* playbook
 
 ## Choosing
 
@@ -156,6 +157,7 @@ Limits on a `choose` (exact syntax not final):
    - Long term, DRY it to `"from": "@shared.improve_any_rating"`
 - "Mark two basic moves as advanced": a pick plus an effect, `advance_basic`
 - Advanced improvements unlock at level 5 (the paper: "after you have leveled up five times"): `"requires": { "level": 5 }`
+- "Change this hunter to a new type": its own flow (choose what to keep); the old playbook's sheet goes in `past_lives`, keyed by the previous playbook's name (not built)
 - Mythic improvements are **homebrew**: not on the paper playbook
    - For now they cost 2 (`"cost": 2` on the list)
    - Intended (post-MVP): the Keeper picks how they cost; the hunter enters it. A starting cost plus a scaling rule (fixed, linear, maybe others), or entering the cost each time
