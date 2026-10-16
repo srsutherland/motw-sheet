@@ -10,7 +10,7 @@
 
 (Luck track placeholder)
 
-**Spell-slinger special**: When you spend a point of Luck, the official council of wizards is going to poke their nose into your business..
+**Spell-slinger special**: When you spend a point of Luck, the official council of wizards is going to poke their nose into your business.
 
 ## Harm
 

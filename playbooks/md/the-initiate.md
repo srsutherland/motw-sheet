@@ -149,7 +149,7 @@ Go around the group again. On your turn, pick one for each of the other hunters:
 - They are your close relative, or partner/spouse. Decide between you exactly what the relationship is.
 - Fellow ancient weapons/martial arts club members.
 - They're described in the prophecies, but the role they will play isn't stated.
-- An ex-member of the Sect, but still friends. Ask them why they left or got thrown out
+- An ex-member of the Sect, but still friends. Ask them why they left or got thrown out.
 - You met researching mystical weirdness, and you've been occult comrades ever since.
 
 <span class="col-break"></span>

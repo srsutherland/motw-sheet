@@ -24,7 +24,7 @@
 
 ## Monster Breed
 
-You're half-human, half-monster: decide if you were always this way or if you you were originally human and transformed somehow.
+You're half-human, half-monster: decide if you were always this way or if you were originally human and transformed somehow.
 
 Now decide if you were always fighting to be good, or if you were evil and changed sides.
 
