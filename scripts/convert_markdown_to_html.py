@@ -35,11 +35,16 @@ def convert_markdown_to_html(
 
 def main() -> None:
     repo_root = Path(__file__).resolve().parents[1]
-    input_path = repo_root / "playbooks" / "md" / "the-spellslinger.md"
-    output_path = repo_root / "playbooks" / "html" / "the-spellslinger.html"
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    convert_markdown_to_html(input_path, output_path, "The Spell-Slinger")
-    print(f"Wrote {output_path}")
+    output_dir = repo_root / "playbooks" / "html"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    for input_path in sorted((repo_root / "playbooks" / "md").glob("*.md")):
+        title = next(
+            line[2:] for line in input_path.read_text(encoding="utf-8").splitlines()
+            if line.startswith("# ")
+        )
+        output_path = output_dir / f"{input_path.stem}.html"
+        convert_markdown_to_html(input_path, output_path, title)
+        print(f"Wrote {output_path.relative_to(repo_root)}")
 
 
 if __name__ == "__main__":
