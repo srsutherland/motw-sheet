@@ -30,12 +30,14 @@ A character sheet app for *Monster of the Week* players (hunters, not Keepers): 
 
 - **Don't present your own inventions as decided.** When documenting, new conventions go under a **Proposals** section, labelled as yours, until the maintainer agrees.
 - **Docs style:** terse lists and parentheticals, like the existing docs; record only what was decided, no extra detail. Tables: align the interior `|`s, don't pad the last column if it would bring it over ~80 chars.
+- **Write for a cold reader.** Docs and comments state how things are, not how they got that way: avoid corrections, contrasts ("not X"), or traces of the conversation that prompted them. Test: would it read naturally to someone who never saw that conversation?
 
 ## Git
 
 - Work on a feature branch off `main`. Push it; the maintainer reviews pushed branches.
 - `main` only moves by **fast-forward** (`git merge --ff-only`): no merge commits, no squashing. Rebase a branch onto `main` before it goes in. Where possible, also follow the same practice for feature branches.
 - Pushing `main` deploys the site (GitHub Pages).
+- Docs that *plan* (proposals, decisions, roadmap additions, design changes ahead of code) go on the `plan-docs` branch, rebased onto the relevant branch before you start and before it's merged. Docs that *record* a code change (renames, corrections, roadmap items the maintainer has called done) go with that change, in its commit or branch.
 - Group commits by concern (e.g. format change, UI fixes, docs). 
 - A formatting-only commit goes in `.git-blame-ignore-revs`.
 - Force-push only branches you own, with `--force-with-lease`.
