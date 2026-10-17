@@ -62,16 +62,32 @@ Deployment: GitHub Pages (see 6)
 
 #### Modules (`src/`)
 
-| File               | Role |
-| ------------------ | --- |
-| `Playbooks.js`     | Imports the JSON files; `files` maps file id (`the_spellslinger`, `basic_moves`) to data |
-| `PlaybookData.js`  | Auto ids, path index, `@` reference resolution, `optionsOf` (a container's options, each with its `written` form). Never mutates data; works on raw (non-reactive) objects |
-| `Hunter.js`        | `Hunter` class, `SCHEMA_VERSION`, record builders (`makeChoices`, `makeRecord`), `fromJSON` (rejects other versions, ignores `computed`) |
-| `HunterState.js`   | `hunterState(h)`; choice editing (`choiceSet`, `toggleChoice`, `setTextChoice`); improvements (budget, disabled, availability, costs) |
-| `HunterContext.js` | `provideHunter` / `useHunter` / `useHunterState` |
-| `Storage.js`       | localStorage (one key per hunter), import/export, `toSaved` (adds `updated`, `computed`, playbook last) |
-| `Markdown.js`      | Markdown subset for display text; escapes everything first (imported files carry their own playbook text) |
-| `Tags.js`          | Typed gear tags ("1 harm magic" -> `["1-harm", "magic"]`) |
+- `Playbooks.js`
+   - Imports the playbook JSON files
+   - `files`: file id (`the_spellslinger`, `basic_moves`) -> data
+- `PlaybookData.js`
+   - Auto ids, path index, `@` reference resolution
+   - `optionsOf`: a container's options, each with its `written` form
+   - Never mutates data; works on raw (non-reactive) objects
+- `Hunter.js`
+   - `Hunter` class, `SCHEMA_VERSION`
+   - Record builders: `makeChoices`, `makeRecord`
+   - `fromJSON`: rejects other versions, ignores `computed`
+- `HunterState.js`
+   - `hunterState(h)`: moves, features, gear, ratings, picks, cross-offs, advanced basic moves
+   - Choice editing: `choiceSet`, `toggleChoice`, `setTextChoice`
+   - Improvements: budget, disabled, availability, costs
+- `HunterContext.js`
+   - `provideHunter`, `useHunter`, `useHunterState`
+- `Storage.js`
+   - localStorage, one key per hunter
+   - Import/export
+   - `toSaved`: adds `updated`, `computed`; playbook last
+- `Markdown.js`
+   - Markdown subset for display text
+   - Escapes everything first (imported files carry their own playbook text)
+- `Tags.js`
+   - Typed gear tags: "1 harm magic" -> `["1-harm", "magic"]`
 
 #### Components (`src/components/`)
 
@@ -148,12 +164,42 @@ Project Name: motw-sheet (working title; see `plan/Name Ideas.md`)
 
 Repository URL: https://github.com/srsutherland/motw-sheet
 
-Primary Contact/Team: the maintainer
+Primary Contact/Team: Sean Sutherland (GitHub: @srsutherland)
 
 Date of Last Update: 2026-10-16
 
 ## 11. Glossary / Acronyms
 
-Game terms (hunter, Keeper, playbook, move, rating, luck, harm): see the *Monster of the Week* rules.
+### Game terms
 
-Data terms (feature, options, chosen, selected, `@` references, `getting_started`, pre-moves/post-moves): see `plan/Schema Notes.md` ("Terms").
+- **Hunter**: a player character
+- **Keeper**: the GM
+- **Playbook**: a character type (the Spell-Slinger, the Expert...); one sheet each
+- **Ratings**: Charm, Cool, Sharp, Tough, Weird; added to rolls
+- **Basic moves**: moves every hunter has, each rolled with a rating; "advanced" versions unlock through advanced improvements
+- **Moves**: a playbook's own special abilities
+- **Luck**: a track of marks, spent to change a roll or avoid harm; full = Doomed. Each playbook adds a luck *special*
+- **Harm**: a track of injury, Okay to Dying; at 4+ the wound is *unstable*
+- **Experience**: 5 boxes; filling them levels the hunter up
+- **Improvement**: what a level up buys. *Advanced* improvements unlock after 5 level ups; *mythic* ones are homebrew (this app's) and cost more than one
+- **Gear**: weapons and equipment, described by tags ("2-harm close loud")
+- **Look**: appearance, picked from short lists or written in
+- **History**: how the hunter knows each other hunter at the table
+
+### Data terms
+
+- **Feature**: a playbook-specific thing that isn't a move (Combat Magic, Haven); shown before or after moves (pre-moves / post-moves)
+- **Options**: what the playbook offers to choose from
+- **`choose`**: a rule on a playbook object: `from` (where to choose) + one verb (`pick`, `cross`, `remove`) and its count
+- **Chosen**: what the hunter picked, stored with the `choose` rule's object
+- **Selected**: computed, on the object that has the options, from any source
+- **`id` / `ref`**: `id` defines something (playbook); `ref` points at it (hunter). A reference with nothing attached is just its string
+- **`@` reference**: a path of ids (`@combat_magic.bases.blast`); relative to its container or playbook root unless the first segment is a file id; `@this`: the object it's written in
+- **`@textbox`**: a free-text option
+- **`getting_started`**: character creation, in the same shape as an improvement (`grant` + `choose`)
+- **Record**: the hunter's side of a playbook object: a reference, or `{ ref, chosen }` / `{ from, chosen }`
+- **Full / slim**: hunter files with the whole playbook copy / references only (slim not built)
+- **`computed`**: what the sheet shows, saved for readers of the file; ignored on load
+- **`schema_version`**: the date of the last breaking format change
+
+See also: `plan/Schema Notes.md` (data terms in depth), the *Monster of the Week* rules and `playbooks/md/` (game terms).
