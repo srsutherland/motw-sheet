@@ -89,7 +89,7 @@ The app uses json files in `/playbooks/` as its source of truth.
 
 ### Creation
 
-- Markdown files are created from the PDF as an intermediate, better-structured format.
+- Markdown files are created from the PDF as an intermediate, better-structured format (all in the private `sources/` submodule).
 - Markdown files are converted to html to check that they look the same as the PDF
 - Markdown files are then used as a reference in creating the JSON files.
 

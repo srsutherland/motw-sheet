@@ -1,4 +1,4 @@
-What varies between the 12 playbooks, for designing a schema that fits all of them. Source: `playbooks/md/`; checked against it after the md audit (2026-10-16).
+What varies between the 12 playbooks, for designing a schema that fits all of them. Source: `sources/md/`; checked against it after the md audit (2026-10-16).
 
 Common to every playbook (unless listed): luck, harm, experience, ratings lines, look, pronouns, introductions, history, improvements.
 

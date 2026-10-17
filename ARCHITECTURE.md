@@ -19,14 +19,15 @@ motw-sheet/
 │   ├── Storage.js            # localStorage, import/export
 │   ├── Markdown.js           # Display-text markdown subset
 │   └── Tags.js               # Gear tag parsing
-├── playbooks/                # Playbook data
-│   ├── *.json                # The app's data (the-spellslinger, basic_moves)
-│   ├── md/                   # Reference transcription of the PDF
+├── playbooks/                # Playbook data (the-spellslinger, basic_moves)
+├── sources/                  # Submodule, private (_motw-sources): PDFs, md
+│   ├── pdf/                  # PDF handouts; books/ for full books
+│   │   └── extracted/        # Raw PDF extractor output, one folder per PDF
+│   ├── md/                   # Reference transcription of the PDFs
 │   ├── html/                 # md rendered, to compare against the PDF
-│   └── extracted/            # Raw PDF extractor output
+│   └── scripts/              # PDF extraction, md -> html (Python)
 ├── samples/                  # Sample hunter files (used by tests)
 ├── tests/                    # Engine and browser tests
-├── scripts/                  # PDF extraction, md -> html (Python)
 ├── res/                      # Styles, font, icon
 ├── plan/                     # Planning docs
 ├── .github/workflows/        # Deploy to GitHub Pages
@@ -115,7 +116,7 @@ Formats: see `plan/Schema Notes.md`.
 
 Type: static JSON in `playbooks/`, bundled into the app
 
-Purpose: the app's source of truth for playbook content. The PDF is the ultimate source; `playbooks/md/` is a reference transcription of it. Game text comes from those, never from memory
+Purpose: the app's source of truth for playbook content. The PDFs are the ultimate source; `sources/md/` is a reference transcription of them. Game text comes from those, never from memory
 
 Key files: `the-spellslinger.json`, `basic_moves.json`
 
@@ -202,4 +203,4 @@ Date of Last Update: 2026-10-16
 - **`computed`**: what the sheet shows, saved for readers of the file; ignored on load
 - **`schema_version`**: the date of the last breaking format change
 
-See also: `plan/Schema Notes.md` (data terms in depth), the *Monster of the Week* rules and `playbooks/md/` (game terms).
+See also: `plan/Schema Notes.md` (data terms in depth), the *Monster of the Week* rules and `sources/md/` (game terms).

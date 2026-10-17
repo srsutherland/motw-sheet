@@ -84,7 +84,7 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 
 # Known issues
 
-- `the-spellslinger.json` text predates the md audit: 7 move descriptions differ from the corrected `playbooks/md/the-spellslinger.md` (e.g. Arcane Reputation, Tools and Techniques)
+- `the-spellslinger.json` text predates the md audit: 7 move descriptions differ from the corrected `sources/md/the-spellslinger.md` (e.g. Arcane Reputation, Tools and Techniques)
 - Initiate's and Professional's granted moves have no name; auto ids need one
 
 - Edit page is too cluttered; more should be in popups
