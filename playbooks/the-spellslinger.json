@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1.2026.10.02",
-  "updated": "2026-10-07",
+  "updated": "2026-10-17",
   "id": "the_spellslinger",
   "type": "playbook",
   "name": "The Spell-Slinger",
@@ -8,7 +8,7 @@
   "quote": "Fight fire with **fire magic**.",
   "luck": {
     "max": 7,
-    "special": "**Spell-slinger Special:** When you spend a point of Luck, the official council of wizards is going to poke their nose into your business..."
+    "special": "**Spell-slinger special**: When you spend a point of Luck, the official council of wizards is going to poke their nose into your business."
   },
   "harm": { "max": 7, "unstable": 4 },
   "pre_moves": [
@@ -77,12 +77,12 @@
         "id": "tools_and_techniques",
         "type": "move",
         "name": "Tools and Techniques",
-        "description": "To use your combat magic effectively you rely on a collection of tools and techniques. Cross off one; you'll need the rest.",
+        "description": "To use your combat magic effectively, you rely on a collection of tools and techniques. Cross off one; you'll need the rest.",
         "choose": { "from": "@this", "cross": 1 },
         "options": [
           {
             "name": "Consumables",
-            "description": "You need certain supplies— powders, oils, etc— on hand, some will be used up each cast. If you don't have them, take 1-harm ignore-armour when you cast."
+            "description": "You need certain supplies— powders, oils, etc—on hand, some will be used up each cast. If you don't have them, take 1-harm ignore-armour when you cast."
           },
           {
             "name": "Foci",
@@ -106,7 +106,7 @@
       {
         "type": "move",
         "name": "Arcane Reputation",
-        "description": "Pick three big organizations or groups in the supernatural community. They've heard of you and respect your power. With affected humans, take +1 forward when you [[manipulate someone|manipulate]] them. You may [[manipulate someone|manipulate]] affected monsters as if they were human, with no bonus.",
+        "description": "Pick three big organizations or groups in the supernatural community, which can include some of the more sociable types of monsters. They've heard of you and respect your power. With affected humans, take +1 forward when you [[manipulate someone|manipulate]] them. You may [[manipulate someone|manipulate]] affected monsters as if they were human, with no bonus.",
         "choose": { "from": "@this", "pick": 3 },
         "options": ["@textbox", "@textbox", "@textbox"]
       },
@@ -114,7 +114,7 @@
         "id": "couldve_been_worse",
         "type": "move",
         "name": "Could've Been Worse",
-        "description": "When you miss a [[use magic]] roll, choose one of the following options instead of losing control of the magic: Fizzle or This Is Gonna Suck.",
+        "description": "When you miss a [[use magic]] roll you can choose one of the following options instead of losing control of the magic:",
         "details": [
           {
             "name": "Fizzle",
@@ -129,14 +129,14 @@
       {
         "type": "move",
         "name": "Enchanted Clothing",
-        "description": "Pick an article of everyday clothing—it's enchanted without any change in appearance. Take -1 harm from any source that tries to get at you through the garment.",
+        "description": "Pick an article of every-day clothing–it's enchanted without any change in appearance. Take -1 harm from any source that tries to get at you through the garment.",
         "choose": { "from": "@this", "pick": 1 },
         "options": ["@textbox"]
       },
       {
         "type": "move",
         "name": "Forensic Divination",
-        "description": "When you successfully [[investigate a mystery]], ask \"What magic was done here?\" as a free extra question."
+        "description": "When you successfully [[investigate a mystery]], you may ask \"What magic was done here?\" as a free extra question."
       },
       {
         "type": "move",
@@ -146,7 +146,7 @@
       {
         "type": "move",
         "name": "Not My Fault",
-        "description": "+1 to [[act under pressure]] when dealing with the consequences of your own spell-casting."
+        "description": "+1 to [[act under pressure]] when you are dealing with the consequences of your own spell-casting."
       },
       {
         "type": "move",
@@ -265,13 +265,13 @@
       {
         "id": "move_1",
         "type": "improvement",
-        "description": "Take another Spell-slinger move",
+        "description": "Take another Spell-Slinger move",
         "choose": { "from": "@moves", "pick": 1 }
       },
       {
         "id": "move_2",
         "type": "improvement",
-        "description": "Take another Spell-slinger move",
+        "description": "Take another Spell-Slinger move",
         "choose": { "from": "@moves", "pick": 1 }
       },
       {
@@ -379,7 +379,7 @@
       {
         "id": "mythic_move",
         "type": "improvement",
-        "description": "Take another Spell-Slinger move.",
+        "description": "Take another Spell-Slinger move",
         "choose": { "from": "@moves", "pick": 1 }
       },
       {

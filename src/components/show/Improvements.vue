@@ -18,7 +18,7 @@
 
 <script setup>
 // Improvements taken, each with what was chosen for it
-// ("Take another Spell-slinger move: Third Eye")
+// ("Take another Spell-Slinger move: Third Eye")
 import { computed } from 'vue';
 import { useHunter } from '@/HunterContext';
 import {

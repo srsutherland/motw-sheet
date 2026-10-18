@@ -22,7 +22,7 @@ check('getting_started mirrors the playbook', h.getting_started.choose.map((c) =
 check('granted records', h.getting_started.grant, ['@basic_moves', { ref: '@moves.tools_and_techniques', chosen: [] }]);
 check('version', h.schema_version, '0.1.2026.10.16');
 check('created timestamp', /^\d{4}-\d\d-\d\dT/.test(h.created), true);
-check('playbook updated', h.playbook_updated, '2026-10-07');
+check('playbook updated', h.playbook_updated, playbooks[0].updated);
 check('slug', D.slug("Could've Been Worse"), 'couldve_been_worse');
 check('root-relative ref', D.refPath('@combat_magic', pb), `${sp}.combat_magic`);
 check('absolute ref', D.refPath('@basic_moves.use_magic.heal', pb), 'basic_moves.use_magic.heal');

@@ -94,7 +94,7 @@ check('view: title', (await page.locator('h1.hunter-name').innerText()).replace(
 check('view: pronouns and look', await page.locator('p.subtitle').innerText(), '(they/them) rumpled clothes, glowing eyes');
 check('view: luck special hidden', await page.locator('.show-luck .popup').count(), 0);
 await page.locator('.show-luck .popup-trigger').hover();
-check('view: luck special on hover', (await page.locator('.show-luck .popup').innerText()).startsWith('Spell-slinger Special:'), true);
+check('view: luck special on hover', (await page.locator('.show-luck .popup').innerText()).startsWith('Spell-slinger special:'), true);
 await page.mouse.move(0, 0);
 await page.locator('.show-luck .popup-trigger').click();
 await page.mouse.move(0, 0);

@@ -44,7 +44,7 @@ check('advancement offered', (await advancement().innerText()).trim(), 'Advancem
 await advancement().click();
 check('advanced locked', (await dialog.locator('section', { has: page.locator('h3:text-is("Advanced Improvements")') }).innerText()).includes('Not unlocked yet'), true);
 check('other playbook move blocked', await option('Take a move from another playbook').first().isDisabled(), true);
-await option('Take another Spell-slinger move').first().click();
+await option('Take another Spell-Slinger move').first().click();
 await dialog.getByRole('button', { name: 'Back' }).click();
 await dialog.getByRole('button', { name: 'Cancel' }).click();
 check('cancel changes nothing', [await dialog.isVisible(), await level(), (await advancement().innerText()).trim(), await page.locator('.show-improvements li').count()], [false, 'Level 1', 'Advancement (+1)', 0]);
@@ -57,7 +57,7 @@ check('+1 weird', [await ratings(), await advancement().count()], [['-1', '1', '
 await levelUp();
 await advancement().click();
 check('taken improvement blocked', await option('Get +1 Weird, max +3').isDisabled(), true);
-await option('Take another Spell-slinger move').first().click();
+await option('Take another Spell-Slinger move').first().click();
 check('unfinished choices allowed, with a note', [await dialog.getByRole('button', { name: 'Take it' }).isDisabled(), (await dialog.innerText()).includes('finish them later')], [false, true]);
 await box('Practitioner').check();
 await box('Heal').check();
@@ -134,7 +134,7 @@ check('two unspent', (await advancement().innerText()).trim(), 'Advancement (+2)
 // Improvements at the bottom of the sheet, with what was chosen
 const taken = await page.locator('.show-improvements li').allInnerTexts();
 check('improvements list', taken.length, 8);
-check('improvement with its choice', taken.find((t) => t.startsWith('Take another Spell-slinger move')), 'Take another Spell-slinger move: Practitioner');
+check('improvement with its choice', taken.find((t) => t.startsWith('Take another Spell-Slinger move')), 'Take another Spell-Slinger move: Practitioner');
 check('any rating shows the rating', taken.find((t) => t.startsWith('Get +1 to any rating')), 'Get +1 to any rating, max +3: Charm');
 check('improvements are last', await page.locator('main > :last-child').getAttribute('class'), 'show-improvements');
 
