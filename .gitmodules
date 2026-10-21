@@ -1,3 +1,5 @@
 [submodule "sources"]
 	path = sources
 	url = https://github.com/srsutherland/_motw-sources.git
+	branch = main
+	update = rebase
