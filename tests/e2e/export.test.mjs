@@ -9,7 +9,7 @@ const errors = [];
 const a = await watchedPage(browser, errors);
 await a.goto(BASE);
 await a.getByRole('button', { name: 'New Playbook' }).click();
-await a.locator('.select-button').first().click();
+await a.locator('#the_spellslinger').click();
 await a.locator('.hunter-name input').fill('Exported');
 await a.locator('#edit-ratings input[type=radio]').nth(2).check();
 await a.getByRole('checkbox', { name: /^Third Eye\b/ }).check();

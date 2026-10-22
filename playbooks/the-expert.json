@@ -1,0 +1,329 @@
+{
+  "schema_version": "0.1.2026.10.02",
+  "updated": "2026-10-22",
+  "id": "the_expert",
+  "type": "playbook",
+  "name": "The Expert",
+  "emoji": "📚",
+  "quote": "I have dedicated my life to the study of the unnatural. I know their habits, their weaknesses. I may not be youngest or strongest, but my knowledge makes me the biggest threat.",
+  "luck": {
+    "max": 7,
+    "special": "**Expert special**: When you spend a point of Luck, you discover something happening now is related to something you were involved in years ago."
+  },
+  "harm": { "max": 7, "unstable": 4 },
+  "pre_moves": [],
+  "moves": {
+    "id": "moves",
+    "description": "You get all of the basic moves, plus pick two Expert moves:",
+    "options": [
+      {
+        "type": "move",
+        "name": "I've Read About This Sort Of Thing",
+        "description": "Roll +Sharp instead of +Cool when you [[act under pressure]]."
+      },
+      {
+        "type": "move",
+        "name": "Often Right",
+        "description": "When **a hunter comes to you for advice** about a problem, give them your honest opinion and advice. If they take your advice, they get +1 ongoing while following your advice, and you mark experience."
+      },
+      {
+        "type": "move",
+        "name": "Preparedness",
+        "description": "When **you need something unusual or rare**, roll +Sharp. On a 10+, you have it here right now. On a 7-9 you have it, but not here: it will take some time to get it. On a miss, you know where it is, but it's somewhere real bad."
+      },
+      {
+        "type": "move",
+        "name": "It Wasn't As Bad As It Looked",
+        "description": "Once per mystery, you may attempt to **keep going despite your injuries**. Roll +Cool. On a 10+, heal 2 harm and stabilize your wounds. On a 7-9 you may either stabilize or heal 1 harm. On a miss, it was worse than it looked: the Keeper may inflict a harm move on you, or make your wounds unstable."
+      },
+      {
+        "type": "move",
+        "name": "Precise Strike",
+        "description": "When you inflict harm on a monster, you can **aim for a weak spot**. Roll +Tough. On a 10+ you inflict +2 harm. On a 7-9 you inflict +1 harm. On a miss, you leave yourself open to the monster."
+      },
+      {
+        "type": "move",
+        "name": "The Woman (or Man) With The Plan",
+        "description": "**At the beginning of each mystery**, roll +Sharp. On a 10+ hold 2, on a 7-9 hold 1. Spend the hold to be where you need to be, prepared and ready. On a miss, the Keeper holds 1 they can spend to put you in the worst place, unprepared and unready."
+      },
+      {
+        "type": "move",
+        "name": "Dark Past",
+        "description": "If **you trawl through your memories** for something relevant to the case at hand, roll +Weird. On a 10+ ask the Keeper two questions from the list below. On a 7-9 ask one. On a miss, you can ask a question anyway but that will mean you were personally complicit in creating the situation you are now dealing with. The questions are:",
+        "details": [
+          "*When I dealt with this creature (or one of its kind), what did I learn?*",
+          "*What black magic do I know that could help here?*",
+          "*Do I know anyone who might be behind this?*",
+          "*Who do I know who can help us right now?*"
+        ]
+      }
+    ]
+  },
+  "post_moves": [
+    {
+      "id": "haven",
+      "type": "feature",
+      "name": "Haven",
+      "description": "You have set up a haven, a safe place to work.",
+      "heading": "Pick three of the options below for your haven:",
+      "options": [
+        {
+          "name": "Lore Library",
+          "description": "When you hit the books, take +1 forward to [[investigate a mystery|investigate the mystery]] (as long as historical or reference works are appropriate)."
+        },
+        {
+          "name": "Mystical Library",
+          "description": "If you use your library's occult tomes and grimoires, preparing with your tomes and grimoires, take +1 forward for [[use magic]]."
+        },
+        {
+          "name": "Protection Spells",
+          "description": "Your haven is safe from monsters—they cannot enter. Monsters might be able to do something special to evade the wards, but not easily."
+        },
+        {
+          "name": "Armory",
+          "description": "You have a stockpile of mystical and rare monster-killing weapons and items. If you **need a special weapon**, roll +Weird. On a 10+ you have it (and plenty if that matters). On a 7-9 you have it, but only the minimum. On a miss, you've got the wrong thing."
+        },
+        {
+          "name": "Infirmary",
+          "description": "You can heal people, and have the space for one or two to recuperate. The Keeper will tell you how long any patient's recovery is likely to take, and if you need extra supplies or help."
+        },
+        {
+          "name": "Workshop",
+          "description": "You have a space for building and repairing guns, cars and other gadgets. Work out with the Keeper how long any repair or construction will take, and if you need extra supplies or help."
+        },
+        {
+          "name": "Oubliette",
+          "description": "This room is isolated from every kind of monster, spirit and magic that you know about. Anything you stash in there can't be found, can't do any magic, and can't get out."
+        },
+        {
+          "name": "Panic Room",
+          "description": "This has essential supplies and is protected by normal and mystical means. You can hide out there for a few days, safe from pretty much anything."
+        },
+        {
+          "name": "Magical Laboratory",
+          "description": "You have a mystical lab with all kinds of weird ingredients and tools useful for casting spells (like the [[use magic]] move, [[Big Magic|big magic]], and any other magical moves)."
+        }
+      ]
+    }
+  ],
+  "starting_gear": {
+    "id": "starting_gear",
+    "description": "You get three monster-slaying weapons.",
+    "heading": "**Monster-slaying weapons** (pick three):",
+    "options": [
+      { "type": "gear", "name": "Mallet & wooden stakes", "tags": ["3-harm", "intimate", "slow", "wooden"] },
+      { "type": "gear", "name": "Silver sword", "tags": ["2-harm", "hand", "messy", "silver"] },
+      { "type": "gear", "name": "Cold iron sword", "tags": ["2-harm", "hand", "messy", "iron"] },
+      { "type": "gear", "name": "Blessed knife", "tags": ["2-harm", "hand", "holy"] },
+      { "type": "gear", "name": "Magical dagger", "tags": ["2-harm", "hand", "magic"] },
+      { "type": "gear", "name": "Juju bag", "tags": ["1-harm", "far", "magic"] },
+      { "type": "gear", "name": "Flamethrower", "tags": ["3-harm", "close", "fire", "heavy", "volatile"] },
+      { "type": "gear", "name": "Magnum", "tags": ["3-harm", "close", "reload", "loud"] },
+      { "type": "gear", "name": "Shotgun", "tags": ["3-harm", "close", "messy", "loud"] }
+    ]
+  },
+  "getting_started": {
+    "description": "To make your Expert, first pick a name. Then follow the instructions in this playbook to decide your look, ratings, haven, moves, and gear. Finally, introduce yourself and pick history.",
+    "grant": ["@basic_moves"],
+    "choose": [
+      { "from": "@haven", "pick": 3 },
+      { "from": "@moves", "pick": 2 },
+      { "from": "@starting_gear", "pick": 3 }
+    ]
+  },
+  "look": {
+    "heading": "Look, pick one from each list:",
+    "face": {
+      "format": "___ face",
+      "options": ["thoughtful", "lined", "scarred", "contemplative", "stern", "avuncular", "experienced", "ancient", "@textbox"]
+    },
+    "clothes": {
+      "format": "___ clothes",
+      "options": ["old fashioned", "casual", "utility", "tailored", "outdoor", "@textbox"]
+    }
+  },
+  "ratings_base": {
+    "heading": "Ratings, pick one line:",
+    "options": [
+      { "charm": -1, "cool": 1, "sharp": 2, "tough": 1, "weird": 0 },
+      { "charm": 0, "cool": 1, "sharp": 2, "tough": -1, "weird": 1 },
+      { "charm": 1, "cool": -1, "sharp": 2, "tough": 1, "weird": 0 },
+      { "charm": -1, "cool": 1, "sharp": 2, "tough": 0, "weird": 1 },
+      { "charm": -1, "cool": 0, "sharp": 2, "tough": -1, "weird": 2 }
+    ]
+  },
+  "introductions": {
+    "description": "When you get here, wait for everyone to catch up so you can do your introductions together.\n\nGo around the group. On your turn, introduce your Expert by name and look, and tell the group what they know about you."
+  },
+  "history": {
+    "description": "Go around the group again. On your turn, pick one of these for each other hunter:",
+    "options": [
+      "They are your student, apprentice, ward, or child. Between you, decide which.",
+      "They came to you for advice, and your advice got them out of trouble. Ask them what the trouble was.",
+      "They know about some of your dark secrets, but they've agreed to keep quiet about them. Tell them what they know.",
+      "A distant relation. Tell them exactly what.",
+      "You were previously both members of an eldritch group, now disbanded. Ask them why *they* left, then tell them why *you* did.",
+      "They once helped you get a singular item that is now part of your haven. Tell them what it was.",
+      "You were taught by the same master. Ask them how it ended.",
+      "You saved their life in a tight spot. Tell them what happened."
+    ]
+  },
+  "leveling_up": {
+    "description": "When you have filled all five experience boxes, you level up. Erase the marks and pick an improvement from the following list:"
+  },
+  "improvements": {
+    "id": "improvements",
+    "options": [
+      {
+        "id": "sharp",
+        "type": "improvement",
+        "description": "Get +1 Sharp, max +3",
+        "effects": [{ "rating": "sharp", "add": 1, "max": 3 }]
+      },
+      {
+        "id": "charm",
+        "type": "improvement",
+        "description": "Get +1 Charm, max +2",
+        "effects": [{ "rating": "charm", "add": 1, "max": 2 }]
+      },
+      {
+        "id": "cool",
+        "type": "improvement",
+        "description": "Get +1 Cool, max +2",
+        "effects": [{ "rating": "cool", "add": 1, "max": 2 }]
+      },
+      {
+        "id": "weird",
+        "type": "improvement",
+        "description": "Get +1 Weird, max +2",
+        "effects": [{ "rating": "weird", "add": 1, "max": 2 }]
+      },
+      {
+        "id": "move_1",
+        "type": "improvement",
+        "description": "Take another Expert move",
+        "choose": { "from": "@moves", "pick": 1 }
+      },
+      {
+        "id": "move_2",
+        "type": "improvement",
+        "description": "Take another Expert move",
+        "choose": { "from": "@moves", "pick": 1 }
+      },
+      {
+        "id": "haven_1",
+        "type": "improvement",
+        "description": "Add an option to your haven",
+        "choose": { "from": "@haven", "pick": 1 }
+      },
+      {
+        "id": "haven_2",
+        "type": "improvement",
+        "description": "Add an option to your haven",
+        "choose": { "from": "@haven", "pick": 1 }
+      },
+      {
+        "id": "other_move_1",
+        "type": "improvement",
+        "description": "Take a move from another playbook",
+        "choose": { "from": "@*.moves", "pick": 1 }
+      },
+      {
+        "id": "other_move_2",
+        "type": "improvement",
+        "description": "Take a move from another playbook",
+        "choose": { "from": "@*.moves", "pick": 1 }
+      }
+    ]
+  },
+  "improvements_advanced": {
+    "id": "improvements_advanced",
+    "description": "After you have leveled up *five* times, you qualify for advanced improvements in addition to these. They're below.",
+    "requires": { "level": 5 },
+    "options": [
+      {
+        "id": "any_rating",
+        "type": "improvement",
+        "description": "Get +1 to any rating, max +3",
+        "choose": { "from": "@this", "pick": 1 },
+        "options": [
+          { "id": "charm", "name": "Charm", "effects": [{ "rating": "charm", "add": 1, "max": 3 }] },
+          { "id": "cool", "name": "Cool", "effects": [{ "rating": "cool", "add": 1, "max": 3 }] },
+          { "id": "sharp", "name": "Sharp", "effects": [{ "rating": "sharp", "add": 1, "max": 3 }] },
+          { "id": "tough", "name": "Tough", "effects": [{ "rating": "tough", "add": 1, "max": 3 }] },
+          { "id": "weird", "name": "Weird", "effects": [{ "rating": "weird", "add": 1, "max": 3 }] }
+        ]
+      },
+      {
+        "id": "erase_luck",
+        "type": "improvement",
+        "description": "Get back one used Luck point",
+        "effects": [{ "luck": -1 }]
+      },
+      {
+        "id": "change_playbook",
+        "type": "improvement",
+        "description": "Change this hunter to a new type",
+        "special": "change_playbook"
+      },
+      {
+        "id": "second_hunter",
+        "type": "improvement",
+        "description": "Create a second hunter to play as well as this one",
+        "special": "second_hunter"
+      },
+      {
+        "id": "advanced_basic_1",
+        "type": "improvement",
+        "description": "Mark two of the basic moves as advanced",
+        "choose": { "from": "@basic_moves", "pick": 2 },
+        "effects": [{ "advance_basic": true }]
+      },
+      {
+        "id": "advanced_basic_2",
+        "type": "improvement",
+        "description": "Mark another two of the basic moves as advanced",
+        "choose": { "from": "@basic_moves", "pick": 2 },
+        "effects": [{ "advance_basic": true }]
+      },
+      {
+        "id": "retire",
+        "type": "improvement",
+        "description": "Retire this hunter to safety",
+        "special": "retire"
+      }
+    ]
+  },
+  "improvements_mythic": {
+    "id": "improvements_mythic",
+    "description": "If you have taken at least twelve improvements, at your Keeper's discretion, you can take one of the following improvements by spending more than one improvement.",
+    "requires": { "improvements": 12 },
+    "cost": 2,
+    "options": [
+      {
+        "id": "mythic_erase_luck",
+        "type": "improvement",
+        "description": "Get back one used Luck point",
+        "effects": [{ "luck": -1 }]
+      },
+      {
+        "id": "mythic_move",
+        "type": "improvement",
+        "description": "Take another Expert move",
+        "choose": { "from": "@moves", "pick": 1 }
+      },
+      {
+        "id": "mythic_haven",
+        "type": "improvement",
+        "description": "Add an option to your haven",
+        "choose": { "from": "@haven", "pick": 1 }
+      },
+      {
+        "id": "mythic_other_move",
+        "type": "improvement",
+        "description": "Take a move from another playbook",
+        "choose": { "from": "@*.moves", "pick": 1 }
+      }
+    ]
+  }
+}

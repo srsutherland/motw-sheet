@@ -10,7 +10,7 @@ const box = (scope, name) => scope.getByRole('checkbox', { name: new RegExp(`^${
 
 await page.goto(BASE);
 await page.getByRole('button', { name: 'New Playbook' }).click();
-await page.locator('.select-button').first().click();
+await page.locator('#the_spellslinger').click();
 await page.waitForURL(/\?edit=/);
 const id = new URL(page.url()).searchParams.get('edit');
 

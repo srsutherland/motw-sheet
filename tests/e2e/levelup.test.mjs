@@ -28,7 +28,7 @@ const box = (name) => dialog.getByRole('checkbox', { name: new RegExp(`^${name}\
 
 await page.goto(BASE);
 await page.getByRole('button', { name: 'New Playbook' }).click();
-await page.locator('.select-button').first().click();
+await page.locator('#the_spellslinger').click();
 await page.locator('#edit-ratings input[type=radio]').first().check(); // Charm-1 Cool+1 Sharp+1 Tough=0 Weird+2
 await page.getByRole('button', { name: 'Save' }).click();
 await page.waitForURL(/\?view=/);
@@ -43,7 +43,7 @@ check('advancement offered', (await advancement().innerText()).trim(), 'Advancem
 // The dialog: cancel changes nothing
 await advancement().click();
 check('advanced locked', (await dialog.locator('section', { has: page.locator('h3:text-is("Advanced Improvements")') }).innerText()).includes('Not unlocked yet'), true);
-check('other playbook move blocked', await option('Take a move from another playbook').first().isDisabled(), true);
+check('other playbook move available', await option('Take a move from another playbook').first().isDisabled(), false);
 await option('Take another Spell-Slinger move').first().click();
 await dialog.getByRole('button', { name: 'Back' }).click();
 await dialog.getByRole('button', { name: 'Cancel' }).click();
