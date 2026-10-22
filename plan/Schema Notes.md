@@ -15,6 +15,7 @@ Sections: **Decided** (with where it was decided), **Needs** (from the playbook 
    - Fixed areas, including "pre-moves" and "post-moves" for features
    - Each area is ordered within
    - e.g. Combat Magic is a pre-move feature; the Expert's Haven is a post-move feature
+   - Sibling headings on the sheet are separate features: Monster Breed, Curses, Natural Attacks
 
 ## Terms
 
@@ -92,6 +93,7 @@ Sections: **Decided** (with where it was decided), **Needs** (from the playbook 
 
 - Sub-items that aren't chosen when building the hunter (Could've Been Worse: Fizzle / This Is Gonna Suck, chosen during play) go under a sub-key, not `options`
    - Key name case by case; `details` for Could've Been Worse
+- Monster Breed Suggestions: `suggestions` on the feature, display only (presets: open question)
 
 ## Placement
 
@@ -126,6 +128,12 @@ Limits on a `choose` (exact syntax not final):
 - A free-text entry is an option like any other: `@textbox`, inline with the rest (look, Chosen material)
 - Once filled in: `{ "ref": "@textbox", "text": "weary" }`
 - Each `@textbox` is picked at most once; for several entries, list it several times (Arcane Reputation: three)
+- Pick one or write your own: plain strings plus a `@textbox` (Monster Breed's origin and alignment)
+
+```jsonc
+"origin": { "name": "Origin",
+  "options": ["Always this way", "Originally human, transformed somehow", "@textbox"] }
+```
 
 ## Look, ratings, history
 
@@ -154,6 +162,7 @@ Limits on a `choose` (exact syntax not final):
 - Specials that cost more than one improvement: ignore for now
 - Redo / remove improvements: implementation detail, not a design question
 - "+1 to any rating": sub-options, one per rating, each a fixed effect; `"choose": { "from": "@this", "pick": 1 }`
+- Monstrous "Free yourself from the curse": `cross` the curse (stays visible, crossed off), plus -1 Weird
    - Long term, DRY it to `"from": "@shared.improve_any_rating"`
 - "Mark two basic moves as advanced": a pick plus an effect, `advance_basic`
 - Advanced improvements unlock at level 5 (the paper: "after you have leveled up five times"): `"requires": { "level": 5 }`
@@ -277,6 +286,17 @@ Conventions the code needed that weren't discussed. All used by the app as built
 - Moves picked from another playbook (`@*.moves`) are stored absolute: `{ "ref": "@the_spellslinger.moves.practitioner", "chosen": [...] }`
 - Playbook list order: alphabetical within a book (`Playbooks.js`)
 - Mythic improvements: the regular list's repeatable improvements (Expert: luck, move, haven option, another playbook's move)
+
+## From implementation (2026-10-22, `the-monstrous`)
+
+- Plain-string options: a string without `@` is an option, stored as written (`"Always this way"`, `"hunger"`)
+- An untyped object with `options` is a sub-list, unless it has its own `choose`: then it's an option with its own choice (Pure Drive)
+   - Its choices are stored on its record, like a move's: `{ "ref": "@pure_drive", "chosen": ["hunger"] }`
+- A `getting_started` rule can pick from a feature's sub-list (`"from": "@monster_breed.origin"`); the edit page shows it in that feature
+- `"min": 0`: an optional pick ("Pick up to 1")
+- `cross` from a container whose options are picked (Curses) offers only your picks; otherwise all options (Tools and Techniques)
+- Saved `computed`: crossed options under `crossed`, separate from `selected`
+- A look list with no noun: `"format": "___"` (Monstrous `form`: almost human, half human...)
 
 # Open questions
 
