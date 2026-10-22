@@ -129,7 +129,7 @@
       {
         "type": "move",
         "name": "Enchanted Clothing",
-        "description": "Pick an article of every-day clothing–it's enchanted without any change in appearance. Take -1 harm from any source that tries to get at you through the garment.",
+        "description": "Pick an article of everyday clothing—it's enchanted without any change in appearance. Take -1 harm from any source that tries to get at you through the garment.",
         "choose": { "from": "@this", "pick": 1 },
         "options": ["@textbox"]
       },
