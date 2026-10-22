@@ -10,6 +10,11 @@
             {{ pick.node?.name ?? pick.node?.description ?? pick.text }}
         </li>
     </ul>
+    <!-- reference only (Monster Breed Suggestions) -->
+    <details v-if="feature.node.suggestions?.length" class="suggestions">
+        <summary>Suggestions</summary>
+        <MoveDetails :details="feature.node.suggestions" />
+    </details>
 </fieldset>
 </template>
 
@@ -17,6 +22,7 @@
 import { useHunterState } from '@/HunterContext';
 import { picksUnder } from '@/HunterState';
 import MarkdownText from '../MarkdownText.vue';
+import MoveDetails from '../show/MoveDetails.vue';
 import GettingStartedChoices from './GettingStartedChoices.vue';
 
 const props = defineProps({
@@ -25,3 +31,9 @@ const props = defineProps({
 
 const state = useHunterState();
 </script>
+
+<style scoped>
+.suggestions summary {
+    cursor: pointer;
+}
+</style>
