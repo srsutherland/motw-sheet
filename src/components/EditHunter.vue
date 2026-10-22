@@ -236,7 +236,9 @@ const otherRules = computed(() => {
         `${id}.starting_gear`,
         ...state.value.features.map((feature) => feature.path),
     ]);
-    return gettingStartedRules(hunter.value).filter(({ container }) => !shown.has(container));
+    // a rule picking from a sub-list of a shown container is shown with it
+    return gettingStartedRules(hunter.value).filter(({ container }) => ![...shown]
+        .some((path) => container === path || container.startsWith(`${path}.`)));
 });
 
 const plusOrEqualsOrNothing = (value) => {

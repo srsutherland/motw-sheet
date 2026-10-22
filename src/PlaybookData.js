@@ -104,7 +104,8 @@ const isContainer = (node) => node && typeof node === 'object' && Array.isArray(
     && !PLACEABLE.has(node.type);
 
 // The options a `from` reference offers, flattened, each with the sub-list it came from.
-// Entries: { key, path, node, group, written } or { key, textbox: true, group, written }
+// Entries: { key, path, node, group, written }, { key, textbox: true, group, written },
+// or { key, literal: true, text, group, written } for a plain string option
 // `written` is how a choice of it is stored (docs/Schema Notes.md: "Hunter JSON"): relative
 // to the container ("@bases.blast"), or as written in the container if the option is itself
 // a reference ("@basic_moves.use_magic.heal"), or absolute for "@*." lists.
@@ -135,14 +136,19 @@ const optionsOf = (ref, root, self) => {
         for (const option of options) {
             if (option === TEXTBOX) {
                 entries.push({ key: `${TEXTBOX}#${textboxes++}`, textbox: true, group, written: TEXTBOX });
+            } else if (typeof option === 'string' && !option.startsWith('@')) {
+                // a plain value, stored as written ("Always this way", "hunger")
+                entries.push({ key: `"${option}"`, literal: true, text: option, group, written: option });
             } else if (typeof option === 'string') {
                 const node = resolve(option, root, self);
                 if (node) {
                     const path = refPath(option, root, self);
                     entries.push({ key: path, path, node, group, written: option });
                 }
-            } else if (option.type === undefined && Array.isArray(option.options)) {
-                // a sub-list, e.g. Combat Magic's bases
+            } else if (option.type === undefined && Array.isArray(option.options)
+                && !option.choose) {
+                // a sub-list, e.g. Combat Magic's bases (an option with its own choice, like
+                // Pure Drive, isn't one)
                 add(option.options, option);
             } else {
                 const path = pathOf(option, root);

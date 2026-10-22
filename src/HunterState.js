@@ -163,6 +163,12 @@ const hunterState = (h) => {
                     continue;
                 }
                 const entry = options.get(refOf(choice));
+                if (entry?.literal && verb === 'pick') {
+                    picks.push({
+                        text: entry.text, literal: true, container, source, set: toRaw(set),
+                    });
+                    continue;
+                }
                 if (!entry?.node) {
                     continue;
                 }
@@ -183,6 +189,12 @@ const hunterState = (h) => {
                     }
                     for (const effect of node.effects ?? []) {
                         effects.push({ effect, source });
+                    }
+                    // an option's own choice (Pure Drive's emotion); placeable items get theirs
+                    // once gained, below
+                    if (node.choose && !PLACEABLE.has(node.type)) {
+                        const own = { choose: node.choose };
+                        process({ holder: own, record: choice, self: node, source });
                     }
                 }
             }
@@ -265,10 +277,15 @@ const areaOf = (path) => {
 };
 
 // Picks (including free text) inside a container: Combat Magic's bases and effects,
-// Practitioner's effects, Arcane Reputation's organizations...
-const picksUnder = (state, path) => state.picks.filter((p) => (p.path
-    ? p.path.startsWith(`${path}.`) || p.container === path
-    : p.container === path));
+// Practitioner's effects, Arcane Reputation's organizations, the Monstrous breed's sub-lists...
+// Text picked inside a picked option (Pure Drive's emotion) belongs to that option instead.
+const picksUnder = (state, path) => state.picks.filter((p) => {
+    if (p.path) {
+        return p.path.startsWith(`${path}.`) || p.container === path;
+    }
+    return p.container === path || (p.container.startsWith(`${path}.`)
+        && !state.picks.some((other) => other.path === p.container));
+});
 
 const crossedUnder = (state, path) => new Set(state.crosses
     .filter((c) => c.path.startsWith(`${path}.`))

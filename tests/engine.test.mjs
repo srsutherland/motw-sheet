@@ -34,7 +34,7 @@ const practitioner = pb.moves.options.find((m) => m.name === 'Practitioner');
 check('options that are references keep their reference', D.optionsOf('@this', pb, practitioner).map((e) => [e.path, e.written])[0], ['basic_moves.use_magic.inflict_harm', '@basic_moves.use_magic.inflict_harm']);
 const ar = pb.moves.options.find((m) => m.name === 'Arcane Reputation');
 check('three textboxes', D.optionsOf('@this', pb, ar).map((e) => e.key), ['@textbox#0', '@textbox#1', '@textbox#2']);
-check('other playbooks moves', D.optionsOf('@*.moves', pb).length, 7);
+check('other playbooks moves: not your own', D.optionsOf('@*.moves', pb).some((o) => o.group === 'The Spell-Slinger'), false);
 
 let st = S.hunterState(h);
 check('granted moves', st.moves.map((m) => m.node.name), ['Tools and Techniques']);
@@ -127,7 +127,7 @@ check('saved: updated after created', keys.indexOf('updated') === keys.indexOf('
 check('saved: luck_used', [keys.includes('luck_used'), keys.includes('luck')], [true, false]);
 check('saved: computed keys', Object.keys(saved.computed), ['ratings', 'moves', 'gear', 'features']);
 const savedMove = (name) => saved.computed.moves.find((m) => m.name === name);
-check('saved: T&T selected (relative)', savedMove('Tools and Techniques').selected, ['@gestures']);
+check('saved: T&T crossed (relative)', [savedMove('Tools and Techniques').crossed, 'selected' in savedMove('Tools and Techniques')], [['@gestures'], false]);
 check('saved: Practitioner selected', savedMove('Practitioner').selected, ['@basic_moves.use_magic.heal', '@basic_moves.use_magic.banish']);
 check('saved: Arcane Reputation selected', savedMove('Arcane Reputation').selected, [{ ref: '@textbox', text: 'The White Council' }]);
 check('saved: no selected on plain moves', 'selected' in savedMove('Third Eye'), false);
@@ -183,5 +183,71 @@ const esaved = toSaved(e);
 check('expert: saved haven', esaved.computed.features.map((f) => [f.name, f.selected]), [['Haven', ['@lore_library', '@armory', '@panic_room', '@infirmary']]]);
 check('expert: round trip', S.hunterState(Hunter.fromJSON(JSON.parse(JSON.stringify(esaved)))).moves.length, 3);
 check('spell-slinger: offered the Expert moves', D.optionsOf('@*.moves', pb).filter((o) => o.group === 'The Expert').length, 7);
+
+// The Monstrous: plain-string options, choices inside a picked option, a borrowed move,
+// another playbook's feature, crossing off a picked option
+const mo = 'the_monstrous';
+const m = new Hunter(playbooks.find((p) => p.id === mo), 'Vlad');
+const mpb = m.playbook;
+const mgs = mpb.getting_started;
+m.ratings_base = { ...mpb.ratings_base.options[0] };
+// `written`: how the option is stored (a plain string option has no path)
+const pickW = (record, holder, i, written) => {
+    const rule = asList(holder.choose)[i];
+    const entry = D.optionsOf(rule.from, mpb, holder).find((o) => o.written === written);
+    S.toggleChoice(S.choiceSet(record, holder, i), entry);
+};
+check('monstrous: plain string options', D.optionsOf('@monster_breed.origin', mpb).map((o) => [o.literal ?? false, o.written]), [[true, 'Always this way'], [true, 'Originally human, transformed somehow'], [false, '@textbox']]);
+pickW(m.getting_started, mgs, 0, 'Originally human, transformed somehow');
+S.setTextChoice(S.choiceSet(m.getting_started, mgs, 1), 0, 'Evil until 1890');
+pickW(m.getting_started, mgs, 2, '@pure_drive');
+const pureDrive = D.lookup(`${mo}.curses.pure_drive`, mpb);
+pickW(S.pickRecord(S.choiceSet(m.getting_started, mgs, 2), '@pure_drive'), pureDrive, 0, 'hunger');
+pickW(m.getting_started, mgs, 3, '@bases.teeth');
+pickW(m.getting_started, mgs, 3, 'Add +1 harm to a base');
+pickW(m.getting_started, mgs, 4, '@something_borrowed');
+pickW(m.getting_started, mgs, 4, '@immortal');
+check('monstrous: stored', m.getting_started.choose.map((c) => c.chosen), [
+    ['Originally human, transformed somehow'],
+    [{ ref: '@textbox', text: 'Evil until 1890' }],
+    [{ ref: '@pure_drive', chosen: ['hunger'] }],
+    ['@bases.teeth', 'Add +1 harm to a base'],
+    [{ ref: '@something_borrowed', chosen: [] }, '@immortal'],
+    [],
+]);
+const borrowed = D.lookup(`${mo}.moves.something_borrowed`, mpb);
+const borrowedRecord = S.pickRecord(S.choiceSet(m.getting_started, mgs, 4), '@something_borrowed');
+pickW(borrowedRecord, borrowed, 0, '@the_expert.moves.preparedness');
+let mst = S.hunterState(m);
+check('monstrous: features', mst.features.map((f) => f.node.name), ['Monster Breed', 'Curses', 'Natural Attacks']);
+check('monstrous: breed picks', S.picksUnder(mst, `${mo}.monster_breed`).map((p) => p.text), ['Originally human, transformed somehow', 'Evil until 1890']);
+check('monstrous: curse, its emotion kept with it', [S.picksUnder(mst, `${mo}.curses`).map((p) => p.node?.name ?? p.text), S.picksUnder(mst, `${mo}.curses.pure_drive`).map((p) => p.text)], [['Pure Drive'], ['hunger']]);
+check('monstrous: natural attacks', S.picksUnder(mst, `${mo}.natural_attacks`).map((p) => p.node?.name ?? p.text), ['teeth', 'Add +1 harm to a base']);
+check('monstrous: borrowed move', mst.moves.map((m2) => m2.node.name), ['Something Borrowed', 'Immortal', 'Preparedness']);
+
+m.level = 7;
+const mtake = (id) => {
+    const imp = S.findImprovement(mpb, id).improvement;
+    m.improvements.push({ ref: S.improvementRef(mpb, imp), ...makeChoices(imp) });
+    return [imp, m.improvements.at(-1)];
+};
+const [mhaven, mhavenRec] = mtake('haven');
+pickW(mhavenRec, mhaven, 0, '@oubliette');
+pickW(mhavenRec, mhaven, 0, '@panic_room');
+mst = S.hunterState(m);
+check('monstrous: haven from the Expert', mst.features.map((f) => `${f.area}:${f.path}`).at(-1), 'post_moves:the_expert.haven');
+check('monstrous: haven picks', S.picksUnder(mst, 'the_expert.haven').map((p) => p.node.name), ['Oubliette', 'Panic Room']);
+const [mfree, mfreeRec] = mtake('free_from_curse');
+pickW(mfreeRec, mfree, 0, '@pure_drive');
+mst = S.hunterState(m);
+check('monstrous: curse crossed, -1 Weird', [[...S.crossedUnder(mst, `${mo}.curses`)], mst.ratings.weird], [[`${mo}.curses.pure_drive`], 2]);
+const msaved = toSaved(m);
+check('monstrous: saved features', msaved.computed.features.map((f) => [f.name, f.selected]), [
+    ['Monster Breed', ['Originally human, transformed somehow', { ref: '@textbox', text: 'Evil until 1890' }]],
+    ['Curses', ['@pure_drive']],
+    ['Natural Attacks', ['@bases.teeth', 'Add +1 harm to a base']],
+    ['Haven', ['@oubliette', '@panic_room']],
+]);
+check('monstrous: saved crossed curse', msaved.computed.features[1].crossed, ['@pure_drive']);
 await server.close();
 finish();

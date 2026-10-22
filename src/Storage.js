@@ -14,12 +14,19 @@ const computedFor = (hunter) => {
     const withSelected = ({ node, path }) => {
         const written = new Map(optionsOf(`@${path}`, hunter.playbook)
             .map((entry) => [entry.path, entry.written]));
-        const selected = [...picksUnder(state, path), ...state.crosses
-            .filter((c) => c.path.startsWith(`${path}.`))]
-            .map((pick) => (pick.path
-                ? written.get(pick.path) ?? `@${pick.path}`
-                : { ref: TEXTBOX, text: pick.text }));
-        return selected.length ? { ...node, selected } : node;
+        const writtenOf = (pick) => {
+            if (pick.path) {
+                return written.get(pick.path) ?? `@${pick.path}`;
+            }
+            return pick.literal ? pick.text : { ref: TEXTBOX, text: pick.text };
+        };
+        const selected = picksUnder(state, path).map(writtenOf);
+        const crossed = state.crosses.filter((c) => c.path.startsWith(`${path}.`)).map(writtenOf);
+        return {
+            ...node,
+            ...(selected.length && { selected }),
+            ...(crossed.length && { crossed }),
+        };
     };
     return {
         ratings: state.ratings,

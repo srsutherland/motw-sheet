@@ -1,7 +1,8 @@
 <template>
 <div class="choose-rule">
     <p class="status" :class="{ unmet: remaining > 0 || unmetLimits.length }">
-        {{ verbLabel }} {{ count }}<span v-if="remaining > 0"> ({{ remaining }} left)</span>
+        {{ verbLabel }} {{ optional ? 'up to ' : '' }}{{ count }}
+        <span v-if="remaining > 0"> ({{ remaining }} left)</span>
         <span v-for="limit in unmetLimits" :key="limit"> · {{ limit }}</span>
     </p>
     <div v-for="group in groups" :key="group.key" class="group">
@@ -38,6 +39,7 @@
                             ({{ entry.node.tags.join(' ') }})
                         </span>
                     </span>
+                    <span v-else-if="entry.literal">{{ entry.text }}</span>
                     <span v-if="takenElsewhere(entry)" class="note">
                         ({{ advancing ? 'already advanced' : 'already have' }})
                     </span>
@@ -97,13 +99,15 @@ const isThisSet = (set) => set === toRaw(props.set);
 
 const containerPath = computed(() => refPath(props.rule.from, hunter.value.playbook, props.self));
 
-// For "remove", the options are the hunter's current picks from the container.
+// For "remove", the options are the hunter's current picks from the container; so are they
+// for "cross" when the container's options are picked (your curse), not had (Tools and
+// Techniques).
 const entries = computed(() => {
     const options = optionsOf(props.rule.from, hunter.value.playbook, props.self);
-    if (verb.value === 'remove') {
-        const picked = new Set(state.value.picks
-            .filter((p) => p.path && p.container === containerPath.value && !isThisSet(p.set))
-            .map((p) => p.path));
+    const picked = new Set(state.value.picks
+        .filter((p) => p.path && p.container === containerPath.value && !isThisSet(p.set))
+        .map((p) => p.path));
+    if (verb.value === 'remove' || (verb.value === 'cross' && picked.size)) {
         return options.filter((entry) => picked.has(entry.path));
     }
     return options;
@@ -125,7 +129,10 @@ const groups = computed(() => {
 });
 
 const chosen = computed(() => props.set?.chosen ?? []);
-const remaining = computed(() => Math.max(0, count.value - chosen.value.length));
+// `"min": 0`: optional ("If you want, you can take one handy weapon")
+const optional = computed(() => props.rule.min === 0);
+const remaining = computed(() => Math.max(0,
+                                          (props.rule.min ?? count.value) - chosen.value.length));
 
 // The nth @textbox option holds the nth free-text choice.
 const textboxIndex = (entry) => Number(entry.key.split('#')[1]);
@@ -142,6 +149,10 @@ const takenElsewhere = (entry) => {
         return false;
     }
     const s = state.value;
+    if (entry.literal) {
+        return s.picks.some((p) => p.literal && p.text === entry.text
+            && p.container === containerPath.value && !isThisSet(p.set));
+    }
     if (verb.value === 'cross') {
         return s.crosses.some((c) => c.path === entry.path && !isThisSet(c.set));
     }
