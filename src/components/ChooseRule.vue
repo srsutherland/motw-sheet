@@ -43,6 +43,7 @@
                     </span>
                     <span v-else-if="atMax(entry)" class="note">(already at max)</span>
                 </label>
+                <MoveDetails :details="entry.node?.details" />
                 <!-- an option with its own choice: Practitioner, Arcane Reputation... -->
                 <div v-if="isChosen(entry) && verb === 'pick' && entry.node?.choose" class="nested">
                     <ChooseRule
@@ -73,6 +74,7 @@ import {
     toggleChoice, verbOf,
 } from '@/HunterState';
 import MarkdownText from './MarkdownText.vue';
+import MoveDetails from './show/MoveDetails.vue';
 
 const props = defineProps({
     rule: { type: Object, required: true },

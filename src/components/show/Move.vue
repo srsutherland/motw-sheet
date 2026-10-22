@@ -2,12 +2,7 @@
 <div class="show-move">
     <span class="move-name">{{ move?.name }}: </span>
     <MarkdownText :text="move?.description" inline />
-    <ul v-if="move?.details?.length">
-        <li v-for="detail in move.details" :key="detail.name">
-            <span class="move-name">{{ detail.name }}: </span>
-            <MarkdownText :text="detail.description" inline />
-        </li>
-    </ul>
+    <MoveDetails :details="move?.details" />
     <!-- the move's own choices: Practitioner's effects, crossed-off Tools and Techniques... -->
     <ul v-for="(rule, i) in asList(move?.choose)" :key="i" class="choices">
         <template v-if="verbOf(rule) === 'cross'">
@@ -40,6 +35,7 @@ import { useHunter, useHunterState } from '@/HunterContext';
 import { crossedUnder, picksUnder, verbOf } from '@/HunterState';
 import { optionsOf } from '@/PlaybookData';
 import MarkdownText from '../MarkdownText.vue';
+import MoveDetails from './MoveDetails.vue';
 
 const props = defineProps({
     move: Object,
