@@ -4,7 +4,7 @@ For AI agents (and people) working on this repo. Read this first, then the docs 
 
 ## What this is
 
-A character sheet app for *Monster of the Week* players (hunters, not Keepers): create, view and edit hunters. Vue 3 + Vite, static site on GitHub Pages, data in the browser (localStorage) plus file import/export. One playbook (the Spell-Slinger) is built so far; the other 11 come after the schema settles.
+A character sheet app for *Monster of the Week* players (hunters, not Keepers): create, view and edit hunters. Vue 3 + Vite, static site on GitHub Pages, data in the browser (localStorage) plus file import/export.
 
 ## Docs
 

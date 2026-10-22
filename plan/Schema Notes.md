@@ -271,6 +271,13 @@ Conventions the code needed that weren't discussed. All used by the app as built
 - Improvement list unlock: `requires.level` compares with level ups completed *before* the one the improvement is for
 - An improvement being picked is stored with `"pending": true` and dropped on load
 
+## From implementation (2026-10-22, `the-expert`)
+
+- `details` entries: `{ name, description }` (Could've Been Worse) or a markdown string (Dark Past's questions)
+- Moves picked from another playbook (`@*.moves`) are stored absolute: `{ "ref": "@the_spellslinger.moves.practitioner", "chosen": [...] }`
+- Playbook list order: alphabetical within a book (`Playbooks.js`)
+- Mythic improvements: the regular list's repeatable improvements (Expert: luck, move, haven option, another playbook's move)
+
 # Open questions
 
 - `"type"` on every object, or only on things that can be placed on a hunter (not on options inside a feature or move)?

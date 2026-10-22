@@ -19,7 +19,7 @@ motw-sheet/
 │   ├── Storage.js            # localStorage, import/export
 │   ├── Markdown.js           # Display-text markdown subset
 │   └── Tags.js               # Gear tag parsing
-├── playbooks/                # Playbook data (the-spellslinger, basic_moves)
+├── playbooks/                # Playbook data
 ├── sources/                  # Submodule, private (_motw-sources): PDFs, md
 │   ├── pdf/                  # PDF handouts; books/ for full books
 │   │   └── extracted/        # Raw PDF extractor output, one folder per PDF
@@ -65,7 +65,7 @@ Deployment: GitHub Pages (see 6)
 
 - `Playbooks.js`
    - Imports the playbook JSON files
-   - `files`: file id (`the_spellslinger`, `basic_moves`) -> data
+   - `files`: file id (`the_spellslinger`, `basic_moves`...) -> data
 - `PlaybookData.js`
    - Auto ids, path index, `@` reference resolution
    - `optionsOf`: a container's options, each with its `written` form
@@ -118,7 +118,7 @@ Type: static JSON in `playbooks/`, bundled into the app
 
 Purpose: the app's source of truth for playbook content. The PDFs are the ultimate source; `sources/md/` is a reference transcription of them. Game text comes from those, never from memory
 
-Key files: `the-spellslinger.json`, `basic_moves.json`
+Key files: `the-*.json` (one per playbook), `basic_moves.json`
 
 Versions: `schema_version` (date of the last breaking change) and `updated`
 

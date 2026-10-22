@@ -93,6 +93,5 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - Saves are always the "full" hunter JSON; the "slim" version (DESIGN.md) isn't built
 - `basic_moves.json` has names and ratings only, no descriptions (needed for popups)
 - `[[wikilinks]]` render as dotted-underline text, no popup yet
-- "Take a move from another playbook" (`@*.moves`) has nothing to offer until there are other playbooks
 - A hunter's playbook copy is indexed once; editing the copy (it's meant to be modifiable) won't re-index it. Nothing edits it yet.
 - ESLint `max-len` with `ignoreStrings` skips any line that contains a string, so most long lines aren't reported
