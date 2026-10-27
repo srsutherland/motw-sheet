@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-// One `choose` rule (plan/Schema Notes.md: "Choosing"): its options, the hunter's
+// One `choose` rule (docs/Schema Notes.md: "Choosing"): its options, the hunter's
 // choices for it, and its limits. Fewer than the full count is always allowed;
 // going over a limit needs "bend the rules" (provided by the edit page).
 import { computed, inject, ref, toRaw } from 'vue';

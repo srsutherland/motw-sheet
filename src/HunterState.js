@@ -6,7 +6,7 @@ import {
 } from '@/PlaybookData';
 
 // Everything about a hunter that's computed from its choices rather than stored
-// (see plan/Schema Notes.md: "Getting started", "Choosing", "Placement", "Hunter JSON").
+// (see docs/Schema Notes.md: "Getting started", "Choosing", "Placement", "Hunter JSON").
 
 const RATINGS = ['charm', 'cool', 'sharp', 'tough', 'weird'];
 const VERBS = ['pick', 'cross', 'remove'];

@@ -72,8 +72,6 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - "Bend the rules": temporary/debug for now; decide what it becomes
 - Tests in the deploy pipeline
 - Better view and filter for "take a move from another playbook" choice picker
-- Restructure `plan` > `docs` (`ARCHITECTURE.md` and `AGENTS.md` are at the root for now)
-   - Same clean-up commit: delete `samples/Dave Johnson the Spell-Slinger.0.1.json`
 
 # Later
 

@@ -1,7 +1,7 @@
 import { toRaw } from 'vue';
 import { files } from '@/Playbooks';
 
-// Ids, paths, and references for playbook data (see plan/Schema Notes.md).
+// Ids, paths, and references for playbook data (see docs/Schema Notes.md).
 // Nothing here modifies the data it reads. Works on raw objects, so a reactive
 // hunter's playbook copy and the same object unwrapped index the same way.
 
@@ -105,7 +105,7 @@ const isContainer = (node) => node && typeof node === 'object' && Array.isArray(
 
 // The options a `from` reference offers, flattened, each with the sub-list it came from.
 // Entries: { key, path, node, group, written } or { key, textbox: true, group, written }
-// `written` is how a choice of it is stored (plan/Schema Notes.md: "Hunter JSON"): relative
+// `written` is how a choice of it is stored (docs/Schema Notes.md: "Hunter JSON"): relative
 // to the container ("@bases.blast"), or as written in the container if the option is itself
 // a reference ("@basic_moves.use_magic.heal"), or absolute for "@*." lists.
 const optionsOf = (ref, root, self) => {

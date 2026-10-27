@@ -57,7 +57,7 @@ const loadHunter = (uid) => {
 };
 
 // Every saved hunter: { uid, hunter }, or { uid, outdated: true, label } for an older format.
-// Migrating old saves isn't MVP (plan/Roadmap.md); they can only be deleted.
+// Migrating old saves isn't MVP (docs/Roadmap.md); they can only be deleted.
 const listHunters = () => {
     const entries = [];
     for (let i = 0; i < localStorage.length; i++) {

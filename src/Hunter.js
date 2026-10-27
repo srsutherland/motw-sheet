@@ -7,7 +7,7 @@ const SCHEMA_VERSION = '0.1.2026.10.16';
 // A `choose` or `grant` may be one rule or a list of them.
 const asList = (value) => (value === undefined ? [] : [].concat(value));
 
-// The hunter's side of a playbook object's `choose` (plan/Schema Notes.md: "Hunter JSON"):
+// The hunter's side of a playbook object's `choose` (docs/Schema Notes.md: "Hunter JSON"):
 // one rule -> { chosen }; several -> { choose: [{ from, chosen }] }, mirroring the playbook.
 const makeChoices = (holder) => {
     const rules = asList(holder?.choose);

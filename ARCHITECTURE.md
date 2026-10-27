@@ -29,7 +29,7 @@ motw-sheet/
 ├── samples/                  # Sample hunter files (used by tests)
 ├── tests/                    # Engine and browser tests
 ├── res/                      # Styles, font, icon
-├── plan/                     # Planning docs
+├── docs/                     # Planning docs
 ├── .github/workflows/        # Deploy to GitHub Pages
 ├── AGENTS.md                 # Guidance for AI agents
 ├── DESIGN.md                 # Page/UI spec
@@ -110,7 +110,7 @@ None: static site; everything runs in the browser.
 
 ## 4. Data Stores
 
-Formats: see `plan/Schema Notes.md`.
+Formats: see `docs/Schema Notes.md`.
 
 ### 4.1. Playbook JSON
 
@@ -132,7 +132,7 @@ Versions: `schema_version` in `src/Hunter.js`; other versions load as "old forma
 
 ## 5. External Integrations / APIs
 
-None. (Google Drive sync: see `plan/Roadmap.md`.)
+None. (Google Drive sync: see `docs/Roadmap.md`.)
 
 ## 6. Deployment & Infrastructure
 
@@ -157,11 +157,11 @@ Code Quality Tools: ESLint with `@stylistic` and `eslint-plugin-vue` (formatting
 
 ## 9. Future Considerations / Roadmap
 
-See `plan/Roadmap.md`.
+See `docs/Roadmap.md`.
 
 ## 10. Project Identification
 
-Project Name: motw-sheet (working title; see `plan/Name Ideas.md`)
+Project Name: motw-sheet (working title; see `docs/Name Ideas.md`)
 
 Repository URL: https://github.com/srsutherland/motw-sheet
 
@@ -203,4 +203,4 @@ Date of Last Update: 2026-10-16
 - **`computed`**: what the sheet shows, saved for readers of the file; ignored on load
 - **`schema_version`**: the date of the last breaking format change
 
-See also: `plan/Schema Notes.md` (data terms in depth), the *Monster of the Week* rules and `sources/md/` (game terms).
+See also: `docs/Schema Notes.md` (data terms in depth), the *Monster of the Week* rules and `sources/md/` (game terms).

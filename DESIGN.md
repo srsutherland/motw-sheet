@@ -81,7 +81,7 @@ This page has responsive columns with the following sections:
 
 # Data Model
 
-Format details: `plan/Schema Notes.md`
+Format details: `docs/Schema Notes.md`
 
 ## Playbook JSON
 

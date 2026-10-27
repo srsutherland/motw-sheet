@@ -13,15 +13,15 @@ A character sheet app for *Monster of the Week* players (hunters, not Keepers): 
 | `AGENTS.md`               | This file, project-agnostic guidance for AI agents. |
 | `DESIGN.md`               | UI/functional/page spec          |
 | `ARCHITECTURE.md`         | Top-level design document        |
-| `plan/Schema Notes.md`    | Playbook and hunter JSON design  |
-| `plan/Roadmap.md`         | High-level roadmap, known issues |
-| `plan/Playbook Survey.md` | What varies between playbooks    |
-| `plan/Name Ideas.md`      | App name candidates and criteria |
+| `docs/Schema Notes.md`    | Playbook and hunter JSON design  |
+| `docs/Roadmap.md`         | High-level roadmap, known issues |
+| `docs/Playbook Survey.md` | What varies between playbooks    |
+| `docs/Name Ideas.md`      | App name candidates and criteria |
 
 ## Working with the maintainer
 
 - **Begin each reply with the current date.**
-- **Don't reverse a decision silently.** If `DESIGN.md`, the plan docs, or the code disagree, or you want to change something already decided, ask first. Several past mistakes were "followed the doc / my own idea without saying so".
+- **Don't reverse a decision silently.** If `DESIGN.md`, the docs in `docs/`, or the code disagree, or you want to change something already decided, ask first. Several past mistakes were "followed the doc / my own idea without saying so".
 - **Several questions:** ask them as multiple-choice questions, one question per item (not one multi-select covering several).
 - **Describing a data shape:** include an abbreviated JSON example, ideally with real data (`samples/`).
 - Don't nitpick things the maintainer has already handled; move the work forward.
