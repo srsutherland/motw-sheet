@@ -20,7 +20,7 @@ const pb = h.playbook;
 const sp = 'the_spellslinger';
 check('copy, not shared', h.playbook !== spellslinger, true);
 check('getting_started mirrors the playbook', h.getting_started.choose.map((c) => c.from), ['@combat_magic', '@moves', '@starting_gear']);
-check('granted records', h.getting_started.grant, ['@basic_moves', { ref: '@moves.tools_and_techniques', chosen: [] }]);
+check('granted records', h.getting_started.grant, [{ ref: '@moves.tools_and_techniques', chosen: [] }]);
 check('version', h.schema_version, '0.1.2026.10.16');
 check('created timestamp', /^\d{4}-\d\d-\d\dT/.test(h.created), true);
 check('playbook updated', h.playbook_updated, spellslinger.updated);
@@ -38,7 +38,7 @@ check('other playbooks moves: not your own', D.optionsOf('@*.moves', pb).some((o
 
 let st = S.hunterState(h);
 check('granted moves', st.moves.map((m) => m.node.name), ['Tools and Techniques']);
-check('granted basic moves', st.basicMoves.length, 8);
+check('basic moves, implicit', st.basicMoves.length, 8);
 check('own features', st.features.map((f) => `${f.area}:${f.node.name}`), ['pre_moves:Combat Magic']);
 
 // Choose the way the UI does: find the option in its container, toggle it
@@ -60,7 +60,7 @@ pick(S.pickRecord(movesSet, '@practitioner'), practitioner, 0, 'basic_moves.use_
 S.setTextChoice(S.choiceSet(S.pickRecord(movesSet, '@arcane_reputation'), ar, 0), 0, 'The White Council');
 
 check('stored: relative to the container', S.choiceSet(h.getting_started, gs, 0), { from: '@combat_magic', chosen: ['@bases.blast', '@effects.fire', '@effects.earth'] });
-check('stored: a grant with choices', h.getting_started.grant[1], { ref: '@moves.tools_and_techniques', chosen: ['@gestures'] });
+check('stored: a grant with choices', h.getting_started.grant[0], { ref: '@moves.tools_and_techniques', chosen: ['@gestures'] });
 check('stored: a pick with its own choices', movesSet.chosen[0], { ref: '@practitioner', chosen: ['@basic_moves.use_magic.heal', '@basic_moves.use_magic.banish'] });
 check('stored: free text', movesSet.chosen[1], { ref: '@arcane_reputation', chosen: [{ ref: '@textbox', text: 'The White Council' }] });
 check('stored: plain picks are strings', [movesSet.chosen[2], S.choiceSet(h.getting_started, gs, 2).chosen], ['@third_eye', ['@ritual_knife']]);
@@ -148,7 +148,7 @@ const pickIn = (playbook, record, holder, i, path) => {
     S.toggleChoice(S.choiceSet(record, holder, i), entry);
 };
 let est = S.hunterState(e);
-check('expert: only basic moves granted', [e.getting_started.grant, est.moves.length, est.basicMoves.length], [['@basic_moves'], 0, 8]);
+check('expert: nothing granted; basic moves anyway', [e.getting_started.grant, est.moves.length, est.basicMoves.length], [[], 0, 8]);
 check('expert: haven is post-moves', est.features.map((f) => `${f.area}:${f.path}`), [`post_moves:${ex}.haven`]);
 const egs = epb.getting_started;
 for (const p of ['lore_library', 'armory', 'panic_room']) pickIn(epb, e.getting_started, egs, 0, `${ex}.haven.${p}`);

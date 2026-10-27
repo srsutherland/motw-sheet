@@ -47,7 +47,9 @@
       "options": [
         {
           "name": "Feed",
-          "description": "You must subsist on living humans—it might take the form of blood, brains, or spiritual essence but it must be from people. You need to [[act under pressure]] to resist feeding whenever a perfect opportunity presents itself."
+          "description": "You must subsist on living humans—it might take the form of blood, brains, or spiritual essence but it must be from people. You need to [[act under pressure]] to resist feeding whenever a perfect opportunity presents itself.",
+          "choose": { "from": "@this", "pick": 1 },
+          "options": ["@textbox"]
         },
         {
           "name": "Vulnerability",
@@ -63,7 +65,9 @@
         },
         {
           "name": "Dark Master",
-          "description": "You have an evil lord who doesn't know you changed sides. They still give you orders, and they do not tolerate refusal. Or failure."
+          "description": "You have an evil lord who doesn't know you changed sides. They still give you orders, and they do not tolerate refusal. Or failure.",
+          "choose": { "from": "@this", "pick": 1 },
+          "options": ["@textbox"]
         }
       ]
     },
@@ -179,7 +183,6 @@
   },
   "getting_started": {
     "description": "To make your Monstrous, first pick a name. Then follow the instructions in this playbook to decide your look, ratings, breed, moves, and gear. Finally, introduce yourself and pick history.",
-    "grant": ["@basic_moves"],
     "choose": [
       { "from": "@monster_breed.origin", "pick": 1 },
       { "from": "@monster_breed.alignment", "pick": 1 },

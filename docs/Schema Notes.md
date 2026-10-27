@@ -213,7 +213,7 @@ Limits on a `choose` (exact syntax not final):
 
 ```jsonc
 "getting_started": {
-  "grant": ["@basic_moves", { "ref": "@moves.tools_and_techniques", "chosen": ["@consumables"] }],
+  "grant": [{ "ref": "@moves.tools_and_techniques", "chosen": ["@consumables"] }],
   "choose": [
     { "from": "@combat_magic", "chosen": ["@bases.blast", "@effects.fire"] },
     { "from": "@moves", "chosen": [
@@ -273,7 +273,7 @@ Conventions the code needed that weren't discussed. All used by the app as built
 
 - Auto ids: lowercase, apostrophes dropped, other runs of non-alphanumerics become `_` (`Could've Been Worse` -> `couldve_been_worse`) (`PlaybookData.js: slug`)
 - A sub-list is an object with `options` and no `type` (Combat Magic's `bases`); its options are offered flattened, grouped by sub-list
-- Placeable types: `move`, `basic_move`, `feature`, `gear`; a `grant` of anything else with `options` grants all its options (`"grant": "@basic_moves"`)
+- Placeable types: `move`, `basic_move`, `feature`, `gear`; a `grant` of anything else with `options` grants all its options; every hunter has the basic moves without a grant
 - `basic_moves.json`: `{ id: "basic_moves", options: [ { type: "basic_move", name, rating, options? } ] }`; use magic's effects are its `options`
 - Your own playbook's features are always on your sheet; others' only when granted
 - An improvement that costs more than 1 stores `"cost"` on its record

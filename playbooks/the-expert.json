@@ -124,7 +124,6 @@
   },
   "getting_started": {
     "description": "To make your Expert, first pick a name. Then follow the instructions in this playbook to decide your look, ratings, haven, moves, and gear. Finally, introduce yourself and pick history.",
-    "grant": ["@basic_moves"],
     "choose": [
       { "from": "@haven", "pick": 3 },
       { "from": "@moves", "pick": 2 },

@@ -191,7 +191,7 @@
   },
   "getting_started": {
     "description": "To make your Spell-slinger, first pick a name. Then follow the instructions below to decide your look, ratings, Combat Magic, moves, and gear. Finally, introduce yourself and pick history.",
-    "grant": ["@basic_moves", "@moves.tools_and_techniques"],
+    "grant": ["@moves.tools_and_techniques"],
     "choose": [
       { "from": "@combat_magic", "pick": 3, "limits": { "@combat_magic.bases": { "min": 1 }} },
       { "from": "@moves", "pick": 3 },

@@ -204,6 +204,10 @@ const hunterState = (h) => {
         }
     };
 
+    // every hunter has the basic moves
+    for (const node of basicMoves.options) {
+        gain(node, 'basic_moves');
+    }
     process({
         holder: root.getting_started ?? {},
         record: h.getting_started,
