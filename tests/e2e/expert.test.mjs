@@ -22,10 +22,12 @@ check('haven full', await box(haven, 'Oubliette').isDisabled(), true);
 // Moves: none granted, pick 2; Dark Past's questions shown with it
 const moves = section('Moves');
 check('no granted moves', await moves.locator('.granted').count(), 0);
-check('Dark Past questions on the edit page', await moves.locator('li', { has: box(page, 'Dark Past') }).locator('.move-details li').count(), 4);
+const darkPastEdit = moves.locator('li', { has: box(page, 'Dark Past') }).locator('.move-details');
+check('Dark Past questions on the edit page, bulleted', [await darkPastEdit.locator('li').count(), await darkPastEdit.evaluate((el) => getComputedStyle(el).listStyleType) !== 'none'], [4, true]);
 await box(moves, 'Dark Past').check();
 await box(moves, 'Preparedness').check();
 check('moves full', await box(moves, 'Precise Strike').isDisabled(), true);
+check('a full option greys out with its details', await moves.locator('li.disabled', { has: box(page, 'Precise Strike') }).count(), 1);
 
 // Gear: pick 3
 const gear = section('Starting Gear');

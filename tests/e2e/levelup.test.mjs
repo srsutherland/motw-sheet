@@ -42,6 +42,7 @@ check('advancement offered', (await advancement().innerText()).trim(), 'Advancem
 
 // The dialog: cancel changes nothing
 await advancement().click();
+check('mythic hidden while locked', await dialog.locator('h3:text-is("Mythic Improvements")').count(), 0);
 check('advanced locked', (await dialog.locator('section', { has: page.locator('h3:text-is("Advanced Improvements")') }).innerText()).includes('Not unlocked yet'), true);
 check('other playbook move available', await option('Take a move from another playbook').first().isDisabled(), false);
 await option('Take another Spell-Slinger move').first().click();

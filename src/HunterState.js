@@ -347,8 +347,12 @@ const improvementLists = (h, levelsBefore) => IMPROVEMENT_LISTS
 // Why an improvement can't be taken right now, or null if it can.
 // `points`: improvements available to spend.
 const improvementBlocked = (h, improvement, state, points) => {
-    if (takenImprovements(h).some((taken) => improvementOf(h.playbook, taken)?.improvement
-        === toRaw(improvement))) {
+    // by id: the hunter's playbook copy may be reactive, so the objects can differ.
+    // Mythic improvements can be taken again.
+    const repeatable = findImprovement(h.playbook, improvement.id)?.list
+        === h.playbook.improvements_mythic;
+    if (!repeatable && takenImprovements(h).some((taken) => improvementOf(h.playbook, taken)
+        ?.improvement.id === improvement.id)) {
         return 'already taken';
     }
     const cost = costOf(h.playbook, improvement.id);

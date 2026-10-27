@@ -15,7 +15,7 @@ Sections: **Decided** (with where it was decided), **Needs** (from the playbook 
    - Fixed areas, including "pre-moves" and "post-moves" for features
    - Each area is ordered within
    - e.g. Combat Magic is a pre-move feature; the Expert's Haven is a post-move feature
-   - Sibling headings on the sheet are separate features: Monster Breed, Curses, Natural Attacks
+   - Sibling headings on the sheet are separate features: Monster Breed, Curse, Natural Attacks
 
 ## Terms
 
@@ -308,7 +308,7 @@ Conventions the code needed that weren't discussed. All used by the app as built
    - Its choices are stored on its record, like a move's: `{ "ref": "@pure_drive", "chosen": ["hunger"] }`
 - A `getting_started` rule can pick from a feature's sub-list (`"from": "@monster_breed.origin"`); the edit page shows it in that feature
 - `"min": 0`: an optional pick ("Pick up to 1")
-- `cross` from a container whose options are picked (Curses) offers only your picks; otherwise all options (Tools and Techniques)
+- `cross` from a container whose options are picked (Curse) offers only your picks; otherwise all options (Tools and Techniques)
 - Saved `computed`: crossed options under `crossed`, separate from `selected`
 - A look list with no noun: `"format": "___"` (Monstrous `form`: almost human, half human...)
 

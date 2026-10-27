@@ -85,18 +85,30 @@
         <legend>Look</legend>
         <p v-if="hunter.playbook.look.heading">{{ hunter.playbook.look.heading }}</p>
         <div v-for="(list, key) in lookLists" :key="key" class="look-list">
+            <span class="format">{{ list.format }}:</span>
             <label v-for="option in list.options.filter((o) => o !== TEXTBOX)" :key="option">
-                <input type="radio" :value="option" v-model="hunter.look[key]" />
+                <input
+                    type="radio"
+                    :name="`look-${key}`"
+                    :value="option"
+                    v-model="hunter.look[key]"
+                />
                 {{ option }}
             </label>
-            <input
-                v-if="list.options.includes(TEXTBOX)"
-                class="textbox"
-                placeholder="write your own"
-                :value="list.options.includes(hunter.look[key]) ? '' : hunter.look[key]"
-                @change="hunter.look[key] = $event.target.value.trim()"
-            />
-            <span class="format">{{ list.format }}</span>
+            <label v-if="list.options.includes(TEXTBOX)">
+                <input
+                    type="radio"
+                    :name="`look-${key}`"
+                    :checked="isCustomLook(key, list)"
+                    @change="pickCustomLook(key, list, $event)"
+                />
+                <input
+                    class="textbox"
+                    placeholder="write your own"
+                    :value="lookText(key, list)"
+                    @change="setCustomLook(key, $event.target.value)"
+                />
+            </label>
         </div>
     </fieldset>
 </section>
@@ -186,7 +198,7 @@
 </template>
 
 <script setup>
-import { computed, provide, ref } from 'vue';
+import { computed, provide, reactive, ref } from 'vue';
 import { rulesOf } from '@/Hunter';
 import { providePage, useHunter, useHunterState, usePageText } from '@/HunterContext';
 import {
@@ -216,6 +228,27 @@ const startingGear = computed(() => hunter.value.playbook.starting_gear);
 // look: { heading, clothes: { format, options }, eyes: {...} }
 const lookLists = computed(() => Object.fromEntries(Object.entries(hunter.value.playbook.look)
     .filter(([key]) => key !== 'heading')));
+
+// Look: what was typed into "write your own", kept while a listed option is picked
+const customLook = reactive({});
+const isCustomLook = (key, list) => !!hunter.value.look[key]
+    && !list.options.includes(hunter.value.look[key]);
+const lookText = (key, list) => customLook[`${hunter.value.uid}.${key}`]
+    ?? (isCustomLook(key, list) ? hunter.value.look[key] : '');
+const setCustomLook = (key, text) => {
+    customLook[`${hunter.value.uid}.${key}`] = text.trim();
+    hunter.value.look[key] = text.trim();
+};
+// Its radio picks the text written there; with nothing written, it moves to the text field.
+const pickCustomLook = (key, list, event) => {
+    const text = lookText(key, list);
+    if (text) {
+        hunter.value.look[key] = text;
+    } else {
+        event.target.checked = false;
+        event.target.nextElementSibling.focus();
+    }
+};
 
 // Moves you get without picking them (Tools and Techniques)
 const grantedMoves = computed(() => state.value.moves
@@ -314,7 +347,7 @@ ul.plain {
 
 .format {
     opacity: 0.7;
-    margin-left: 0.5em;
+    margin-right: 0.5em;
 }
 
 .textbox {

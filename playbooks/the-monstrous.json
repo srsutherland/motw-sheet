@@ -51,9 +51,9 @@
       }
     },
     {
-      "id": "curses",
+      "id": "curse",
       "type": "feature",
-      "name": "Curses",
+      "name": "Curse",
       "heading": "Curses, pick one:",
       "options": [
         {
@@ -200,7 +200,7 @@
     "choose": [
       { "from": "@monster_breed.origin", "pick": 1 },
       { "from": "@monster_breed.alignment", "pick": 1 },
-      { "from": "@curses", "pick": 1 },
+      { "from": "@curse", "pick": 1 },
       {
         "from": "@natural_attacks",
         "pick": 2,
@@ -377,7 +377,7 @@
         "id": "free_from_curse",
         "type": "improvement",
         "description": "Free yourself from the curse of your kind. Your curse no longer applies, but you lose 1 Weird",
-        "choose": { "from": "@curses", "cross": 1 },
+        "choose": { "from": "@curse", "cross": 1 },
         "effects": [{ "rating": "weird", "add": -1 }]
       },
       {

@@ -17,6 +17,7 @@ await page.locator('.hunter-name input').fill('Vlad');
 // Monster Breed: two pick-1 sub-lists of plain strings, each with a write-your-own
 const breed = section('Monster Breed');
 check('breed sub-lists', await breed.locator('.sub-list-name').allInnerTexts(), ['Origin:', 'Alignment:']);
+check('write-your-own has a checkbox among options', await breed.locator('li', { has: page.locator('input.textbox') }).first().locator('input[type=checkbox]').count(), 1);
 await box(breed, 'Originally human').check();
 check('origin: one only', await box(breed, 'Always this way').isDisabled(), true);
 await breed.locator('input.textbox').nth(1).fill('Evil until 1890');
@@ -24,11 +25,11 @@ await breed.locator('input.textbox').nth(1).blur();
 check('edit: suggestions (on_edit details)', await breed.locator('.move-details li').count(), 7);
 check('edit: description extended (on_edit)', (await breed.locator('.md').first().innerText()).includes('listed below'), true);
 
-// Curses: Pure Drive has its own pick of an emotion
-const curses = section('Curses');
-check('edit: Pure Drive lists its emotions', (await curses.innerText()).includes('Pick from: hunger'), true);
-await box(curses, 'Pure Drive').check();
-const drive = curses.locator('li', { has: box(page, 'Pure Drive') }).locator('.nested');
+// Curse: Pure Drive has its own pick of an emotion
+const curse = section('Curse');
+check('edit: Pure Drive lists its emotions', (await curse.innerText()).includes('Pick from: hunger'), true);
+await box(curse, 'Pure Drive').check();
+const drive = curse.locator('li', { has: box(page, 'Pure Drive') }).locator('.nested');
 await box(drive, 'hunger').check();
 check('one emotion', await box(drive, 'hate').isDisabled(), true);
 
@@ -49,6 +50,14 @@ await box(moves, 'Immortal').check();
 // Gear is optional
 check('optional gear', [await section('Starting Gear').locator('.status').innerText(), await section('Starting Gear').locator('.status.unmet').count()], ['Pick up to 1', 0]);
 
+const look = section('Look');
+check('look: format first', (await look.locator('.look-list').nth(1).innerText()).startsWith('___ aura:'), true);
+await look.locator('.look-list').nth(1).locator('input.textbox').fill('smoky');
+await look.locator('.look-list').nth(1).locator('input.textbox').blur();
+check('look: write-your-own radio checked', await look.locator('.look-list').nth(1).locator('input[type=radio]').last().isChecked(), true);
+await look.getByLabel('sinister').check();
+await look.locator('.look-list').nth(1).locator('input[type=radio]').last().check();
+check('look: back to what was written', await look.locator('.look-list').nth(1).locator('input[type=radio]').last().isChecked(), true);
 await page.locator('#edit-ratings input[type=radio]').first().check();
 await page.getByRole('button', { name: 'Save' }).click();
 await page.waitForURL(/\?view=/);
@@ -56,9 +65,10 @@ await page.waitForURL(/\?view=/);
 const feature = (name) => page.locator('.show-feature', { has: page.locator(`h2:text-is("${name}")`) });
 check('view: breed', await feature('Monster Breed').locator('li').allInnerTexts(), ['Originally human, transformed somehow', 'Evil until 1890']);
 check('view: breed groups', await feature('Monster Breed').locator('.group-name').allInnerTexts(), ['Origin:', 'Alignment:']);
-const curseView = await feature('Curses').locator('li').innerText();
+const curseView = await feature('Curse').locator('li').innerText();
 check('view: curse with its emotion, shorter text (on_view)', [curseView.endsWith('(hunger)'), curseView.includes('Pick from')], [true, false]);
 check('view: breed without the suggestions (on_edit only)', [await feature('Monster Breed').locator('.move-details').count(), (await feature('Monster Breed').locator('.description').innerText()).includes('listed below')], [0, false]);
+check('view: natural attacks groups', await feature('Natural Attacks').locator('.group-name').allInnerTexts(), ['Bases:', 'Extras:']);
 check('view: natural attacks', (await feature('Natural Attacks').locator('li').allInnerTexts()).map((t) => t.replace(/\s+/g, ' ').trim()), ['teeth (3-harm intimate)', 'Add +1 harm to a base']);
 check('view: moves', (await page.locator('.show-move .move-name').allInnerTexts()).map((t) => t.trim()), ['Something Borrowed:', 'Immortal:', 'Preparedness:']);
 check('view: no gear', await page.locator('.show-gear li').count(), 0);

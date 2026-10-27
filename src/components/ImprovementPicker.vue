@@ -94,7 +94,9 @@ const levelsBefore = computed(() => {
     return h.level - unspentImprovements(h);
 });
 
-const lists = computed(() => improvementLists(hunter.value, levelsBefore.value));
+// mythic improvements stay hidden until they unlock
+const lists = computed(() => improvementLists(hunter.value, levelsBefore.value)
+    .filter(({ key, unlocked }) => unlocked || key !== 'improvements_mythic'));
 // Improvements available to spend
 const points = computed(() => unspentImprovements(hunter.value));
 const blocked = (improvement) => improvementBlocked(

@@ -1,5 +1,6 @@
 // The data layer and state engine, run against the real playbook JSON
 // (through Vite, so the @/ aliases and JSON imports work).
+import { reactive } from 'vue';
 import { createServer } from 'vite';
 import { check, finish } from './check.mjs';
 
@@ -129,6 +130,15 @@ h.extra_gear.push({ name: 'Amulet', tags: ['1-harm', 'magic'] });
 const { toSaved } = await load('/src/Storage.js');
 const saved = toSaved(h);
 const keys = Object.keys(saved);
+
+const rh = reactive(new Hunter(spellslinger, 'Reactive'));
+rh.level = 13;
+rh.improvements.push('@improvements.move_1', '@improvements_mythic.mythic_move');
+const rst = S.hunterState(rh);
+const imp = (id) => S.findImprovement(rh.playbook, id).improvement;
+check('repeat: taken improvement blocked (reactive hunter)', S.improvementBlocked(rh, imp('move_1'), rst, 5), 'already taken');
+check('repeat: its twin is not', S.improvementBlocked(rh, imp('move_2'), rst, 5), null);
+check('repeat: mythic can be taken again', S.improvementBlocked(rh, imp('mythic_move'), rst, 5), null);
 check('saved: playbook last, computed before it', keys.slice(-2), ['computed', 'playbook']);
 check('saved: updated after created', keys.indexOf('updated') === keys.indexOf('created') + 1, true);
 check('saved: luck_used', [keys.includes('luck_used'), keys.includes('luck')], [true, false]);
@@ -208,7 +218,7 @@ check('monstrous: plain string options', D.optionsOf('@monster_breed.origin', mp
 pickW(m.getting_started, mgs, 0, 'Originally human, transformed somehow');
 S.setTextChoice(S.choiceSet(m.getting_started, mgs, 1), 0, 'Evil until 1890');
 pickW(m.getting_started, mgs, 2, '@pure_drive');
-const pureDrive = D.lookup(`${mo}.curses.pure_drive`, mpb);
+const pureDrive = D.lookup(`${mo}.curse.pure_drive`, mpb);
 pickW(S.pickRecord(S.choiceSet(m.getting_started, mgs, 2), '@pure_drive'), pureDrive, 0, 'hunger');
 pickW(m.getting_started, mgs, 3, '@bases.teeth');
 pickW(m.getting_started, mgs, 3, 'Add +1 harm to a base');
@@ -226,9 +236,9 @@ const borrowed = D.lookup(`${mo}.moves.something_borrowed`, mpb);
 const borrowedRecord = S.pickRecord(S.choiceSet(m.getting_started, mgs, 4), '@something_borrowed');
 pickW(borrowedRecord, borrowed, 0, '@the_expert.moves.preparedness');
 let mst = S.hunterState(m);
-check('monstrous: features', mst.features.map((f) => f.node.name), ['Monster Breed', 'Curses', 'Natural Attacks']);
+check('monstrous: features', mst.features.map((f) => f.node.name), ['Monster Breed', 'Curse', 'Natural Attacks']);
 check('monstrous: breed picks', S.picksUnder(mst, `${mo}.monster_breed`).map((p) => p.text), ['Originally human, transformed somehow', 'Evil until 1890']);
-check('monstrous: curse, its emotion kept with it', [S.picksUnder(mst, `${mo}.curses`).map((p) => p.node?.name ?? p.text), S.picksUnder(mst, `${mo}.curses.pure_drive`).map((p) => p.text)], [['Pure Drive'], ['hunger']]);
+check('monstrous: curse, its emotion kept with it', [S.picksUnder(mst, `${mo}.curse`).map((p) => p.node?.name ?? p.text), S.picksUnder(mst, `${mo}.curse.pure_drive`).map((p) => p.text)], [['Pure Drive'], ['hunger']]);
 check('monstrous: natural attacks', S.picksUnder(mst, `${mo}.natural_attacks`).map((p) => p.node?.name ?? p.text), ['teeth', 'Add +1 harm to a base']);
 check('monstrous: borrowed move', mst.moves.map((m2) => m2.node.name), ['Something Borrowed', 'Immortal', 'Preparedness']);
 
@@ -247,11 +257,11 @@ check('monstrous: haven picks', S.picksUnder(mst, 'the_expert.haven').map((p) =>
 const [mfree, mfreeRec] = mtake('free_from_curse');
 pickW(mfreeRec, mfree, 0, '@pure_drive');
 mst = S.hunterState(m);
-check('monstrous: curse crossed, -1 Weird', [[...S.crossedUnder(mst, `${mo}.curses`)], mst.ratings.weird], [[`${mo}.curses.pure_drive`], 2]);
+check('monstrous: curse crossed, -1 Weird', [[...S.crossedUnder(mst, `${mo}.curse`)], mst.ratings.weird], [[`${mo}.curse.pure_drive`], 2]);
 const msaved = toSaved(m);
 check('monstrous: saved features', msaved.computed.features.map((f) => [f.name, f.selected]), [
     ['Monster Breed', ['Originally human, transformed somehow', { ref: '@textbox', text: 'Evil until 1890' }]],
-    ['Curses', ['@pure_drive']],
+    ['Curse', ['@pure_drive']],
     ['Natural Attacks', ['@bases.teeth', 'Add +1 harm to a base']],
     ['Haven', ['@oubliette', '@panic_room']],
 ]);

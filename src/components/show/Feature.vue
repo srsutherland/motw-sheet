@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-// A playbook feature (Combat Magic, Haven, Curses...) and what the hunter chose from it.
+// A playbook feature (Combat Magic, Haven, Curse...) and what the hunter chose from it.
 import { computed } from 'vue';
 import { useHunter, useHunterState, usePageText } from '@/HunterContext';
 import { crossedUnder, picksUnder } from '@/HunterState';
@@ -49,6 +49,7 @@ const chosenGroups = computed(() => {
     const path = props.feature.path;
     const picks = picksUnder(state.value, path);
     const crossed = crossedUnder(state.value, path);
+    // free text; plain-string options are matched to their sub-list below
     const texts = picks.filter((p) => !p.path);
     const groups = [];
     const groupFor = (node) => {
@@ -65,8 +66,15 @@ const chosenGroups = computed(() => {
             const inner = picksUnder(state.value, entry.path)
                 .map((p) => p.text ?? p.node?.name ?? p.node?.description);
             groupFor(entry.group).items.push({ ...entry, crossed: crossed.has(entry.path), inner });
-        } else if (entry.textbox || entry.literal) {
-            // text picks land in their sub-list, once each
+        } else if (entry.literal) {
+            // "Add +1 harm to a base": in its own sub-list (Extras)
+            const at = texts.findIndex((p) => p.literal && p.text === entry.text);
+            if (at >= 0) {
+                groupFor(entry.group).items.push({ key: entry.key, text: entry.text });
+                texts.splice(at, 1);
+            }
+        } else if (entry.textbox) {
+            // free text lands at the end of its sub-list
             groupFor(entry.group);
         }
     }

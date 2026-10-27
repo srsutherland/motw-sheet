@@ -7,23 +7,23 @@
     </p>
     <div v-for="group in groups" :key="group.key" class="group">
         <p v-if="group.name" class="group-name">{{ group.name }}:</p>
-        <ul>
-            <li v-for="entry in group.entries" :key="entry.key">
-                <label
-                    :class="{
-                        disabled: isDisabled(entry),
-                        crossed: verb === 'cross' && isChosen(entry),
-                    }"
-                >
+        <ul class="options">
+            <li
+                v-for="entry in group.entries"
+                :key="entry.key"
+                :class="{ disabled: isDisabled(entry) }"
+            >
+                <label :class="{ crossed: verb === 'cross' && isChosen(entry) }">
+                    <!-- a write-your-own among other options gets a checkbox too -->
                     <input
-                        v-if="!entry.textbox"
+                        v-if="!entry.textbox || !onlyTextboxes"
                         type="checkbox"
                         :checked="isChosen(entry)"
                         :disabled="isDisabled(entry)"
-                        @change="toggle(entry)"
+                        @change="entry.textbox ? toggleText(entry, $event) : toggle(entry)"
                     />
                     <input
-                        v-else
+                        v-if="entry.textbox"
                         type="text"
                         class="textbox"
                         placeholder="write your own"
@@ -121,7 +121,9 @@ const groups = computed(() => {
         const key = group ? pathOf(group, hunter.value.playbook) ?? group : '';
         let found = list.find((g) => g.key === key);
         if (!found) {
-            found = { key, name: group?.name, node: group, entries: [] };
+            // "@*." lists group by playbook name (a string)
+            const name = typeof group === 'string' ? group : group?.name;
+            found = { key, name, node: group, entries: [] };
             list.push(found);
         }
         found.entries.push(entry);
@@ -197,11 +199,24 @@ const isDisabled = (entry) => {
 
 const toggle = (entry) => toggleChoice(props.set, entry);
 
+const onlyTextboxes = computed(() => entries.value.every((entry) => entry.textbox));
+
+// A write-your-own is chosen once it has text: checking its box moves to the text field,
+// unchecking clears it.
+const toggleText = (entry, event) => {
+    if (event.target.checked) {
+        event.target.checked = false;
+        event.target.closest('label').querySelector('input.textbox').focus();
+    } else {
+        setText(entry, '');
+    }
+};
+
 const setText = (entry, text) => setTextChoice(props.set, textboxIndex(entry), text);
 </script>
 
 <style scoped>
-.choose-rule ul {
+.choose-rule ul.options {
     list-style: none;
     padding-left: 0.5em;
     margin: 0.25em 0;
