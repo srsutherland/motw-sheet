@@ -71,13 +71,13 @@ Sections: **Decided** (with where it was decided), **Needs** (from the playbook 
 | `cross`  | strike it out; stays visible, crossed off  | the container's options |
 | `remove` | undo an earlier pick                       | the hunter's current picks from that container |
 
-- A choice that belongs to a move or feature lives on that move or feature (`"from": "@this"`)
+- A choice that belongs to a move or feature lives on that move or feature (`"from": "@this"`, the default when `from` is left out)
    - Gaining it, from `getting_started`, a grant, or an improvement, triggers the choice
    - e.g. Practitioner, Tools and Techniques, Arcane Reputation
 
 ```jsonc
 // on the Tools and Techniques move
-{ "choose": { "from": "@this", "cross": 1 } }
+{ "choose": { "cross": 1 } }
 
 // Divine: change your mission (redo = remove + pick)
 { "choose": [
@@ -94,7 +94,7 @@ Sections: **Decided** (with where it was decided), **Needs** (from the playbook 
 
 - Sub-items that aren't chosen when building the hunter (Could've Been Worse: Fizzle / This Is Gonna Suck, chosen during play) go under a sub-key, not `options`
    - Key name case by case; `details` for Could've Been Worse
-- Monster Breed Suggestions: `suggestions` on the feature, display only (presets: open question)
+- Monster Breed Suggestions: `details` in the feature's `on_edit`, display only (presets: open question)
 
 ## Placement
 
@@ -162,7 +162,7 @@ Limits on a `choose` (exact syntax not final):
 - Chosen in a popup, or a dropdown if simple (DESIGN.md)
 - Specials that cost more than one improvement: ignore for now
 - Redo / remove improvements: implementation detail, not a design question
-- "+1 to any rating": sub-options, one per rating, each a fixed effect; `"choose": { "from": "@this", "pick": 1 }`
+- "+1 to any rating": sub-options, one per rating, each a fixed effect; `"choose": { "pick": 1 }`
 - Monstrous "Free yourself from the curse": `cross` the curse (stays visible, crossed off), plus -1 Weird
    - Long term, DRY it to `"from": "@shared.improve_any_rating"`
 - "Mark two basic moves as advanced": a pick plus an effect, `advance_basic`
@@ -182,6 +182,19 @@ Limits on a `choose` (exact syntax not final):
 ## Text
 
 - Display text is markdown, plus `[[wikilinks]]` to game terms and `<span class='...'>` (DESIGN.md)
+- Paragraphs: a string, or an array of paragraph strings when there's more than one (schema type `paragraphs`: `string | string[]`)
+- `on_edit` / `on_view`: keys that override the object's own on the edit / view page (`description`, `details`, ...)
+   - In an override array, `"@..."` stands for the object's own value
+
+```jsonc
+// Monster Breed: suggestions only while building the hunter
+"on_edit": {
+  "description": ["@...", "Some classic monsters with suggestions for picks are listed below..."],
+  "details": ["**Vampire**: *Curse*: feed (blood or life-force)...", ...] }
+
+// Pure Drive: no list of emotions once one is picked
+"on_view": { "description": "One emotion rules you. Whenever you have a chance..." }
+```
 - Wikilinks whose text differs from the term use a pipe: `[[manipulate someone|manipulate]]` (target, then displayed text)
 
 ## Hunter JSON
