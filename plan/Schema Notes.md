@@ -20,9 +20,10 @@ Sections: **Decided** (with where it was decided), **Needs** (from the playbook 
 
 - **Feature**: a playbook-specific thing that isn't a move (Haven, Combat Magic, Background, Fate, Heat, Agency, Breed); goes in pre-moves or post-moves
 - **Options**: what the playbook offers
-- **Chosen**: what the hunter picked; stored with the `choose` rule's object
-- **Selected**: computed, on the object that has the `options` (from any source)
-- Objects get an explicit `"type"`: `move`, `gear`, `feature`, `improvement`, etc.
+- **`chosen`**: what the hunter picked; stored with the `choose` rule's object
+- **`selected`**: computed, on the object that has the `options` (from any source)
+- Objects may get an explicit `"type"`: `move`, `gear`, `feature`, `improvement`, etc.
+   - Where reasonable, type may (should) be implicit.
    - Plain values (look, ratings lines, history) are implicitly typed by their key
 
 ## Ids
