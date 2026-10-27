@@ -52,12 +52,7 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - Migrating hunters from old versions (a loader that upgrades old saves)
 - Remaining core playbooks
 - Basic move popups (needs basic rules JSON)
-- Add more sources, probably in a submodule (removes the issue of hosting copyrighted pdfs), and model the rest of the playbooks
-   - `/sources/` == `_motw-sources` repo
-   - `/sources/pdf`, `/sources/md`, `/sources/html`, `/sources/scripts`
-   - Playbook jsons remain in `/playbooks/` as part of the app.
-   - Don't worry about scrubbing the git history
-- List of playbooks ordered by book release date, then alphabetically (right now we only have the pdf for core)
+- List of playbooks ordered by book release date, then alphabetically
 - Responsive columns (DESIGN.md)
 - Replace `confirm`/`alert` in `ActionList.vue`, `Storage.js`, and leveling down
 - Reconcile `DESIGN.md` with what shipped
@@ -72,6 +67,7 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - "Bend the rules": temporary/debug for now; decide what it becomes
 - Tests in the deploy pipeline
 - Better view and filter for "take a move from another playbook" choice picker
+- Need some way to add options to existing lists (for homebrew and bending the rules)
 
 # Later
 
@@ -82,9 +78,7 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 
 # Known issues
 
-- `the-spellslinger.json` text predates the md audit: 7 move descriptions differ from the corrected `sources/md/the-spellslinger.md` (e.g. Arcane Reputation, Tools and Techniques)
 - Initiate's and Professional's granted moves have no name; auto ids need one
-
 - Edit page is too cluttered; more should be in popups
 - Mythic improvement costs are fixed at 2 (Keeper-chosen schemes are post-MVP)
 - Saves from older hunter formats can only be deleted (the sample was converted with one-off scripts)
