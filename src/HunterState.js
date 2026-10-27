@@ -1,5 +1,5 @@
 import { toRaw } from 'vue';
-import { asList, makeRecord } from '@/Hunter';
+import { asList, makeRecord, rulesOf } from '@/Hunter';
 import { basicMoves } from '@/Playbooks';
 import {
     TEXTBOX, PLACEABLE, isContainer, lookup, optionsOf, pathOf, refPath, resolve,
@@ -50,7 +50,7 @@ const choiceSet = (record, holder, i) => {
     if (!record || typeof record !== 'object') {
         return null;
     }
-    const rules = asList(holder?.choose);
+    const rules = rulesOf(holder);
     if (rules.length === 1) {
         return record.chosen ? record : null;
     }
@@ -94,7 +94,7 @@ const setTextChoice = (set, n, text) => {
 // the container it picks from.
 const gettingStartedRules = (h) => {
     const gs = h.playbook.getting_started;
-    return asList(gs?.choose).map((rule, index) => ({
+    return rulesOf(gs).map((rule, index) => ({
         rule,
         index,
         set: choiceSet(h.getting_started, gs, index),
@@ -103,7 +103,7 @@ const gettingStartedRules = (h) => {
 };
 
 // What was chosen for a holder's rules, resolved: [{ node, path, written } | { text }]
-const chosenFor = (playbook, holder, record) => asList(holder?.choose).flatMap((rule, i) => {
+const chosenFor = (playbook, holder, record) => rulesOf(holder).flatMap((rule, i) => {
     const options = new Map(optionsOf(rule.from, playbook, holder)
         .map((entry) => [entry.written, entry]));
     return (choiceSet(record, holder, i)?.chosen ?? [])
@@ -145,7 +145,7 @@ const hunterState = (h) => {
             }
         }
         const advance = advancesBasicMoves(holder);
-        asList(holder.choose).forEach((rule, i) => {
+        rulesOf(holder).forEach((rule, i) => {
             const set = choiceSet(record, holder, i);
             if (!set) {
                 return;
@@ -358,7 +358,7 @@ const improvementBlocked = (h, improvement, state, points) => {
     if ((improvement.effects ?? []).some((effect) => overMax(effect, state))) {
         return 'rating already at max';
     }
-    for (const rule of asList(improvement.choose)) {
+    for (const rule of rulesOf(improvement)) {
         const options = optionsOf(rule.from, h.playbook, improvement)
             .filter((entry) => entry.textbox || !(entry.node?.effects ?? [])
                 .some((effect) => overMax(effect, state)));

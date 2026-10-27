@@ -7,10 +7,14 @@ const SCHEMA_VERSION = '0.1.2026.10.16';
 // A `choose` or `grant` may be one rule or a list of them.
 const asList = (value) => (value === undefined ? [] : [].concat(value));
 
+// A holder's `choose` rules; `from` defaults to the holder itself ("@this").
+const rulesOf = (holder) => asList(holder?.choose)
+    .map((rule) => (rule.from ? rule : { ...rule, from: '@this' }));
+
 // The hunter's side of a playbook object's `choose` (docs/Schema Notes.md: "Hunter JSON"):
 // one rule -> { chosen }; several -> { choose: [{ from, chosen }] }, mirroring the playbook.
 const makeChoices = (holder) => {
-    const rules = asList(holder?.choose);
+    const rules = rulesOf(holder);
     if (rules.length === 0) {
         return {};
     }
@@ -98,4 +102,4 @@ class Hunter {
     }
 }
 
-export { Hunter, SCHEMA_VERSION, asList, makeChoices, makeRecord, hunterTitle };
+export { Hunter, SCHEMA_VERSION, asList, rulesOf, makeChoices, makeRecord, hunterTitle };

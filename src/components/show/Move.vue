@@ -1,10 +1,10 @@
 <template>
 <div class="show-move">
     <span class="move-name">{{ move?.name }}: </span>
-    <MarkdownText :text="move?.description" inline />
-    <MoveDetails :details="move?.details" />
+    <MarkdownText :text="shown(move, 'description')" inline />
+    <MoveDetails :details="shown(move, 'details')" />
     <!-- the move's own choices: Practitioner's effects, crossed-off Tools and Techniques... -->
-    <ul v-for="(rule, i) in asList(move?.choose)" :key="i" class="choices">
+    <ul v-for="(rule, i) in rulesOf(move)" :key="i" class="choices">
         <template v-if="verbOf(rule) === 'cross'">
             <li
                 v-for="entry in optionsOf(rule.from, hunter.playbook, move)"
@@ -12,14 +12,14 @@
                 :class="{ crossed: crossed.has(entry.path) }"
             >
                 <strong>{{ entry.node.name }}</strong>:
-                <MarkdownText :text="entry.node.description" inline />
+                <MarkdownText :text="shown(entry.node, 'description')" inline />
             </li>
         </template>
         <template v-else>
             <li v-for="pick in picks" :key="pick.path ?? pick.text">
                 <strong v-if="pick.node?.name">{{ pick.node.name }}</strong>
                 <span v-if="pick.node?.name && pick.node?.description">: </span>
-                <MarkdownText v-if="pick.node" :text="pick.node.description" inline />
+                <MarkdownText v-if="pick.node" :text="shown(pick.node, 'description')" inline />
                 <span v-else>{{ pick.text }}</span>
             </li>
             <li v-if="!picks.length"><em>Nothing chosen yet.</em></li>
@@ -30,8 +30,8 @@
 
 <script setup>
 import { computed } from 'vue';
-import { asList } from '@/Hunter';
-import { useHunter, useHunterState } from '@/HunterContext';
+import { rulesOf } from '@/Hunter';
+import { useHunter, useHunterState, usePageText } from '@/HunterContext';
 import { crossedUnder, picksUnder, verbOf } from '@/HunterState';
 import { optionsOf } from '@/PlaybookData';
 import MarkdownText from '../MarkdownText.vue';
@@ -44,6 +44,7 @@ const props = defineProps({
 
 const hunter = useHunter();
 const state = useHunterState();
+const shown = usePageText();
 
 const picks = computed(() => picksUnder(state.value, props.path));
 const crossed = computed(() => crossedUnder(state.value, props.path));

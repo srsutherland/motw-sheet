@@ -9,7 +9,7 @@ const server = await createServer({
     logLevel: 'error',
 });
 const load = (p) => server.ssrLoadModule(p);
-const { Hunter, asList, makeChoices } = await load('/src/Hunter.js');
+const { Hunter, rulesOf, makeChoices } = await load('/src/Hunter.js');
 const { playbooks } = await load('/src/Playbooks.js');
 const D = await load('/src/PlaybookData.js');
 const S = await load('/src/HunterState.js');
@@ -34,6 +34,13 @@ const practitioner = pb.moves.options.find((m) => m.name === 'Practitioner');
 check('options that are references keep their reference', D.optionsOf('@this', pb, practitioner).map((e) => [e.path, e.written])[0], ['basic_moves.use_magic.inflict_harm', '@basic_moves.use_magic.inflict_harm']);
 const ar = pb.moves.options.find((m) => m.name === 'Arcane Reputation');
 check('three textboxes', D.optionsOf('@this', pb, ar).map((e) => e.key), ['@textbox#0', '@textbox#1', '@textbox#2']);
+check('onPage: no override', D.onPage({ description: 'a' }, 'description', 'edit'), 'a');
+check('onPage: override', D.onPage({ description: 'a', on_view: { description: 'b' } }, 'description', 'view'), 'b');
+check('onPage: other page', D.onPage({ description: 'a', on_view: { description: 'b' } }, 'description', 'edit'), 'a');
+check('onPage: splice a string', D.onPage({ description: 'a', on_edit: { description: ['@...', 'b'] } }, 'description', 'edit'), ['a', 'b']);
+check('onPage: splice an array', D.onPage({ description: ['a', 'b'], on_edit: { description: ['z', '@...'] } }, 'description', 'edit'), ['z', 'a', 'b']);
+check('onPage: new key', D.onPage({ on_edit: { details: ['x', '@...'] } }, 'details', 'edit'), ['x']);
+check('rulesOf: from defaults to @this', rulesOf({ choose: { pick: 1 } }), [{ pick: 1, from: '@this' }]);
 check('other playbooks moves: not your own', D.optionsOf('@*.moves', pb).some((o) => o.group === 'The Spell-Slinger'), false);
 
 let st = S.hunterState(h);
@@ -43,7 +50,7 @@ check('own features', st.features.map((f) => `${f.area}:${f.node.name}`), ['pre_
 
 // Choose the way the UI does: find the option in its container, toggle it
 const pick = (record, holder, i, path) => {
-    const rule = asList(holder.choose)[i];
+    const rule = rulesOf(holder)[i];
     const entry = D.optionsOf(rule.from, pb, holder).find((e) => e.path === path);
     S.toggleChoice(S.choiceSet(record, holder, i), entry);
 };
@@ -143,7 +150,7 @@ const ex = 'the_expert';
 const e = new Hunter(playbooks.find((p) => p.id === ex), 'Bea');
 const epb = e.playbook;
 const pickIn = (playbook, record, holder, i, path) => {
-    const rule = asList(holder.choose)[i];
+    const rule = rulesOf(holder)[i];
     const entry = D.optionsOf(rule.from, playbook, holder).find((o) => o.path === path);
     S.toggleChoice(S.choiceSet(record, holder, i), entry);
 };
@@ -193,7 +200,7 @@ const mgs = mpb.getting_started;
 m.ratings_base = { ...mpb.ratings_base.options[0] };
 // `written`: how the option is stored (a plain string option has no path)
 const pickW = (record, holder, i, written) => {
-    const rule = asList(holder.choose)[i];
+    const rule = rulesOf(holder)[i];
     const entry = D.optionsOf(rule.from, mpb, holder).find((o) => o.written === written);
     S.toggleChoice(S.choiceSet(record, holder, i), entry);
 };

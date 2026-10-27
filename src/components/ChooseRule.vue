@@ -33,8 +33,8 @@
                     />
                     <span v-if="entry.node">
                         <strong v-if="entry.node.name">{{ entry.node.name }}</strong>
-                        <span v-if="entry.node.name && entry.node.description">: </span>
-                        <MarkdownText :text="entry.node.description" inline />
+                        <span v-if="entry.node.name && shown(entry.node, 'description')">: </span>
+                        <MarkdownText :text="shown(entry.node, 'description')" inline />
                         <span v-if="entry.node.tags?.length" class="tags">
                             ({{ entry.node.tags.join(' ') }})
                         </span>
@@ -45,11 +45,11 @@
                     </span>
                     <span v-else-if="atMax(entry)" class="note">(already at max)</span>
                 </label>
-                <MoveDetails :details="entry.node?.details" />
+                <MoveDetails :details="shown(entry.node, 'details')" />
                 <!-- an option with its own choice: Practitioner, Arcane Reputation... -->
                 <div v-if="isChosen(entry) && verb === 'pick' && entry.node?.choose" class="nested">
                     <ChooseRule
-                        v-for="(nested, i) in asList(entry.node.choose)"
+                        v-for="(nested, i) in rulesOf(entry.node)"
                         :key="i"
                         :rule="nested"
                         :self="entry.node"
@@ -68,8 +68,8 @@
 // choices for it, and its limits. Fewer than the full count is always allowed;
 // going over a limit needs "bend the rules" (provided by the edit page).
 import { computed, inject, ref, toRaw } from 'vue';
-import { asList } from '@/Hunter';
-import { useHunter, useHunterState } from '@/HunterContext';
+import { rulesOf } from '@/Hunter';
+import { useHunter, useHunterState, usePageText } from '@/HunterContext';
 import { optionsOf, pathOf, refPath } from '@/PlaybookData';
 import {
     advancesBasicMoves, choiceSet, countOf, isText, overMax, pickRecord, refOf, setTextChoice,
@@ -86,6 +86,7 @@ const props = defineProps({
 
 const hunter = useHunter();
 const state = useHunterState();
+const shown = usePageText();
 const bendRules = inject('bendRules', ref(false));
 
 const verb = computed(() => verbOf(props.rule));

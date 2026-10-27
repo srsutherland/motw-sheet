@@ -1,8 +1,10 @@
 <template>
 <fieldset class="feature">
     <legend>{{ feature.node.name }}</legend>
-    <MarkdownText :text="feature.node.description" />
-    <p v-if="feature.node.heading"><MarkdownText :text="feature.node.heading" inline /></p>
+    <MarkdownText :text="shown(feature.node, 'description')" />
+    <p v-if="shown(feature.node, 'heading')">
+        <MarkdownText :text="shown(feature.node, 'heading')" inline />
+    </p>
     <GettingStartedChoices :from="feature.path" />
     <!-- a feature gained from another playbook: its choices are on the improvement -->
     <ul v-if="feature.source !== 'playbook'">
@@ -10,16 +12,12 @@
             {{ pick.node?.name ?? pick.node?.description ?? pick.text }}
         </li>
     </ul>
-    <!-- reference only (Monster Breed Suggestions) -->
-    <details v-if="feature.node.suggestions?.length" class="suggestions">
-        <summary>Suggestions</summary>
-        <MoveDetails :details="feature.node.suggestions" />
-    </details>
+    <MoveDetails :details="shown(feature.node, 'details')" />
 </fieldset>
 </template>
 
 <script setup>
-import { useHunterState } from '@/HunterContext';
+import { useHunterState, usePageText } from '@/HunterContext';
 import { picksUnder } from '@/HunterState';
 import MarkdownText from '../MarkdownText.vue';
 import MoveDetails from '../show/MoveDetails.vue';
@@ -30,10 +28,6 @@ const props = defineProps({
 });
 
 const state = useHunterState();
+const shown = usePageText();
 </script>
 
-<style scoped>
-.suggestions summary {
-    cursor: pointer;
-}
-</style>

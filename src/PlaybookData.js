@@ -160,7 +160,21 @@ const optionsOf = (ref, root, self) => {
     return entries;
 };
 
+// "@..." in an on_edit / on_view override stands for the object's own value.
+const SPLICE = '@...';
+
+// One of an object's keys as shown on a page ("edit" or "view"): `on_edit` / `on_view`
+// override its keys, e.g. a shorter description once the choice is made.
+const onPage = (node, key, page) => {
+    const base = node?.[key];
+    const override = node?.[`on_${page}`]?.[key];
+    if (!Array.isArray(override)) {
+        return override ?? base;
+    }
+    return override.flatMap((part) => (part === SPLICE ? [].concat(base ?? []) : [part]));
+};
+
 export {
-    TEXTBOX, PLACEABLE,
+    TEXTBOX, PLACEABLE, SPLICE, onPage,
     slug, idOf, indexOf, lookup, pathOf, refPath, resolve, isContainer, optionsOf,
 };

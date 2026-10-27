@@ -7,7 +7,7 @@
 import { render, renderInline } from '@/Markdown';
 
 const props = defineProps({
-    text: String,
+    text: [String, Array], // paragraphs: a string or an array of them
     inline: Boolean,
 });
 </script>

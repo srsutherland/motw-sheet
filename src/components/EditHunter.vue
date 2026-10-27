@@ -46,10 +46,10 @@
         <div v-for="move in grantedMoves" :key="move.path" class="granted">
             <p>
                 <strong>{{ move.node.name }}</strong>:
-                <MarkdownText :text="move.node.description" inline />
+                <MarkdownText :text="shown(move.node, 'description')" inline />
             </p>
             <ChooseRule
-                v-for="(rule, i) in asList(move.node.choose)"
+                v-for="(rule, i) in rulesOf(move.node)"
                 :key="i"
                 :rule="rule"
                 :self="move.node"
@@ -167,7 +167,7 @@
                 </button>
             </p>
             <ChooseRule
-                v-for="(rule, i) in asList(improvement.choose)"
+                v-for="(rule, i) in rulesOf(improvement)"
                 :key="i"
                 :rule="rule"
                 :self="improvement"
@@ -187,8 +187,8 @@
 
 <script setup>
 import { computed, provide, ref } from 'vue';
-import { asList } from '@/Hunter';
-import { useHunter, useHunterState } from '@/HunterContext';
+import { rulesOf } from '@/Hunter';
+import { providePage, useHunter, useHunterState, usePageText } from '@/HunterContext';
 import {
     choiceSet, gettingStartedRules, improvementOf, isDisabled, refOf,
 } from '@/HunterState';
@@ -202,6 +202,8 @@ import GettingStartedChoices from './edit/GettingStartedChoices.vue';
 
 const hunter = useHunter();
 const state = useHunterState();
+providePage('edit');
+const shown = usePageText('edit');
 
 const emit = defineEmits(['change-view']);
 

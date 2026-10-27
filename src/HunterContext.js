@@ -1,5 +1,6 @@
 import { computed, inject, provide, toRef } from 'vue';
 import { hunterState } from '@/HunterState';
+import { onPage } from '@/PlaybookData';
 
 // Components get "their" hunter from the nearest ancestor that provides one,
 // instead of it being passed down as a prop at every level.
@@ -36,4 +37,15 @@ const useHunterState = () => {
     return state;
 };
 
-export { provideHunter, useHunter, useHunterState };
+const pageKey = Symbol('page');
+
+// The page ("edit" or "view") that playbook text is shown on, for on_edit / on_view.
+const providePage = (page) => provide(pageKey, page);
+
+// Returns shown(node, key): the node's key as shown on this page (PlaybookData.js: onPage).
+// `page` for the component that provides it (inject doesn't see its own provide).
+const usePageText = (page = inject(pageKey, 'view')) => {
+    return (node, key) => onPage(node, key, page);
+};
+
+export { provideHunter, useHunter, useHunterState, providePage, usePageText };

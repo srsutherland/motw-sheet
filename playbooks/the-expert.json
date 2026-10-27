@@ -152,7 +152,10 @@
     ]
   },
   "introductions": {
-    "description": "When you get here, wait for everyone to catch up so you can do your introductions together.\n\nGo around the group. On your turn, introduce your Expert by name and look, and tell the group what they know about you."
+    "description": [
+      "When you get here, wait for everyone to catch up so you can do your introductions together.",
+      "Go around the group. On your turn, introduce your Expert by name and look, and tell the group what they know about you."
+    ]
   },
   "history": {
     "description": "Go around the group again. On your turn, pick one of these for each other hunter:",
@@ -244,7 +247,7 @@
         "id": "any_rating",
         "type": "improvement",
         "description": "Get +1 to any rating, max +3",
-        "choose": { "from": "@this", "pick": 1 },
+        "choose": { "pick": 1 },
         "options": [
           { "id": "charm", "name": "Charm", "effects": [{ "rating": "charm", "add": 1, "max": 3 }] },
           { "id": "cool", "name": "Cool", "effects": [{ "rating": "cool", "add": 1, "max": 3 }] },

@@ -16,7 +16,10 @@
       "id": "combat_magic",
       "type": "feature",
       "name": "Combat Magic",
-      "description": "You have a few attack spells you can use as weapons. When you use these spells to [[kick some ass]], roll <span class='roll'>+Weird</span> instead of +Tough. Sometimes the situation may require you to [[act under pressure]] to cast your spell without problems.\n\nYour combat spells can combine any of your base spells with any of your effects.",
+      "description": [
+        "You have a few attack spells you can use as weapons. When you use these spells to [[kick some ass]], roll <span class='roll'>+Weird</span> instead of +Tough. Sometimes the situation may require you to [[act under pressure]] to cast your spell without problems.",
+        "Your combat spells can combine any of your base spells with any of your effects."
+      ],
       "heading": "Combat magic, pick three (with at least one base):",
       "options": [
         {
@@ -78,7 +81,7 @@
         "type": "move",
         "name": "Tools and Techniques",
         "description": "To use your combat magic effectively, you rely on a collection of tools and techniques. Cross off one; you'll need the rest.",
-        "choose": { "from": "@this", "cross": 1 },
+        "choose": { "cross": 1 },
         "options": [
           {
             "name": "Consumables",
@@ -107,7 +110,7 @@
         "type": "move",
         "name": "Arcane Reputation",
         "description": "Pick three big organizations or groups in the supernatural community, which can include some of the more sociable types of monsters. They've heard of you and respect your power. With affected humans, take +1 forward when you [[manipulate someone|manipulate]] them. You may [[manipulate someone|manipulate]] affected monsters as if they were human, with no bonus.",
-        "choose": { "from": "@this", "pick": 3 },
+        "choose": { "pick": 3 },
         "options": ["@textbox", "@textbox", "@textbox"]
       },
       {
@@ -130,7 +133,7 @@
         "type": "move",
         "name": "Enchanted Clothing",
         "description": "Pick an article of everyday clothing—it's enchanted without any change in appearance. Take -1 harm from any source that tries to get at you through the garment.",
-        "choose": { "from": "@this", "pick": 1 },
+        "choose": { "pick": 1 },
         "options": ["@textbox"]
       },
       {
@@ -152,7 +155,7 @@
         "type": "move",
         "name": "Practitioner",
         "description": "Choose two effects available to you under [[use magic]]. Take +1 to [[use magic]] whenever you choose one of those effects.",
-        "choose": { "from": "@this", "pick": 2 },
+        "choose": { "pick": 2 },
         "options": [
           "@basic_moves.use_magic.inflict_harm",
           "@basic_moves.use_magic.enchant_weapon",
@@ -217,7 +220,10 @@
     ]
   },
   "introductions": {
-    "description": "When you get here, wait for everyone to catch up so you can do your introductions together.\n\nGo around the group. On your turn, introduce your Spell-slinger by name and look, and tell the group what they know about you."
+    "description": [
+      "When you get here, wait for everyone to catch up so you can do your introductions together.",
+      "Go around the group. On your turn, introduce your Spell-slinger by name and look, and tell the group what they know about you."
+    ]
   },
   "history": {
     "description": "Go around the group again. On your turn, pick one for each of the other hunters:",
@@ -303,7 +309,7 @@
         "id": "any_rating",
         "type": "improvement",
         "description": "Get +1 to any rating, max +3",
-        "choose": { "from": "@this", "pick": 1 },
+        "choose": { "pick": 1 },
         "options": [
           { "id": "charm", "name": "Charm", "effects": [{ "rating": "charm", "add": 1, "max": 3 }] },
           { "id": "cool", "name": "Cool", "effects": [{ "rating": "cool", "add": 1, "max": 3 }] },

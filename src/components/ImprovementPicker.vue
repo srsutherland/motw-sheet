@@ -42,7 +42,7 @@
             Recorded on your sheet; work out the details with your Keeper.
         </p>
         <ChooseRule
-            v-for="(rule, i) in asList(pending.choose)"
+            v-for="(rule, i) in rulesOf(pending)"
             :key="i"
             :rule="rule"
             :self="pending"
@@ -62,8 +62,8 @@
 // The improvement being picked is added to the hunter right away (marked pending),
 // so its choices are stored like any other and previewed live on the sheet.
 import { computed, onMounted, ref } from 'vue';
-import { asList, makeChoices } from '@/Hunter';
-import { useHunter, useHunterState } from '@/HunterContext';
+import { makeChoices, rulesOf } from '@/Hunter';
+import { providePage, useHunter, useHunterState } from '@/HunterContext';
 import {
     applyOneOffEffects, choiceSet, costOf, countOf, improvementBlocked, improvementOf,
     improvementRef,
@@ -76,6 +76,7 @@ const emit = defineEmits(['done']);
 
 const hunter = useHunter();
 const state = useHunterState();
+providePage('edit');
 const dialog = ref(null);
 
 onMounted(() => dialog.value.showModal());
@@ -106,7 +107,7 @@ const pending = computed(() => {
     return taken ? improvementOf(hunter.value.playbook, taken)?.improvement : null;
 });
 
-const complete = computed(() => asList(pending.value?.choose).every((rule, i) => {
+const complete = computed(() => rulesOf(pending.value).every((rule, i) => {
     const set = choiceSet(hunter.value.improvements[pendingIndex.value], pending.value, i);
     return (set?.chosen ?? []).length >= (rule.min ?? countOf(rule));
 }));

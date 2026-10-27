@@ -1,7 +1,8 @@
 <template>
 <section class="show-feature">
     <h2>{{ feature.node.name }}</h2>
-    <MarkdownText :text="feature.node.description" class="description" />
+    <MarkdownText :text="shown(feature.node, 'description')" class="description" />
+    <MoveDetails :details="shown(feature.node, 'details')" />
     <p v-if="!chosenGroups.length" class="none"><em>Nothing chosen yet.</em></p>
     <div v-for="group in chosenGroups" :key="group.key">
         <span v-if="group.name" class="group-name">{{ group.name }}:</span>
@@ -9,8 +10,8 @@
             <li v-for="item in group.items" :key="item.key" :class="{ crossed: item.crossed }">
                 <template v-if="item.node">
                     <strong v-if="item.node.name">{{ item.node.name }}</strong>
-                    <span v-if="item.node.name && item.node.description">: </span>
-                    <MarkdownText :text="item.node.description" inline />
+                    <span v-if="item.node.name && shown(item.node, 'description')">: </span>
+                    <MarkdownText :text="shown(item.node, 'description')" inline />
                     <span v-if="item.node.tags?.length && !item.node.description" class="tags">
                         ({{ item.node.tags.join(' ') }})
                     </span>
@@ -27,10 +28,11 @@
 <script setup>
 // A playbook feature (Combat Magic, Haven, Curses...) and what the hunter chose from it.
 import { computed } from 'vue';
-import { useHunter, useHunterState } from '@/HunterContext';
+import { useHunter, useHunterState, usePageText } from '@/HunterContext';
 import { crossedUnder, picksUnder } from '@/HunterState';
 import { optionsOf, pathOf } from '@/PlaybookData';
 import MarkdownText from '../MarkdownText.vue';
+import MoveDetails from './MoveDetails.vue';
 
 const props = defineProps({
     feature: { type: Object, required: true }, // from hunterState().features
@@ -38,6 +40,7 @@ const props = defineProps({
 
 const hunter = useHunter();
 const state = useHunterState();
+const shown = usePageText();
 
 // Chosen options, in the playbook's order, grouped by sub-list (Bases, Effects); free text
 // at the end of its sub-list

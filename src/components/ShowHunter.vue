@@ -36,7 +36,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useHunter, useHunterState } from '@/HunterContext';
+import { providePage, useHunter, useHunterState } from '@/HunterContext';
 import Ratings from './show/Ratings.vue';
 import HarmTrack from './show/HarmTrack.vue';
 import LuckTrack from './show/LuckTrack.vue';
@@ -50,6 +50,7 @@ import { exportHunter } from '@/Storage';
 
 const hunter = useHunter();
 const state = useHunterState();
+providePage('view');
 
 const features = (area) => state.value.features.filter((feature) => feature.area === area);
 
