@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import PlaybookList from './PlaybookList.vue';
+import PlaybookList from './new/PlaybookList.vue';
 import { Hunter } from '@/Hunter';
 
 const emit = defineEmits(['change-view']);

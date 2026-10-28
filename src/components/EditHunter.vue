@@ -206,9 +206,9 @@ import {
 } from '@/HunterState';
 import { TEXTBOX } from '@/PlaybookData';
 import { parseTags } from '@/Tags';
-import AdvancementButton from './AdvancementButton.vue';
-import ChooseRule from './ChooseRule.vue';
-import MarkdownText from './MarkdownText.vue';
+import AdvancementButton from './shared/AdvancementButton.vue';
+import ChooseRule from './shared/ChooseRule.vue';
+import MarkdownText from './shared/MarkdownText.vue';
 import EditFeature from './edit/EditFeature.vue';
 import GettingStartedChoices from './edit/GettingStartedChoices.vue';
 

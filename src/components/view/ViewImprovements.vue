@@ -24,7 +24,7 @@ import { useHunter } from '@/HunterContext';
 import {
     chosenFor, improvementOf, isDisabled, refOf, takenImprovements,
 } from '@/HunterState';
-import MarkdownText from '../MarkdownText.vue';
+import MarkdownText from '../shared/MarkdownText.vue';
 
 const hunter = useHunter();
 

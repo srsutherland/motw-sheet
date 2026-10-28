@@ -18,8 +18,8 @@
 
 <script setup>
 import { useHunter } from '@/HunterContext';
-import HoverPopup from '../HoverPopup.vue';
-import MarkdownText from '../MarkdownText.vue';
+import HoverPopup from '../shared/HoverPopup.vue';
+import MarkdownText from '../shared/MarkdownText.vue';
 import Track from './Track.vue';
 
 const hunter = useHunter();

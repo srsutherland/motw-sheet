@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import MarkdownText from './MarkdownText.vue';
+import MarkdownText from '../shared/MarkdownText.vue';
 
 const props = defineProps({
     pb: {

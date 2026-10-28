@@ -34,8 +34,8 @@ import { rulesOf } from '@/Hunter';
 import { useHunter, useHunterState, usePageText } from '@/HunterContext';
 import { crossedUnder, picksUnder, verbOf } from '@/HunterState';
 import { optionsOf } from '@/PlaybookData';
-import MarkdownText from '../MarkdownText.vue';
-import MoveDetails from '../MoveDetails.vue';
+import MarkdownText from '../shared/MarkdownText.vue';
+import MoveDetails from '../shared/MoveDetails.vue';
 
 const props = defineProps({
     move: Object,

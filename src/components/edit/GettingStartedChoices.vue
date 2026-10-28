@@ -21,8 +21,8 @@ import { computed } from 'vue';
 import { useHunter, usePageText } from '@/HunterContext';
 import { gettingStartedRules } from '@/HunterState';
 import { lookup } from '@/PlaybookData';
-import ChooseRule from '../ChooseRule.vue';
-import MarkdownText from '../MarkdownText.vue';
+import ChooseRule from '../shared/ChooseRule.vue';
+import MarkdownText from '../shared/MarkdownText.vue';
 
 const props = defineProps({
     from: { type: String, required: true }, // absolute path of the container

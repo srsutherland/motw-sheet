@@ -31,8 +31,8 @@ import { computed } from 'vue';
 import { useHunter, useHunterState, usePageText } from '@/HunterContext';
 import { attachedTo, crossedUnder, picksUnder } from '@/HunterState';
 import { optionsOf, pathOf } from '@/PlaybookData';
-import MarkdownText from '../MarkdownText.vue';
-import MoveDetails from '../MoveDetails.vue';
+import MarkdownText from '../shared/MarkdownText.vue';
+import MoveDetails from '../shared/MoveDetails.vue';
 
 const props = defineProps({
     feature: { type: Object, required: true }, // from hunterState().features

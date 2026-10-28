@@ -19,8 +19,8 @@
 <script setup>
 import { useHunterState, usePageText } from '@/HunterContext';
 import { picksUnder } from '@/HunterState';
-import MarkdownText from '../MarkdownText.vue';
-import MoveDetails from '../MoveDetails.vue';
+import MarkdownText from '../shared/MarkdownText.vue';
+import MoveDetails from '../shared/MoveDetails.vue';
 import GettingStartedChoices from './GettingStartedChoices.vue';
 
 const props = defineProps({

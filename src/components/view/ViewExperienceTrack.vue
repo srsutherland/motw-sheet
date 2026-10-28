@@ -22,7 +22,7 @@
 // separately, through Advancement, so leveling up mid-session never blocks the sheet.
 import { useHunter } from '@/HunterContext';
 import { improvementBudget, takenImprovements } from '@/HunterState';
-import AdvancementButton from '../AdvancementButton.vue';
+import AdvancementButton from '../shared/AdvancementButton.vue';
 import Track from './Track.vue';
 
 const hunter = useHunter();
