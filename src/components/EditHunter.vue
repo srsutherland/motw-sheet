@@ -239,15 +239,10 @@ const setCustomLook = (key, text) => {
     customLook[`${hunter.value.uid}.${key}`] = text.trim();
     hunter.value.look[key] = text.trim();
 };
-// Its radio picks the text written there; with nothing written, it moves to the text field.
 const pickCustomLook = (key, list, event) => {
     const text = lookText(key, list);
-    if (text) {
-        hunter.value.look[key] = text;
-    } else {
-        event.target.checked = false;
-        event.target.nextElementSibling.focus();
-    }
+    hunter.value.look[key] = text;
+    event.target.nextElementSibling.focus();
 };
 
 // Moves you get without picking them (Tools and Techniques)
