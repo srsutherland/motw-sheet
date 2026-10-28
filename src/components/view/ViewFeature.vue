@@ -1,5 +1,5 @@
 <template>
-<section class="show-feature">
+<section class="view-feature">
     <h2>{{ feature.node.name }}</h2>
     <MarkdownText :text="shown(feature.node, 'description')" class="description" />
     <MoveDetails :details="shown(feature.node, 'details')" />
@@ -32,7 +32,7 @@ import { useHunter, useHunterState, usePageText } from '@/HunterContext';
 import { attachedTo, crossedUnder, picksUnder } from '@/HunterState';
 import { optionsOf, pathOf } from '@/PlaybookData';
 import MarkdownText from '../MarkdownText.vue';
-import MoveDetails from './MoveDetails.vue';
+import MoveDetails from '../MoveDetails.vue';
 
 const props = defineProps({
     feature: { type: Object, required: true }, // from hunterState().features
@@ -96,11 +96,11 @@ const chosenGroups = computed(() => {
 </script>
 
 <style scoped>
-.show-feature {
+.view-feature {
     max-width: 40em;
 }
 
-.show-feature h2 {
+.view-feature h2 {
     margin-bottom: 0.25em;
 }
 

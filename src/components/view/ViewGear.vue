@@ -1,5 +1,5 @@
 <template>
-<section class="show-gear">
+<section class="view-gear">
     <span class="heading">Gear</span>:
     <div class="indent">
         <ul>

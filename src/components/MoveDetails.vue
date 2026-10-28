@@ -13,7 +13,7 @@
 
 <script setup>
 // A move's display-only sub-items, chosen during play rather than when building the hunter
-import MarkdownText from '../MarkdownText.vue';
+import MarkdownText from './MarkdownText.vue';
 
 const props = defineProps({
     details: Array,

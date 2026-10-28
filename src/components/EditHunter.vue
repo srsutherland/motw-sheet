@@ -189,7 +189,7 @@
     </fieldset>
 </section>
 
-<button @click="$emit('change-view', 'show', hunter)">Save</button>
+<button @click="$emit('change-view', 'view', hunter)">Save</button>
 <!-- escape valve: lift pick limits -->
 <label class="bend-rules" title="Lift pick limits, e.g. for house rules or Keeper rulings">
     <input type="checkbox" v-model="bendRules" />

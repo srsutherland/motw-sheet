@@ -7,7 +7,7 @@
     <ActionList v-if="currentView === 'action'" @change-view="changeView"/>
     <NewHunter v-if="currentView === 'new'" @change-view="changeView"/>
     <EditHunter v-if="currentView === 'edit'" @change-view="changeView"/>
-    <ShowHunter v-if="currentView === 'show'" @change-view="changeView"/>
+    <ViewHunter v-if="currentView === 'view'" @change-view="changeView"/>
 </main>
 </template>
 
@@ -16,7 +16,7 @@ import { ref, watch } from 'vue';
 import ActionList from './components/ActionList.vue';
 import NewHunter from './components/NewHunter.vue';
 import EditHunter from './components/EditHunter.vue';
-import ShowHunter from './components/ShowHunter.vue';
+import ViewHunter from './components/ViewHunter.vue';
 import { loadHunter, saveHunter } from './Storage';
 import { provideHunter } from './HunterContext';
 
@@ -27,12 +27,12 @@ provideHunter(hunter);
 // Routes live in the query string (GitHub Pages can't serve arbitrary paths):
 //   ?          -> action (home)
 //   ?new       -> new
-//   ?view={id} -> show
+//   ?view={id} -> view
 //   ?edit={id} -> edit
 const urlFor = (view, id) => {
     switch (view) {
         case 'new': return '?new';
-        case 'show': return `?view=${id}`;
+        case 'view': return `?view=${id}`;
         case 'edit': return `?edit=${id}`;
         default: return '?';
     }
@@ -47,7 +47,7 @@ const loadRoute = () => {
     } else if (id) {
         hunter.value = loadHunter(id);
         if (hunter.value) {
-            currentView.value = params.has('edit') ? 'edit' : 'show';
+            currentView.value = params.has('edit') ? 'edit' : 'view';
             return;
         }
         console.error(`No saved hunter with id ${id}`);

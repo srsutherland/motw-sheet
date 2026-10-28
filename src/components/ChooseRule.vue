@@ -76,7 +76,7 @@ import {
     toggleChoice, verbOf,
 } from '@/HunterState';
 import MarkdownText from './MarkdownText.vue';
-import MoveDetails from './show/MoveDetails.vue';
+import MoveDetails from './MoveDetails.vue';
 
 const props = defineProps({
     rule: { type: Object, required: true },

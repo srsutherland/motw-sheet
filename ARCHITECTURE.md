@@ -8,7 +8,7 @@ How the codebase is organized, for finding your way around quickly. Update it as
 motw-sheet/
 ├── src/                      # The app (Vue 3)
 │   ├── components/           # Pages and UI components
-│   │   ├── show/             # View page sections (tracks, ratings, moves, features...)
+│   │   ├── view/             # View page sections (tracks, ratings, moves, features...)
 │   │   └── edit/             # Edit page sections
 │   ├── App.vue               # Query-string router, autosave
 │   ├── Hunter.js             # Hunter class, schema version, record builders
@@ -93,7 +93,7 @@ Deployment: GitHub Pages (see 6)
 #### Components (`src/components/`)
 
 - `App.vue`: router (`?new`, `?view={id}`, `?edit={id}`; GitHub Pages can't serve other paths), autosave, `provideHunter`
-- `ShowHunter.vue` + `show/`: view page; `Track.vue` is the generic box track (luck, harm, experience wrap it)
+- `ViewHunter.vue` + `view/`: view page; sections are `View*`; `Track.vue` is the generic box track (luck, harm, experience wrap it)
 - `EditHunter.vue` + `edit/`: edit page
 - `ChooseRule.vue`: renders any `choose` rule (options, limits, free text, nested choices); used by the edit page and the Advancement dialog
 - `ImprovementPicker.vue` (Advancement dialog), `AdvancementButton.vue`, `HoverPopup.vue`, `MarkdownText.vue`

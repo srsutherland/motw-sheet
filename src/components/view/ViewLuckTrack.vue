@@ -1,5 +1,5 @@
 <template>
-<section class="show-luck">
+<section class="view-luck">
     <!-- the playbook's luck special pops up from the heading -->
     <HoverPopup v-if="hunter.playbook.luck.special">
         <template #trigger><span class="heading">Luck</span></template>

@@ -7,11 +7,11 @@ const page = await watchedPage(browser, errors);
 
 const dialog = page.locator('dialog');
 const ratings = () => page.locator('.stat-bubble').allInnerTexts();
-const level = async () => (await page.locator('.show-experience em').innerText()).trim();
-const xp = () => page.locator('.show-experience .track').innerText()
+const level = async () => (await page.locator('.view-experience em').innerText()).trim();
+const xp = () => page.locator('.view-experience .track').innerText()
     .then((t) => (t.match(/■/g) || []).length);
 const fillXp = async () => {
-    for (let i = 0; i < 5; i++) await page.locator('.show-experience button.plus').click();
+    for (let i = 0; i < 5; i++) await page.locator('.view-experience button.plus').click();
 };
 const levelUp = async () => {
     await fillXp();
@@ -48,7 +48,7 @@ check('other playbook move available', await option('Take a move from another pl
 await option('Take another Spell-Slinger move').first().click();
 await dialog.getByRole('button', { name: 'Back' }).click();
 await dialog.getByRole('button', { name: 'Cancel' }).click();
-check('cancel changes nothing', [await dialog.isVisible(), await level(), (await advancement().innerText()).trim(), await page.locator('.show-improvements li').count()], [false, 'Level 1', 'Advancement (+1)', 0]);
+check('cancel changes nothing', [await dialog.isVisible(), await level(), (await advancement().innerText()).trim(), await page.locator('.view-improvements li').count()], [false, 'Level 1', 'Advancement (+1)', 0]);
 
 // A fixed effect
 await take('Get +1 Weird, max +3');
@@ -64,7 +64,7 @@ await box('Practitioner').check();
 await box('Heal').check();
 await box('Summon').check();
 await dialog.getByRole('button', { name: 'Take it' }).click();
-const practitioner = page.locator('.show-move', { has: page.locator('.move-name:text-is("Practitioner:")') });
+const practitioner = page.locator('.view-move', { has: page.locator('.move-name:text-is("Practitioner:")') });
 check('move from improvement, with its choices', (await practitioner.locator('.choices li').allInnerTexts()).map((t) => t.split(' ')[0]), ['Heal', 'Summon']);
 
 // Up to level 5
@@ -84,10 +84,10 @@ await dialog.getByRole('button', { name: 'Take it' }).click();
 check('+1 charm', [await ratings(), await level()], [['0', '2', '2', '1', '3'], 'Level 6']);
 
 // Advanced: erase a used luck mark
-for (let i = 0; i < 2; i++) await page.locator('.show-luck button.plus').click();
+for (let i = 0; i < 2; i++) await page.locator('.view-luck button.plus').click();
 await levelUp();
 await take('Erase one used Luck mark from your playbook');
-check('luck mark erased', await page.locator('.show-luck .track').innerText().then((t) => (t.match(/■/g) || []).length), 1);
+check('luck mark erased', await page.locator('.view-luck .track').innerText().then((t) => (t.match(/■/g) || []).length), 1);
 
 // Remove an improvement on the edit page; take it again through Advancement
 await page.getByTitle('Edit').click();
@@ -110,22 +110,22 @@ await box('Use Magic').check();
 await dialog.getByRole('button', { name: 'Take it' }).click();
 const advancedMoves = () => page.locator('.basic-moves li', { hasText: '(advanced)' }).count();
 check('advanced on the ratings table', await advancedMoves(), 2);
-check('not added as moves', await page.locator('.show-move .move-name', { hasText: 'Kick Some Ass' }).count(), 0);
+check('not added as moves', await page.locator('.view-move .move-name', { hasText: 'Kick Some Ass' }).count(), 0);
 
 // Level down: - at 0 XP, confirmed; the newest improvement is disabled, choices kept
 const confirms = [];
 page.on('dialog', (d) => { confirms.push(d.message()); d.accept(); });
-await page.locator('.show-experience button.minus').click();
+await page.locator('.view-experience button.minus').click();
 check('level down asks first', confirms[0]?.startsWith('Level down to level 7?') && confirms[0].includes('1 improvement will be disabled'), true);
 check('leveled down', [await level(), await xp()], ['Level 7', 4]);
-check('disabled note', (await page.locator('.show-experience .disabled-note').innerText()).trim(), '1 improvement disabled');
+check('disabled note', (await page.locator('.view-experience .disabled-note').innerText()).trim(), '1 improvement disabled');
 check('its effect is gone', await advancedMoves(), 0);
-check('marked disabled, choices kept', (await page.locator('.show-improvements li.disabled').innerText()).trim(), 'Mark two of the basic moves as advanced: Kick Some Ass, Use Magic (disabled: above your current level)');
+check('marked disabled, choices kept', (await page.locator('.view-improvements li.disabled').innerText()).trim(), 'Mark two of the basic moves as advanced: Kick Some Ass, Use Magic (disabled: above your current level)');
 
 // Level back up: re-enabled
-await page.locator('.show-experience button.plus').click();
+await page.locator('.view-experience button.plus').click();
 await page.getByRole('button', { name: 'Level Up' }).click();
-check('re-enabled', [await level(), await advancedMoves(), await page.locator('.show-improvements li.disabled').count()], ['Level 8', 2, 0]);
+check('re-enabled', [await level(), await advancedMoves(), await page.locator('.view-improvements li.disabled').count()], ['Level 8', 2, 0]);
 
 // Levels can be banked
 await levelUp();
@@ -133,14 +133,14 @@ await levelUp();
 check('two unspent', (await advancement().innerText()).trim(), 'Advancement (+2)');
 
 // Improvements at the bottom of the sheet, with what was chosen
-const taken = await page.locator('.show-improvements li').allInnerTexts();
+const taken = await page.locator('.view-improvements li').allInnerTexts();
 check('improvements list', taken.length, 8);
 check('improvement with its choice', taken.find((t) => t.startsWith('Take another Spell-Slinger move')), 'Take another Spell-Slinger move: Practitioner');
 check('any rating shows the rating', taken.find((t) => t.startsWith('Get +1 to any rating')), 'Get +1 to any rating, max +3: Charm');
-check('improvements are last', await page.locator('main > :last-child').getAttribute('class'), 'show-improvements');
+check('improvements are last', await page.locator('main > :last-child').getAttribute('class'), 'view-improvements');
 
 await page.reload();
-check('after reload', [await ratings(), await level(), await page.locator('.show-improvements li').count(), (await advancement().innerText()).trim()], [['0', '2', '2', '1', '3'], 'Level 10', 8, 'Advancement (+2)']);
+check('after reload', [await ratings(), await level(), await page.locator('.view-improvements li').count(), (await advancement().innerText()).trim()], [['0', '2', '2', '1', '3'], 'Level 10', 8, 'Advancement (+2)']);
 
 check('console errors', errors, []);
 await browser.close();

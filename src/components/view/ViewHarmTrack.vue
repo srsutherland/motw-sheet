@@ -1,5 +1,5 @@
 <template>
-<section class="show-harm">
+<section class="view-harm">
     <div class="heading">Harm:</div>
     <Track
         class="indent"

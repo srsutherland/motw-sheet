@@ -1,5 +1,5 @@
 <template>
-<section class="show-history">
+<section class="view-history">
     <h2>History</h2>
     <p v-if="!hunter.history.length"><em>No history yet.</em></p>
     <ul>
@@ -18,7 +18,7 @@ const hunter = useHunter();
 </script>
 
 <style scoped>
-.show-history {
+.view-history {
     max-width: 40em;
 }
 

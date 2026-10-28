@@ -85,32 +85,32 @@ check('reload: pronouns', await page.locator('.pronouns input').inputValue(), 't
 // Save -> view page
 await page.getByRole('button', { name: 'Save' }).click();
 await page.waitForURL(new RegExp(`view=${id}`));
-check('view: moves', (await page.locator('.show-move .move-name').allInnerTexts()).map((t) => t.trim()), ['Tools and Techniques:', 'Practitioner:', 'Arcane Reputation:', 'Third Eye:']);
-check('view: gear', (await page.locator('.show-gear li').allInnerTexts()).map((t) => t.replace(/\s+/g, ' ').trim()), ['Ritual knife (1-harm hand)', 'Flashlight (utility)']);
+check('view: moves', (await page.locator('.view-move .move-name').allInnerTexts()).map((t) => t.trim()), ['Tools and Techniques:', 'Practitioner:', 'Arcane Reputation:', 'Third Eye:']);
+check('view: gear', (await page.locator('.view-gear li').allInnerTexts()).map((t) => t.replace(/\s+/g, ' ').trim()), ['Ritual knife (1-harm hand)', 'Flashlight (utility)']);
 check('view: ratings', await page.locator('.stat-bubble').allInnerTexts(), ['-1', '1', '1', '0', '2']);
 check('view: protect someone listed', (await page.locator('.basic-moves').allInnerTexts()).join('|').includes('Protect Someone'), true);
 
 check('view: title', (await page.locator('h1.hunter-name').innerText()).replace(/[🖉⭳]/gu, '').trim(), 'Alice the Spell-Slinger');
 check('view: pronouns and look', await page.locator('p.subtitle').innerText(), '(they/them) rumpled clothes, glowing eyes');
-check('view: luck special hidden', await page.locator('.show-luck .popup').count(), 0);
-await page.locator('.show-luck .popup-trigger').hover();
-check('view: luck special on hover', (await page.locator('.show-luck .popup').innerText()).startsWith('Spell-slinger special:'), true);
+check('view: luck special hidden', await page.locator('.view-luck .popup').count(), 0);
+await page.locator('.view-luck .popup-trigger').hover();
+check('view: luck special on hover', (await page.locator('.view-luck .popup').innerText()).startsWith('Spell-slinger special:'), true);
 await page.mouse.move(0, 0);
-await page.locator('.show-luck .popup-trigger').click();
+await page.locator('.view-luck .popup-trigger').click();
 await page.mouse.move(0, 0);
-check('view: luck special pinned by click', await page.locator('.show-luck .popup').isVisible(), true);
-const feature = page.locator('.show-feature', { has: page.locator('h2:text-is("Combat Magic")') });
+check('view: luck special pinned by click', await page.locator('.view-luck .popup').isVisible(), true);
+const feature = page.locator('.view-feature', { has: page.locator('h2:text-is("Combat Magic")') });
 check('view: combat magic groups', (await feature.locator('.group-name').allInnerTexts()), ['Bases:', 'Effects:']);
 check('view: combat magic picks', (await feature.locator('li strong').allInnerTexts()), ['Blast', 'Fire', 'Earth']);
 check('view: feature description', (await feature.locator('.description').innerText()).startsWith('You have a few attack spells'), true);
 const order = await page.locator('main > section').evaluateAll((els) => els.map((el) => el.className.split(' ')[0]));
-check('view: gear before features and moves', order.indexOf('show-gear') < order.indexOf('show-feature') && order.indexOf('show-feature') < order.indexOf('show-moves'), true);
-const moveOf = (name) => page.locator('.show-move', { has: page.locator(`.move-name:text-is("${name}:")`) });
+check('view: gear before features and moves', order.indexOf('view-gear') < order.indexOf('view-feature') && order.indexOf('view-feature') < order.indexOf('view-moves'), true);
+const moveOf = (name) => page.locator('.view-move', { has: page.locator(`.move-name:text-is("${name}:")`) });
 check('view: crossed T&T', await moveOf('Tools and Techniques').locator('li.crossed strong').allInnerTexts(), ['Gestures']);
 check('view: practitioner effects', (await moveOf('Practitioner').locator('.choices li').allInnerTexts()).map((t) => t.split(' ')[0]), ['Heal', 'Banish']);
 check('view: arcane reputation', await moveOf('Arcane Reputation').locator('.choices li').allInnerTexts(), ['The White Council']);
 check('view: details', await moveOf('Third Eye').locator('ul').count(), 0);
-check('view: history', (await page.locator('.show-history li').innerText()).replace(/\s+/g, ' '), 'Bob: Mentor from another life. Taught me to fight.');
+check('view: history', (await page.locator('.view-history li').innerText()).replace(/\s+/g, ' '), 'Bob: Mentor from another life. Taught me to fight.');
 await page.locator('header a').click();
 check('home list title', (await page.locator('#hunters li a').first().innerText()).trim(), '🔮 Alice the Spell-Slinger');
 

@@ -40,10 +40,10 @@ export default defineConfig([
         },
     },
 
-    // show/* components are named after sheet sections (Luck, Harm, ...);
+    // view/* building blocks are named after parts of the sheet (Move, Track);
     // the folder already namespaces them
     {
-        files: ['src/components/show/**/*.vue'],
+        files: ['src/components/view/**/*.vue'],
         rules: {
             'vue/multi-word-component-names': 'off',
         },

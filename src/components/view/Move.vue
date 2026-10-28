@@ -1,5 +1,5 @@
 <template>
-<div class="show-move">
+<div class="view-move">
     <span class="move-name">{{ move?.name }}: </span>
     <MarkdownText :text="shown(move, 'description')" inline />
     <MoveDetails :details="shown(move, 'details')" />
@@ -35,7 +35,7 @@ import { useHunter, useHunterState, usePageText } from '@/HunterContext';
 import { crossedUnder, picksUnder, verbOf } from '@/HunterState';
 import { optionsOf } from '@/PlaybookData';
 import MarkdownText from '../MarkdownText.vue';
-import MoveDetails from './MoveDetails.vue';
+import MoveDetails from '../MoveDetails.vue';
 
 const props = defineProps({
     move: Object,
@@ -51,7 +51,7 @@ const crossed = computed(() => crossedUnder(state.value, props.path));
 </script>
 
 <style scoped>
-.show-move {
+.view-move {
     margin-bottom: 1em;
     max-width: 40em;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

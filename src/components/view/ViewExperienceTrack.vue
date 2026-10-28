@@ -1,5 +1,5 @@
 <template>
-<section class="show-experience">
+<section class="view-experience">
     <span class="heading">Experience</span>:
     <Track class="indent" v-model="hunter.experience" :max="5" @below-min="levelDown">
         <template #after-plus>

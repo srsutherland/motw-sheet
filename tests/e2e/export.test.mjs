@@ -28,7 +28,7 @@ await b.goto(BASE);
 await b.locator('input[type=file]').setInputFiles(file);
 await b.waitForURL(/\?view=/);
 check('imported view', [(await b.locator('h1.hunter-name').innerText()).includes('Exported'), await b.locator('.stat-bubble').allInnerTexts()], [true, ['-1', '0', '2', '-1', '2']]);
-check('imported moves', (await b.locator('.show-move .move-name').allInnerTexts()).map((t) => t.trim()), ['Tools and Techniques:', 'Third Eye:']);
+check('imported moves', (await b.locator('.view-move .move-name').allInnerTexts()).map((t) => t.trim()), ['Tools and Techniques:', 'Third Eye:']);
 
 // The converted sample hunter loads
 await b.locator('header a').click();

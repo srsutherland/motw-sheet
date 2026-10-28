@@ -1,5 +1,5 @@
 <template>
-<section id="ratings" class="show-ratings">
+<section id="ratings" class="view-ratings">
     <table>
         <tr v-for="rating in RATINGS" :key="rating">
             <td>

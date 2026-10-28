@@ -16,7 +16,7 @@
             <a
                 v-else
                 :href="`?view=${entry.uid}`"
-                @click.prevent="$emit('change-view', 'show', entry.hunter)"
+                @click.prevent="$emit('change-view', 'view', entry.hunter)"
             >
                 {{ entry.hunter.playbook?.emoji }} {{ entry.hunter.toString() }}
             </a>
@@ -49,7 +49,7 @@ const onImport = async (event) => {
     try {
         const hunter = await importHunter(file);
         if (hunter) {
-            emit('change-view', 'show', hunter);
+            emit('change-view', 'view', hunter);
         }
     } catch (e) {
         alert(`Couldn't import ${file.name}: ${e.message}`);

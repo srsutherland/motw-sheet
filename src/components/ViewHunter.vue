@@ -15,13 +15,13 @@
     <span v-if="hunter.pronouns">({{ hunter.pronouns }})</span>
     {{ look }}
 </p>
-<Ratings />
-<LuckTrack />
-<HarmTrack />
-<ExperienceTrack />
-<Gear />
-<Feature v-for="feature in features('pre_moves')" :key="feature.path" :feature="feature" />
-<section class="show-moves">
+<ViewRatings />
+<ViewLuckTrack />
+<ViewHarmTrack />
+<ViewExperienceTrack />
+<ViewGear />
+<ViewFeature v-for="feature in features('pre_moves')" :key="feature.path" :feature="feature" />
+<section class="view-moves">
     <h2>Moves</h2>
     <ul>
         <li v-for="move in state.moves" :key="move.path">
@@ -29,23 +29,23 @@
         </li>
     </ul>
 </section>
-<Feature v-for="feature in features('post_moves')" :key="feature.path" :feature="feature" />
-<History />
-<Improvements />
+<ViewFeature v-for="feature in features('post_moves')" :key="feature.path" :feature="feature" />
+<ViewHistory />
+<ViewImprovements />
 </template>
 
 <script setup>
 import { computed } from 'vue';
 import { providePage, useHunter, useHunterState } from '@/HunterContext';
-import Ratings from './show/Ratings.vue';
-import HarmTrack from './show/HarmTrack.vue';
-import LuckTrack from './show/LuckTrack.vue';
-import ExperienceTrack from './show/ExperienceTrack.vue';
-import Feature from './show/Feature.vue';
-import Gear from './show/Gear.vue';
-import History from './show/History.vue';
-import Improvements from './show/Improvements.vue';
-import Move from './show/Move.vue';
+import ViewRatings from './view/ViewRatings.vue';
+import ViewHarmTrack from './view/ViewHarmTrack.vue';
+import ViewLuckTrack from './view/ViewLuckTrack.vue';
+import ViewExperienceTrack from './view/ViewExperienceTrack.vue';
+import ViewFeature from './view/ViewFeature.vue';
+import ViewGear from './view/ViewGear.vue';
+import ViewHistory from './view/ViewHistory.vue';
+import ViewImprovements from './view/ViewImprovements.vue';
+import Move from './view/Move.vue';
 import { exportHunter } from '@/Storage';
 
 const hunter = useHunter();

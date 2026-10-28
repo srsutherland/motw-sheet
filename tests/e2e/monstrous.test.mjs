@@ -67,7 +67,7 @@ await page.locator('#edit-ratings input[type=radio]').first().check();
 await page.getByRole('button', { name: 'Save' }).click();
 await page.waitForURL(/\?view=/);
 
-const feature = (name) => page.locator('.show-feature', { has: page.locator(`h2:text-is("${name}")`) });
+const feature = (name) => page.locator('.view-feature', { has: page.locator(`h2:text-is("${name}")`) });
 check('view: breed', await feature('Monster Breed').locator('li').allInnerTexts(), ['Originally human, transformed somehow', 'Evil until 1890']);
 check('view: breed groups', await feature('Monster Breed').locator('.group-name').allInnerTexts(), ['Origin:', 'Alignment:']);
 const curseView = await feature('Curse').locator('li').innerText();
@@ -75,8 +75,8 @@ check('view: curse with its emotion, shorter text (on_view)', [curseView.endsWit
 check('view: breed without the suggestions (on_edit only)', [await feature('Monster Breed').locator('.move-details').count(), (await feature('Monster Breed').locator('.description').innerText()).includes('listed below')], [0, false]);
 check('view: natural attacks groups', await feature('Natural Attacks').locator('.group-name').allInnerTexts(), ['Bases:']);
 check('view: natural attacks', (await feature('Natural Attacks').locator('li').allInnerTexts()).map((t) => t.replace(/\s+/g, ' ').trim()), ['teeth (3-harm intimate) (Add +1 harm to a base)']);
-check('view: moves', (await page.locator('.show-move .move-name').allInnerTexts()).map((t) => t.trim()), ['Something Borrowed:', 'Immortal:', 'Preparedness:']);
-check('view: no gear', await page.locator('.show-gear li').count(), 0);
+check('view: moves', (await page.locator('.view-move .move-name').allInnerTexts()).map((t) => t.trim()), ['Something Borrowed:', 'Immortal:', 'Preparedness:']);
+check('view: no gear', await page.locator('.view-gear li').count(), 0);
 check('view: ratings', await page.locator('.stat-bubble').allInnerTexts(), ['-1', '-1', '0', '2', '3']);
 
 check('console errors', errors, []);

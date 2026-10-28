@@ -20,7 +20,7 @@
 import { useHunterState, usePageText } from '@/HunterContext';
 import { picksUnder } from '@/HunterState';
 import MarkdownText from '../MarkdownText.vue';
-import MoveDetails from '../show/MoveDetails.vue';
+import MoveDetails from '../MoveDetails.vue';
 import GettingStartedChoices from './GettingStartedChoices.vue';
 
 const props = defineProps({

@@ -1,5 +1,5 @@
 <template>
-<section class="show-improvements">
+<section class="view-improvements">
     <h2>Improvements</h2>
     <p v-if="!taken.length"><em>None yet.</em></p>
     <ul>
@@ -45,7 +45,7 @@ const taken = computed(() => takenImprovements(hunter.value)
 </script>
 
 <style scoped>
-.show-improvements {
+.view-improvements {
     max-width: 40em;
 }
 
