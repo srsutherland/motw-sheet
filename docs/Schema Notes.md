@@ -70,6 +70,7 @@ Sections: **Decided** (with where it was decided), **Needs** (from the playbook 
 | `pick`   | add it                                     | the container's options |
 | `cross`  | strike it out; stays visible, crossed off  | the container's options |
 | `remove` | undo an earlier pick                       | the hunter's current picks from that container |
+| `attach` | attach this option to one of your picks    | the hunter's current picks from that container |
 
 - A choice that belongs to a move or feature lives on that move or feature (`"from": "@this"`, the default when `from` is left out)
    - Gaining it, from `getting_started`, a grant, or an improvement, triggers the choice
@@ -118,6 +119,14 @@ Limits on a `choose` (exact syntax not final):
 | limits per sub-list, keyed by reference | Combat Magic (3, at least 1 base), Monstrous natural attacks (2, at least 1 base, at most 1 extra), gear categories |
 
 - A feature with sub-lists is one container: Combat Magic's options are two sub-lists, `bases` and `effects`
+- A sub-list can have a `description`: shown under its name on the edit page (Monster Breed's origin and alignment)
+- Monstrous natural attacks: extras `attach` to one of your bases, so an improvement can add an extra to a base you have; the same extra can't be taken twice
+
+```jsonc
+// an extra; `extras` is a sub-list of natural_attacks
+{ "name": "Add +1 harm to a base", "choose": { "from": "@natural_attacks.bases", "attach": 1 } }
+// hunter: { "ref": "@extras.add_1_harm_to_a_base", "chosen": ["@teeth"] }
+```
 
 ```jsonc
 { "choose": { "from": "@combat_magic", "pick": 3,
