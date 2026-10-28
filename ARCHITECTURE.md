@@ -20,6 +20,7 @@ motw-sheet/
 │   ├── Playbooks.js          # Loads the playbook JSON
 │   ├── Storage.js            # localStorage, import/export
 │   ├── Markdown.js           # Display-text markdown subset
+│   ├── Format.js             # Text formatting (ratings lines)
 │   └── Tags.js               # Gear tag parsing
 ├── playbooks/                # Playbook data
 ├── sources/                  # Submodule, private (_motw-sources): PDFs, md
@@ -89,6 +90,8 @@ Deployment: GitHub Pages (see 6)
 - `Markdown.js`
    - Markdown subset for display text
    - Escapes everything first (imported files carry their own playbook text)
+- `Format.js`
+   - `ratingLineHtml`: "Charm-1, Cool+1, ...", numbers colored by value
 - `Tags.js`
    - Typed gear tags: "1 harm magic" -> `["1-harm", "magic"]`
 
@@ -96,7 +99,7 @@ Deployment: GitHub Pages (see 6)
 
 - `App.vue`: router (`?new`, `?view={id}`, `?edit={id}`; GitHub Pages can't serve other paths), autosave, `provideHunter`
 - `ViewHunter.vue` + `view/`: view page; sections are `View*`; `Track.vue` is the generic box track (luck, harm, experience wrap it)
-- `EditHunter.vue` + `edit/`: edit page, plus the editing parts the view page also uses
+- `EditHunter.vue` + `edit/`: edit page; sections are `Edit*` (gear, moves, features, look, ratings, history, improvements), plus the editing parts the view page also uses
    - `ChooseRule.vue`: renders any `choose` rule (options, limits, free text, nested choices)
    - `AdvancementButton.vue` opens `ImprovementPicker.vue` (the Advancement dialog)
 - `ActionList.vue`: home page (saved hunters, import); `NewHunter.vue` + `new/`: new hunter page

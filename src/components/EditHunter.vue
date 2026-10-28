@@ -1,266 +1,82 @@
 <template>
-<h1 class="hunter-name">
-    <input v-model="hunter.name" placeholder="Name"/>
-    {{ hunter?.playbook_name }}
-</h1>
-<p class="pronouns">
-    <label>Pronouns: <input v-model="hunter.pronouns" placeholder="pronouns" /></label>
-</p>
+<div class="edit-hunter">
+    <h1 class="hunter-name">
+        <input v-model="hunter.name" placeholder="Name"/>
+        {{ hunter?.playbook_name }}
+    </h1>
+    <p class="pronouns">
+        <label>Pronouns: <input v-model="hunter.pronouns" placeholder="pronouns" /></label>
+    </p>
 
-<!-- Current ratings (picked below, under Ratings) -->
-<p v-if="hunter.ratings_base" class="current-ratings" v-html="fomatRatingRich(state.ratings)"></p>
+    <!-- Current ratings (picked below, under Ratings) -->
+    <p
+        v-if="hunter.ratings_base"
+        class="current-ratings"
+        v-html="ratingLineHtml(state.ratings)"
+    ></p>
 
-<!-- Gear Section -->
-<section id="gear">
-    <fieldset>
-        <legend>Starting Gear</legend>
-        <MarkdownText :text="startingGear?.description" />
-        <GettingStartedChoices :from="`${playbookId}.starting_gear`" />
-    </fieldset>
-    <fieldset>
-        <legend>Other Gear</legend>
-        <ul class="plain">
-            <li v-for="(item, i) in hunter.extra_gear" :key="i">
-                <input v-model="item.name" placeholder="name" />
-                <input
-                    :value="item.tags.join(' ')"
-                    placeholder="tags, e.g. 1-harm close"
-                    @change="item.tags = parseTags($event.target.value)"
-                />
-                <button class="small" title="Remove" @click="hunter.extra_gear.splice(i, 1)">
-                    ✕
-                </button>
-            </li>
-        </ul>
-        <button class="small" @click="hunter.extra_gear.push({ name: '', tags: [] })">
-            Add gear
-        </button>
-    </fieldset>
-</section>
+    <EditGear />
+    <EditMoves />
 
-<!-- Moves Section -->
-<section id="moves">
-    <fieldset>
-        <legend>Moves</legend>
-        <MarkdownText :text="hunter.playbook.moves.description" />
-        <div v-for="move in grantedMoves" :key="move.path" class="granted">
-            <p>
-                <strong>{{ move.node.name }}</strong>:
-                <MarkdownText :text="shown(move.node, 'description')" inline />
-            </p>
+    <!-- Playbook-specific features -->
+    <section id="features">
+        <EditFeature v-for="feature in state.features" :key="feature.path" :feature="feature" />
+    </section>
+
+    <!-- getting_started choices that don't belong to any section above -->
+    <section v-if="otherRules.length" id="other-choices">
+        <fieldset>
+            <legend>Other choices</legend>
             <ChooseRule
-                v-for="(rule, i) in rulesOf(move.node)"
-                :key="i"
+                v-for="{ rule, index, set } in otherRules"
+                :key="index"
                 :rule="rule"
-                :self="move.node"
-                :set="choiceSet(move.record, move.node, i)"
+                :self="hunter.playbook.getting_started"
+                :set="set"
             />
-        </div>
-        <GettingStartedChoices :from="`${playbookId}.moves`" />
-    </fieldset>
-</section>
+        </fieldset>
+    </section>
 
-<!-- Playbook-specific features -->
-<section id="features">
-    <EditFeature v-for="feature in state.features" :key="feature.path" :feature="feature" />
-</section>
+    <EditLook />
+    <EditRatings />
+    <EditHistory />
+    <EditImprovements />
 
-<!-- getting_started choices that don't belong to any section above -->
-<section v-if="otherRules.length" id="other-choices">
-    <fieldset>
-        <legend>Other choices</legend>
-        <ChooseRule
-            v-for="{ rule, index, set } in otherRules"
-            :key="index"
-            :rule="rule"
-            :self="hunter.playbook.getting_started"
-            :set="set"
-        />
-    </fieldset>
-</section>
-
-<!-- Look Section -->
-<section id="look">
-    <fieldset>
-        <legend>Look</legend>
-        <p v-if="hunter.playbook.look.heading">{{ hunter.playbook.look.heading }}</p>
-        <div v-for="(list, key) in lookLists" :key="key" class="look-list">
-            <span class="format">{{ list.format }}:</span>
-            <label v-for="option in list.options.filter((o) => o !== TEXTBOX)" :key="option">
-                <input
-                    type="radio"
-                    :name="`look-${key}`"
-                    :value="option"
-                    v-model="hunter.look[key]"
-                />
-                {{ option }}
-            </label>
-            <label v-if="list.options.includes(TEXTBOX)">
-                <input
-                    type="radio"
-                    :name="`look-${key}`"
-                    :checked="isCustomLook(key, list)"
-                    @change="pickCustomLook(key, list, $event)"
-                />
-                <input
-                    class="textbox"
-                    placeholder="write your own"
-                    :value="lookText(key, list)"
-                    @change="setCustomLook(key, $event.target.value)"
-                />
-            </label>
-        </div>
-    </fieldset>
-</section>
-
-<!-- Ratings Selection -->
-<section id="edit-ratings">
-    <fieldset>
-        <legend>{{ hunter.playbook.ratings_base.heading ?? 'Ratings, pick one line:' }}</legend>
-        <div v-for="(rating, i) in hunter.playbook.ratings_base.options" :key="i">
-            <label>
-                <input
-                    type="radio"
-                    :value="rating"
-                    v-model="hunter.ratings_base"
-                />
-                <span v-html="fomatRatingRich(rating)"></span>
-            </label>
-        </div>
-    </fieldset>
-</section>
-
-<!-- History Section -->
-<section id="history">
-    <fieldset>
-        <legend>History</legend>
-        <MarkdownText :text="hunter.playbook.history.description" />
-        <div v-for="(entry, i) in hunter.history" :key="i" class="history-entry">
-            <input v-model="entry.name" placeholder="other hunter's name" />
-            <select @change="entry.option = $event.target.value; $event.target.value = ''">
-                <option value="">pick from the playbook…</option>
-                <option
-                    v-for="option in hunter.playbook.history.options"
-                    :key="option"
-                    :value="option"
-                >
-                    {{ option }}
-                </option>
-            </select>
-            <textarea v-model="entry.option" placeholder="how you know them" rows="2"></textarea>
-            <textarea v-model="entry.notes" placeholder="notes" rows="1"></textarea>
-            <button class="small" @click="hunter.history.splice(i, 1)" title="Remove">✕</button>
-        </div>
-        <button class="small" @click="hunter.history.push({ name: '', option: '', notes: '' })">
-            Add a hunter
-        </button>
-    </fieldset>
-</section>
-
-<!-- Improvements Section: manage those taken; Advancement takes new ones -->
-<section v-if="takenWithIndex.length || hunter.level" id="improvements">
-    <fieldset>
-        <legend>Improvements</legend>
-        <p><em>Level {{ hunter.level }}</em><AdvancementButton /></p>
-        <div
-            v-for="{ taken, index, improvement } in takenWithIndex"
-            :key="refOf(taken)"
-            class="improvement"
-        >
-            <p :class="{ 'disabled-improvement': isDisabled(hunter, taken) }">
-                <MarkdownText :text="improvement.description" inline />
-                <em v-if="isDisabled(hunter, taken)"> (disabled: above your current level)</em>
-                <button
-                    class="small"
-                    title="Remove (leaves an improvement unspent)"
-                    @click="hunter.improvements.splice(index, 1)"
-                >
-                    ✕
-                </button>
-            </p>
-            <ChooseRule
-                v-for="(rule, i) in rulesOf(improvement)"
-                :key="i"
-                :rule="rule"
-                :self="improvement"
-                :set="choiceSet(taken, improvement, i)"
-            />
-        </div>
-    </fieldset>
-</section>
-
-<button @click="$emit('change-view', 'view', hunter)">Save</button>
-<!-- escape valve: lift pick limits -->
-<label class="bend-rules" title="Lift pick limits, e.g. for house rules or Keeper rulings">
-    <input type="checkbox" v-model="bendRules" />
-    Bend the rules
-</label>
+    <button @click="$emit('change-view', 'view', hunter)">Save</button>
+    <!-- escape valve: lift pick limits -->
+    <label class="bend-rules" title="Lift pick limits, e.g. for house rules or Keeper rulings">
+        <input type="checkbox" v-model="bendRules" />
+        Bend the rules
+    </label>
+</div>
 </template>
 
 <script setup>
-import { computed, provide, reactive, ref } from 'vue';
-import { rulesOf } from '@/Hunter';
-import { providePage, useHunter, useHunterState, usePageText } from '@/HunterContext';
-import {
-    choiceSet, gettingStartedRules, improvementOf, isDisabled, refOf,
-} from '@/HunterState';
-import { TEXTBOX } from '@/PlaybookData';
-import { parseTags } from '@/Tags';
-import AdvancementButton from './edit/AdvancementButton.vue';
+import { computed, provide, ref } from 'vue';
+import { ratingLineHtml } from '@/Format';
+import { providePage, useHunter, useHunterState } from '@/HunterContext';
+import { gettingStartedRules } from '@/HunterState';
 import ChooseRule from './edit/ChooseRule.vue';
-import MarkdownText from './shared/MarkdownText.vue';
 import EditFeature from './edit/EditFeature.vue';
-import GettingStartedChoices from './edit/GettingStartedChoices.vue';
+import EditGear from './edit/EditGear.vue';
+import EditHistory from './edit/EditHistory.vue';
+import EditImprovements from './edit/EditImprovements.vue';
+import EditLook from './edit/EditLook.vue';
+import EditMoves from './edit/EditMoves.vue';
+import EditRatings from './edit/EditRatings.vue';
 
 const hunter = useHunter();
 const state = useHunterState();
 providePage('edit');
-const shown = usePageText('edit');
 
 const emit = defineEmits(['change-view']);
 
 const bendRules = ref(false);
 provide('bendRules', bendRules);
 
-const playbookId = computed(() => hunter.value.playbook.id);
-const startingGear = computed(() => hunter.value.playbook.starting_gear);
-
-// look: { heading, clothes: { format, options }, eyes: {...} }
-const lookLists = computed(() => Object.fromEntries(Object.entries(hunter.value.playbook.look)
-    .filter(([key]) => key !== 'heading')));
-
-// Look: what was typed into "write your own", kept while a listed option is picked
-const customLook = reactive({});
-const isCustomLook = (key, list) => !!hunter.value.look[key]
-    && !list.options.includes(hunter.value.look[key]);
-const lookText = (key, list) => customLook[`${hunter.value.uid}.${key}`]
-    ?? (isCustomLook(key, list) ? hunter.value.look[key] : '');
-const setCustomLook = (key, text) => {
-    customLook[`${hunter.value.uid}.${key}`] = text.trim();
-    hunter.value.look[key] = text.trim();
-};
-const pickCustomLook = (key, list, event) => {
-    const text = lookText(key, list);
-    hunter.value.look[key] = text;
-    event.target.nextElementSibling.focus();
-};
-
-// Moves you get without picking them (Tools and Techniques)
-const grantedMoves = computed(() => state.value.moves
-    .filter((move) => move.source === 'getting_started'
-        && !state.value.picks.some((p) => p.path === move.path)));
-
-// Taken improvements with their index in hunter.improvements (for their source keys)
-const takenWithIndex = computed(() => hunter.value.improvements
-    .map((taken, index) => ({
-        taken,
-        index,
-        improvement: improvementOf(hunter.value.playbook, taken)?.improvement,
-    }))
-    .filter(({ taken, improvement }) => improvement && !taken.pending));
-
+// Rules not shown by a section: anything but the moves, the gear and the features
 const otherRules = computed(() => {
-    const id = playbookId.value;
+    const id = hunter.value.playbook.id;
     const shown = new Set([
         `${id}.moves`,
         `${id}.starting_gear`,
@@ -270,24 +86,6 @@ const otherRules = computed(() => {
     return gettingStartedRules(hunter.value).filter(({ container }) => ![...shown]
         .some((path) => container === path || container.startsWith(`${path}.`)));
 });
-
-const plusOrEqualsOrNothing = (value) => {
-    return value > 0 ? '+' : value === 0 ? '=' : '';
-};
-
-const fomatRatingRich = (rating) => {
-    /*
-    { "charm": -1, "cool": 1, "sharp": 1, "tough": 0, "weird": 2 }
-      =>
-    "Charm-1, Cool+1, Sharp+1, Tough=0, Weird+2"
-    */
-    const numberspan = (value) =>
-        `<span class="color-${value}">${plusOrEqualsOrNothing(value)}${value}</span>`;
-    const capitalized = (key) => key[0].toUpperCase() + key.slice(1);
-    return Object.entries(rating)
-        .map(([key, value]) => `${capitalized(key)}${numberspan(value)}`)
-        .join(', ');
-};
 </script>
 
 <style scoped>
@@ -306,7 +104,16 @@ const fomatRatingRich = (rating) => {
     min-width: 5em;
 }
 
-button {
+.bend-rules {
+    position: fixed;
+    top: 5px;
+    right: 10px;
+}
+</style>
+
+<!-- For every section of the edit page -->
+<style>
+.edit-hunter button {
     margin: 1em 0;
     padding: 0.5em 1em;
     border: 1px solid var(--color-button-border);
@@ -316,71 +123,17 @@ button {
     box-shadow: 0 0 5px 5px rgba(255, 0, 255, 0.1);
 }
 
-button.small {
+.edit-hunter button.small {
     margin: 0.25em;
     padding: 0.1em 0.5em;
 }
 
-fieldset {
+.edit-hunter fieldset {
     width: fit-content;
     max-width: 50em;
     margin-bottom: 1em;
 }
 
-ul.plain {
-    list-style: none;
-    padding-left: 0;
-}
-
-.look-list {
-    margin: 0.5em 0;
-}
-
-.look-list label {
-    margin-right: 1em;
-}
-
-.format {
-    opacity: 0.7;
-    margin-right: 0.5em;
-}
-
-.textbox {
-    width: 10em;
-}
-
-.history-entry {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25em;
-    align-items: flex-start;
-    margin: 0.5em 0;
-}
-
-.history-entry select {
-    max-width: 12em;
-}
-
-.history-entry textarea {
-    min-width: 15em;
-}
-
-.granted {
-    margin-bottom: 1em;
-}
-
-.disabled-improvement {
-    opacity: 0.6;
-}
-
-.bend-rules {
-    position: fixed;
-    top: 5px;
-    right: 10px;
-}
-</style>
-
-<style>
 .color--1 {
     color: red;
 }
