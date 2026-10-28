@@ -1,7 +1,10 @@
 <template>
 <div v-for="{ rule, index, set, container } in rules" :key="index">
     <!-- a rule picking from one of the container's sub-lists (Monster Breed's Origin) -->
-    <p v-if="container !== from" class="sub-list-name">{{ nameOf(container) }}:</p>
+    <template v-if="container !== from">
+        <p class="sub-list-name">{{ nameOf(container) }}:</p>
+        <MarkdownText :text="shown(lookup(container, hunter.playbook), 'description')" />
+    </template>
     <ChooseRule
         :rule="rule"
         :self="hunter.playbook.getting_started"
@@ -15,16 +18,18 @@
 // the starting gear) or its sub-lists, so each can be shown in its own section of the
 // edit page.
 import { computed } from 'vue';
-import { useHunter } from '@/HunterContext';
+import { useHunter, usePageText } from '@/HunterContext';
 import { gettingStartedRules } from '@/HunterState';
 import { lookup } from '@/PlaybookData';
 import ChooseRule from '../ChooseRule.vue';
+import MarkdownText from '../MarkdownText.vue';
 
 const props = defineProps({
     from: { type: String, required: true }, // absolute path of the container
 });
 
 const hunter = useHunter();
+const shown = usePageText();
 
 const rules = computed(() => gettingStartedRules(hunter.value)
     .filter(({ container }) => container === props.from

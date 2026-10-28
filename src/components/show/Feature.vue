@@ -15,7 +15,7 @@
                     <span v-if="item.node.tags?.length && !item.node.description" class="tags">
                         ({{ item.node.tags.join(' ') }})
                     </span>
-                    <!-- the option's own choice: Pure Drive's emotion -->
+                    <!-- its own choice (Pure Drive's emotion), or what's attached (extras) -->
                     <span v-if="item.inner.length"> ({{ item.inner.join(', ') }})</span>
                 </template>
                 <span v-else>{{ item.text }}</span>
@@ -29,7 +29,7 @@
 // A playbook feature (Combat Magic, Haven, Curse...) and what the hunter chose from it.
 import { computed } from 'vue';
 import { useHunter, useHunterState, usePageText } from '@/HunterContext';
-import { crossedUnder, picksUnder } from '@/HunterState';
+import { attachedTo, crossedUnder, picksUnder } from '@/HunterState';
 import { optionsOf, pathOf } from '@/PlaybookData';
 import MarkdownText from '../MarkdownText.vue';
 import MoveDetails from './MoveDetails.vue';
@@ -49,6 +49,7 @@ const chosenGroups = computed(() => {
     const path = props.feature.path;
     const picks = picksUnder(state.value, path);
     const crossed = crossedUnder(state.value, path);
+    const attached = new Set(state.value.attached.map((a) => a.by));
     // free text; plain-string options are matched to their sub-list below
     const texts = picks.filter((p) => !p.path);
     const groups = [];
@@ -62,9 +63,16 @@ const chosenGroups = computed(() => {
         return group;
     };
     for (const entry of optionsOf(`@${path}`, playbook)) {
+        if (attached.has(entry.path)) {
+            // shown on what it's attached to
+            continue;
+        }
         if (entry.node && (crossed.has(entry.path) || picks.some((p) => p.path === entry.path))) {
-            const inner = picksUnder(state.value, entry.path)
-                .map((p) => p.text ?? p.node?.name ?? p.node?.description);
+            const inner = [
+                ...picksUnder(state.value, entry.path)
+                    .map((p) => p.text ?? p.node?.name ?? p.node?.description),
+                ...attachedTo(state.value, entry.path).map((node) => node.name),
+            ];
             groupFor(entry.group).items.push({ ...entry, crossed: crossed.has(entry.path), inner });
         } else if (entry.literal) {
             // "Add +1 harm to a base": in its own sub-list (Extras)

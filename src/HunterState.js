@@ -9,7 +9,7 @@ import {
 // (see docs/Schema Notes.md: "Getting started", "Choosing", "Placement", "Hunter JSON").
 
 const RATINGS = ['charm', 'cool', 'sharp', 'tough', 'weird'];
-const VERBS = ['pick', 'cross', 'remove'];
+const VERBS = ['pick', 'cross', 'remove', 'attach'];
 
 const verbOf = (rule) => VERBS.find((verb) => rule[verb] !== undefined) ?? 'pick';
 
@@ -119,6 +119,8 @@ const hunterState = (h) => {
     const root = h.playbook;
     const picks = []; // { path, node, text, container, source, set, advance }
     const crosses = []; // { path, container, source, set }
+    // an option attached to one of your picks (an extra on a base): { path, by, node, source, set }
+    const attached = [];
     const gained = new Map(); // path -> { node, source, record }
     const effects = []; // { effect, source }
 
@@ -175,6 +177,9 @@ const hunterState = (h) => {
                 const { path, node } = entry;
                 if (verb === 'cross') {
                     crosses.push({ path, container, source, set: toRaw(set) });
+                } else if (verb === 'attach') {
+                    const by = pathOf(self, root);
+                    attached.push({ path, by, node: self, source, set: toRaw(set) });
                 } else if (verb === 'remove') {
                     const at = picks.findIndex((p) => p.path === path);
                     if (at >= 0) {
@@ -262,6 +267,7 @@ const hunterState = (h) => {
     return {
         picks,
         crosses,
+        attached,
         effects,
         ratings,
         advanced,
@@ -290,6 +296,10 @@ const picksUnder = (state, path) => state.picks.filter((p) => {
     return p.container === path || (p.container.startsWith(`${path}.`)
         && !state.picks.some((other) => other.path === p.container));
 });
+
+// What's attached to a pick: the extras on a base
+const attachedTo = (state, path) => state.attached.filter((a) => a.path === path)
+    .map((a) => a.node);
 
 const crossedUnder = (state, path) => new Set(state.crosses
     .filter((c) => c.path.startsWith(`${path}.`))
@@ -393,7 +403,7 @@ export {
     verbOf, countOf, findImprovement, improvementOf, improvementRef, refOf, isText,
     choiceSet, grantRecord, pickRecord, toggleChoice, setTextChoice, gettingStartedRules, chosenFor,
     advancesBasicMoves,
-    hunterState, picksUnder, crossedUnder, basicMovesByRating,
+    hunterState, picksUnder, crossedUnder, attachedTo, basicMovesByRating,
     takenImprovements, costOf, improvementBudget, unspentImprovements, isDisabled,
     overMax, improvementLists, improvementBlocked,
     applyOneOffEffects,

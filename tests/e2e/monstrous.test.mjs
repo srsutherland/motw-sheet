@@ -17,6 +17,7 @@ await page.locator('.hunter-name input').fill('Vlad');
 // Monster Breed: two pick-1 sub-lists of plain strings, each with a write-your-own
 const breed = section('Monster Breed');
 check('breed sub-lists', await breed.locator('.sub-list-name').allInnerTexts(), ['Origin:', 'Alignment:']);
+check('sub-list description', (await breed.innerText()).includes('Now decide if you were always fighting to be good'), true);
 check('write-your-own has a checkbox among options', await breed.locator('li', { has: page.locator('input.textbox') }).first().locator('input[type=checkbox]').count(), 1);
 await box(breed, 'Originally human').check();
 check('origin: one only', await box(breed, 'Always this way').isDisabled(), true);
@@ -37,8 +38,12 @@ check('one emotion', await box(drive, 'hate').isDisabled(), true);
 const attacks = section('Natural Attacks');
 await box(attacks, 'Add +1 harm').check();
 check('at most one extra', await box(attacks, 'Add ignore-armour').isDisabled(), true);
-check('base still needed', await attacks.locator('.status').innerText(), 'Pick 2 (1 left) · at least 1 from Bases');
+check('base still needed', await attacks.locator('.status').first().innerText(), 'Pick 2 (1 left) · at least 1 from Bases');
+const extra = attacks.locator('li', { has: box(page, 'Add +1 harm') }).locator('.nested');
+check('attach: nothing to attach to yet', await extra.locator('input[type=checkbox]').count(), 0);
 await box(attacks, 'teeth').check();
+check('attach: offers your bases only', await extra.locator('label').allInnerTexts(), ['teeth (3-harm intimate)']);
+await box(extra, 'teeth').check();
 
 // Moves: Something Borrowed picks a move from another playbook
 const moves = section('Moves');
@@ -68,8 +73,8 @@ check('view: breed groups', await feature('Monster Breed').locator('.group-name'
 const curseView = await feature('Curse').locator('li').innerText();
 check('view: curse with its emotion, shorter text (on_view)', [curseView.endsWith('(hunger)'), curseView.includes('Pick from')], [true, false]);
 check('view: breed without the suggestions (on_edit only)', [await feature('Monster Breed').locator('.move-details').count(), (await feature('Monster Breed').locator('.description').innerText()).includes('listed below')], [0, false]);
-check('view: natural attacks groups', await feature('Natural Attacks').locator('.group-name').allInnerTexts(), ['Bases:', 'Extras:']);
-check('view: natural attacks', (await feature('Natural Attacks').locator('li').allInnerTexts()).map((t) => t.replace(/\s+/g, ' ').trim()), ['teeth (3-harm intimate)', 'Add +1 harm to a base']);
+check('view: natural attacks groups', await feature('Natural Attacks').locator('.group-name').allInnerTexts(), ['Bases:']);
+check('view: natural attacks', (await feature('Natural Attacks').locator('li').allInnerTexts()).map((t) => t.replace(/\s+/g, ' ').trim()), ['teeth (3-harm intimate) (Add +1 harm to a base)']);
 check('view: moves', (await page.locator('.show-move .move-name').allInnerTexts()).map((t) => t.trim()), ['Something Borrowed:', 'Immortal:', 'Preparedness:']);
 check('view: no gear', await page.locator('.show-gear li').count(), 0);
 check('view: ratings', await page.locator('.stat-bubble').allInnerTexts(), ['-1', '-1', '0', '2', '3']);

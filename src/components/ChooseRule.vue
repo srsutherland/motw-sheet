@@ -91,7 +91,7 @@ const bendRules = inject('bendRules', ref(false));
 
 const verb = computed(() => verbOf(props.rule));
 const count = computed(() => countOf(props.rule));
-const VERB_LABELS = { pick: 'Pick', cross: 'Cross off', remove: 'Remove' };
+const VERB_LABELS = { pick: 'Pick', cross: 'Cross off', remove: 'Remove', attach: 'Attach to' };
 const verbLabel = computed(() => VERB_LABELS[verb.value]);
 
 // "Mark two basic moves as advanced": picks moves you already have
@@ -100,15 +100,17 @@ const isThisSet = (set) => set === toRaw(props.set);
 
 const containerPath = computed(() => refPath(props.rule.from, hunter.value.playbook, props.self));
 
-// For "remove", the options are the hunter's current picks from the container; so are they
-// for "cross" when the container's options are picked (your curse), not had (Tools and
-// Techniques).
+// For "remove" and "attach", the options are the hunter's current picks from the container
+// (or its sub-list: an extra attaches to one of your bases); so are they for "cross" when the
+// container's options are picked (your curse), not had (Tools and Techniques).
 const entries = computed(() => {
     const options = optionsOf(props.rule.from, hunter.value.playbook, props.self);
+    const path = containerPath.value;
     const picked = new Set(state.value.picks
-        .filter((p) => p.path && p.container === containerPath.value && !isThisSet(p.set))
+        .filter((p) => p.path && !isThisSet(p.set)
+            && (p.container === path || p.path.startsWith(`${path}.`)))
         .map((p) => p.path));
-    if (verb.value === 'remove' || (verb.value === 'cross' && picked.size)) {
+    if (['remove', 'attach'].includes(verb.value) || (verb.value === 'cross' && picked.size)) {
         return options.filter((entry) => picked.has(entry.path));
     }
     return options;
@@ -148,7 +150,7 @@ const isChosen = (entry) => (entry.textbox
 
 // Picked or gained through another source (another improvement, a grant...).
 const takenElsewhere = (entry) => {
-    if (entry.textbox || isChosen(entry)) {
+    if (entry.textbox || isChosen(entry) || verb.value === 'attach') {
         return false;
     }
     const s = state.value;

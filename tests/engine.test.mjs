@@ -221,14 +221,16 @@ pickW(m.getting_started, mgs, 2, '@pure_drive');
 const pureDrive = D.lookup(`${mo}.curse.pure_drive`, mpb);
 pickW(S.pickRecord(S.choiceSet(m.getting_started, mgs, 2), '@pure_drive'), pureDrive, 0, 'hunger');
 pickW(m.getting_started, mgs, 3, '@bases.teeth');
-pickW(m.getting_started, mgs, 3, 'Add +1 harm to a base');
+pickW(m.getting_started, mgs, 3, '@extras.add_1_harm_to_a_base');
+const plusHarm = D.lookup(`${mo}.natural_attacks.extras.add_1_harm_to_a_base`, mpb);
+pickW(S.pickRecord(S.choiceSet(m.getting_started, mgs, 3), '@extras.add_1_harm_to_a_base'), plusHarm, 0, '@teeth');
 pickW(m.getting_started, mgs, 4, '@something_borrowed');
 pickW(m.getting_started, mgs, 4, '@immortal');
 check('monstrous: stored', m.getting_started.choose.map((c) => c.chosen), [
     ['Originally human, transformed somehow'],
     [{ ref: '@textbox', text: 'Evil until 1890' }],
     [{ ref: '@pure_drive', chosen: ['hunger'] }],
-    ['@bases.teeth', 'Add +1 harm to a base'],
+    ['@bases.teeth', { ref: '@extras.add_1_harm_to_a_base', chosen: ['@teeth'] }],
     [{ ref: '@something_borrowed', chosen: [] }, '@immortal'],
     [],
 ]);
@@ -240,6 +242,7 @@ check('monstrous: features', mst.features.map((f) => f.node.name), ['Monster Bre
 check('monstrous: breed picks', S.picksUnder(mst, `${mo}.monster_breed`).map((p) => p.text), ['Originally human, transformed somehow', 'Evil until 1890']);
 check('monstrous: curse, its emotion kept with it', [S.picksUnder(mst, `${mo}.curse`).map((p) => p.node?.name ?? p.text), S.picksUnder(mst, `${mo}.curse.pure_drive`).map((p) => p.text)], [['Pure Drive'], ['hunger']]);
 check('monstrous: natural attacks', S.picksUnder(mst, `${mo}.natural_attacks`).map((p) => p.node?.name ?? p.text), ['teeth', 'Add +1 harm to a base']);
+check('monstrous: extra attached to its base', S.attachedTo(mst, `${mo}.natural_attacks.bases.teeth`).map((n) => n.name), ['Add +1 harm to a base']);
 check('monstrous: borrowed move', mst.moves.map((m2) => m2.node.name), ['Something Borrowed', 'Immortal', 'Preparedness']);
 
 m.level = 7;
@@ -254,6 +257,14 @@ pickW(mhavenRec, mhaven, 0, '@panic_room');
 mst = S.hunterState(m);
 check('monstrous: haven from the Expert', mst.features.map((f) => `${f.area}:${f.path}`).at(-1), 'post_moves:the_expert.haven');
 check('monstrous: haven picks', S.picksUnder(mst, 'the_expert.haven').map((p) => p.node.name), ['Oubliette', 'Panic Room']);
+// an improvement adds an extra to a base you already have
+const [mna, mnaRec] = mtake('natural_attacks');
+pickW(mnaRec, mna, 0, '@extras.add_ignore_armour_to_a_base');
+const ignoreArmour = D.lookup(`${mo}.natural_attacks.extras.add_ignore_armour_to_a_base`, mpb);
+pickW(S.pickRecord(mnaRec, '@extras.add_ignore_armour_to_a_base'), ignoreArmour, 0, '@teeth');
+mst = S.hunterState(m);
+check('monstrous: second extra on the same base', S.attachedTo(mst, `${mo}.natural_attacks.bases.teeth`).map((n) => n.name), ['Add +1 harm to a base', 'Add ignore-armour to a base']);
+check('monstrous: teeth picked once', S.picksUnder(mst, `${mo}.natural_attacks`).filter((p) => p.node?.name === 'teeth').length, 1);
 const [mfree, mfreeRec] = mtake('free_from_curse');
 pickW(mfreeRec, mfree, 0, '@pure_drive');
 mst = S.hunterState(m);
@@ -262,7 +273,7 @@ const msaved = toSaved(m);
 check('monstrous: saved features', msaved.computed.features.map((f) => [f.name, f.selected]), [
     ['Monster Breed', ['Originally human, transformed somehow', { ref: '@textbox', text: 'Evil until 1890' }]],
     ['Curse', ['@pure_drive']],
-    ['Natural Attacks', ['@bases.teeth', 'Add +1 harm to a base']],
+    ['Natural Attacks', ['@bases.teeth', '@extras.add_1_harm_to_a_base', '@extras.add_ignore_armour_to_a_base']],
     ['Haven', ['@oubliette', '@panic_room']],
 ]);
 check('monstrous: saved crossed curse', msaved.computed.features[1].crossed, ['@pure_drive']);
