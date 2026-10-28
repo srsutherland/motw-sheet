@@ -21,7 +21,7 @@ import { computed } from 'vue';
 import { useHunter, usePageText } from '@/HunterContext';
 import { gettingStartedRules } from '@/HunterState';
 import { lookup } from '@/PlaybookData';
-import ChooseRule from '../shared/ChooseRule.vue';
+import ChooseRule from './ChooseRule.vue';
 import MarkdownText from '../shared/MarkdownText.vue';
 
 const props = defineProps({

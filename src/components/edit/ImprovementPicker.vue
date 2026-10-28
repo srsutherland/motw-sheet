@@ -70,7 +70,7 @@ import {
     improvementLists, unspentImprovements,
 } from '@/HunterState';
 import ChooseRule from './ChooseRule.vue';
-import MarkdownText from './MarkdownText.vue';
+import MarkdownText from '../shared/MarkdownText.vue';
 
 const emit = defineEmits(['done']);
 

@@ -9,9 +9,9 @@ motw-sheet/
 ├── src/                      # The app (Vue 3)
 │   ├── components/           # Pages (one per route); their parts in subfolders
 │   │   ├── view/             # View page sections (tracks, ratings, moves, features...)
-│   │   ├── edit/             # Edit page sections
+│   │   ├── edit/             # Edit page sections; choosing, advancement
 │   │   ├── new/              # New hunter page: the playbook list
-│   │   └── shared/           # Used by more than one page
+│   │   └── shared/           # Generic building blocks (markdown text, details, popups)
 │   ├── App.vue               # Query-string router, autosave
 │   ├── Hunter.js             # Hunter class, schema version, record builders
 │   ├── HunterState.js        # Computed hunter state; editing choices; improvements
@@ -96,11 +96,11 @@ Deployment: GitHub Pages (see 6)
 
 - `App.vue`: router (`?new`, `?view={id}`, `?edit={id}`; GitHub Pages can't serve other paths), autosave, `provideHunter`
 - `ViewHunter.vue` + `view/`: view page; sections are `View*`; `Track.vue` is the generic box track (luck, harm, experience wrap it)
-- `EditHunter.vue` + `edit/`: edit page
+- `EditHunter.vue` + `edit/`: edit page, plus the editing parts the view page also uses
+   - `ChooseRule.vue`: renders any `choose` rule (options, limits, free text, nested choices)
+   - `AdvancementButton.vue` opens `ImprovementPicker.vue` (the Advancement dialog)
 - `ActionList.vue`: home page (saved hunters, import); `NewHunter.vue` + `new/`: new hunter page
-- `shared/`:
-   - `ChooseRule.vue`: renders any `choose` rule (options, limits, free text, nested choices); used by the edit page and the Advancement dialog
-   - `ImprovementPicker.vue` (Advancement dialog), `AdvancementButton.vue`, `HoverPopup.vue`, `MarkdownText.vue`, `MoveDetails.vue`
+- `shared/`: `MarkdownText.vue`, `MoveDetails.vue`, `HoverPopup.vue`
 
 #### Patterns
 

@@ -75,8 +75,8 @@ import {
     advancesBasicMoves, choiceSet, countOf, isText, overMax, pickRecord, refOf, setTextChoice,
     toggleChoice, verbOf,
 } from '@/HunterState';
-import MarkdownText from './MarkdownText.vue';
-import MoveDetails from './MoveDetails.vue';
+import MarkdownText from '../shared/MarkdownText.vue';
+import MoveDetails from '../shared/MoveDetails.vue';
 
 const props = defineProps({
     rule: { type: Object, required: true },
