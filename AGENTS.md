@@ -20,7 +20,7 @@ A character sheet app for *Monster of the Week* players (hunters, not Keepers): 
 
 ## Working with the maintainer
 
-- **Begin each reply with the current date.**
+- **Begin each reply with the current date.** (When tool calls split a turn into several text blocks, date the first and the final text block of the turn)
 - **Don't reverse a decision silently.** If `DESIGN.md`, the docs in `docs/`, or the code disagree, or you want to change something already decided, ask first. Several past mistakes were "followed the doc / my own idea without saying so".
 - **Several questions:** ask them as multiple-choice questions, one question per item (not one multi-select covering several).
 - **Describing a data shape:** include an abbreviated JSON example, ideally with real data (`samples/`).
