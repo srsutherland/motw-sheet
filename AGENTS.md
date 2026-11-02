@@ -30,6 +30,7 @@ A character sheet app for *Monster of the Week* players (hunters, not Keepers): 
 
 - **Don't present your own inventions as decided.** When documenting, new conventions go under a **Proposals** section, labelled as yours, until the maintainer agrees.
 - **Docs style:** terse lists and parentheticals, like the existing docs; record only what was decided, no extra detail. Tables: align the interior `|`s, don't pad the last column if it would bring it over ~80 chars.
+- **Format changes go in `schema/`.** Any change to the playbook or hunter JSON format (new keys, new verbs, new shapes) updates `schema/*.schema.json` in the same commit, so the maintainer can review format changes as schema diffs.
 - **Write for a cold reader.** Docs and comments state how things are, not how they got that way: avoid corrections, contrasts ("not X"), or traces of the conversation that prompted them. Test: would it read naturally to someone who never saw that conversation?
 
 ## Git
@@ -48,7 +49,7 @@ A character sheet app for *Monster of the Week* players (hunters, not Keepers): 
 ## Before committing
 
 - `npm run lint` (ESLint; it also fixes formatting) and `npm test`.
-- `npm test` = `test:engine` (data layer and hunter state, against the real JSON) + `test:e2e` (browser tests; drive an installed Edge, or `TEST_BROWSER=chrome`).
+- `npm test` = `test:engine` (data layer and hunter state, against the real JSON) + `test:schema` (data files against `schema/`) + `test:e2e` (browser tests; drive an installed Edge, or `TEST_BROWSER=chrome`).
 - `max-len` (100) skips any line containing a string (`ignoreStrings`), so check long lines yourself.
 - `git status` to check the current state of your working directory and staging area.
 

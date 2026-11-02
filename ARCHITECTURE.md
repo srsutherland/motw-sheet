@@ -29,6 +29,7 @@ motw-sheet/
 │   ├── md/                   # Reference transcription of the PDFs
 │   ├── html/                 # md rendered, to compare against the PDF
 │   └── scripts/              # PDF extraction, md -> html (Python)
+├── schema/                   # JSON Schemas (preliminary, descriptive): playbook, hunter, basic moves, common
 ├── samples/                  # Sample hunter files (used by tests)
 ├── tests/                    # Engine and browser tests
 ├── res/                      # Styles, font, icon
@@ -117,7 +118,7 @@ None: static site; everything runs in the browser.
 
 ## 4. Data Stores
 
-Formats: see `docs/Schema Notes.md`.
+Formats: `schema/` (JSON Schema, checked by `npm test`); background and decisions in `docs/Schema Notes.md`.
 
 ### 4.1. Playbook JSON
 
@@ -158,7 +159,7 @@ Monitoring & Logging: none
 
 Local Setup Instructions: see `README.md`
 
-Testing Frameworks: `tests/engine.test.mjs` (real modules through Vite's `ssrLoadModule`); `tests/e2e/` (Playwright via `playwright-core`, driving an installed Edge or Chrome; `run.mjs` starts and stops the dev server); `tests/check.mjs` (assertions)
+Testing Frameworks: `tests/engine.test.mjs` (real modules through Vite's `ssrLoadModule`); `tests/e2e/` (Playwright via `playwright-core`, driving an installed Edge or Chrome; `run.mjs` starts and stops the dev server); `tests/schema.test.mjs` (data files against `schema/`, with ajv); `tests/check.mjs` (assertions)
 
 Code Quality Tools: ESLint with `@stylistic` and `eslint-plugin-vue` (formatting included; no Prettier). See `AGENTS.md`
 

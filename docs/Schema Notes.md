@@ -1,4 +1,4 @@
-Working notes on the playbook data design (not a schema file). See `Playbook Survey.md` for what the 12 playbooks need, and `playbooks/the-spellslinger.json` for the Spell-Slinger written to these notes.
+Working notes on the playbook data design. The formats themselves, as JSON Schema: `schema/`. See `Playbook Survey.md` for what the 12 playbooks need, and `playbooks/the-spellslinger.json` for the Spell-Slinger written to these notes.
 
 Sections: **Decided** (with where it was decided), **Needs** (from the playbook data), **Proposals** (not yet discussed; don't treat as decided), **Open questions**.
 
