@@ -64,6 +64,8 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - "Bend the rules": temporary/debug for now; decide what it becomes
 - Better view and filter for "take a move from another playbook" choice picker
 - Need some way to add options to existing lists (for homebrew and bending the rules)
+- One component for an option's text ("**Name**: description (tags)"), now rendered separately in `ChooseRule`, `ViewFeature`, `Move` and `EditFeature`
+- `ViewMoves`: the moves section is still inline in `ViewHunter`; match `EditMoves` and the other `View*` sections
 
 # Minor
 
