@@ -37,6 +37,7 @@ A character sheet app for *Monster of the Week* players (hunters, not Keepers): 
 - Work on a feature branch off `main`. Push it; the maintainer reviews pushed branches.
 - `main` only moves by **fast-forward** (`git merge --ff-only`): no merge commits, no squashing. Rebase a branch onto `main` before it goes in. Where possible, also follow the same practice for feature branches.
 - Pushing `main` deploys the site (GitHub Pages).
+- `latest` points at the newest work: `main`, then each branch ahead of it in order, ending with the newest. After pushing work, force-move `latest` to it (`--force-with-lease`). Never merge, rebase or branch from `latest`.
 - Docs that *plan* (proposals, decisions, roadmap additions, design changes ahead of code) go on the `plan-docs` branch, rebased onto the relevant branch before you start and before it's merged. Docs that *record* a code change (renames, corrections, roadmap items the maintainer has called done) go with that change, in its commit or branch.
 - Group commits by concern (e.g. format change, UI fixes, docs). 
 - A formatting-only commit goes in `.git-blame-ignore-revs`.
