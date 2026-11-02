@@ -1,6 +1,6 @@
 Rough order of work. The schema grows out of building the Spell-Slinger; `Schema Notes.md` and `Playbook Survey.md` are for discussion along the way, not a spec to finish first.
 
-# 1. MVP
+# 1. MVP (completed)
 
 Status: built on `spellslinger-mvp` (2026-10-02), awaiting review. All six points below work and were checked in a browser.
 
@@ -37,9 +37,9 @@ Rough order:
 
 Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 
-# 2. After MVP
+# 2. Roadmap
 
-- A second playbook, picked to stress the schema (Expert, Monstrous, Chosen, or Wronged)
+- ~~A second playbook, picked to stress the schema (Expert, Monstrous, Chosen, or Wronged)~~
 - Draft the schema (soon)
    - JSON Schema files in `/schema/`: playbook, hunter, probably `common.schema.json`
    - A big comment on each: preliminary and descriptive, not prescriptive; changes if development needs it
@@ -53,8 +53,6 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - Remaining core playbooks
 - Basic move popups (needs basic rules JSON)
 - List of playbooks ordered by book release date, then alphabetically
-- Responsive columns (DESIGN.md)
-- Replace `confirm`/`alert` in `ActionList.vue`, `Storage.js`, and leveling down
 - Reconcile `DESIGN.md` with what shipped
 - Pick the app name
 - Hunter name buttons (DESIGN.md): currently Edit and Export icons inside the title
@@ -62,12 +60,17 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
    - Export as a popup (now a direct download)
    - Add a Share button
 - History: the other hunter picks from *their* playbook how they know you (DESIGN.md); needs their playbook's history list
-- Rating colors: check them in light and dark mode
 - `computed.moves`: a `source` on each move (which level / improvement it came from); `h.moves` is display-only for now
 - "Bend the rules": temporary/debug for now; decide what it becomes
-- Tests in the deploy pipeline
 - Better view and filter for "take a move from another playbook" choice picker
 - Need some way to add options to existing lists (for homebrew and bending the rules)
+
+# Minor
+
+- Replace `confirm`/`alert` in `ActionList.vue`, `Storage.js`, and leveling down
+- Responsive columns (DESIGN.md)
+- Tests in the deploy pipeline
+- Rating colors: check them in light and dark mode
 
 # Later
 
