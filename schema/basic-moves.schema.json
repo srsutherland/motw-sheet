@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "basic-moves.schema.json",
+  "title": "Basic moves",
+  "description": "PRELIMINARY. Describes playbooks/basic_moves.json as the app uses it today; it changes whenever development needs it. Background: docs/Schema Notes.md (\"Other content\"). Every hunter has these moves; referenced as `@basic_moves...`.",
+  "type": "object",
+  "properties": {
+    "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "updated": { "$ref": "common.schema.json#/$defs/date" },
+    "id": { "const": "basic_moves" },
+    "type": { "const": "basic_moves" },
+    "name": { "type": "string" },
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "type": { "const": "basic_move" },
+          "name": { "type": "string" },
+          "rating": { "$ref": "common.schema.json#/$defs/rating" },
+          "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
+          "options": {
+            "description": "Use magic's effects (Practitioner picks from them).",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "$ref": "common.schema.json#/$defs/id" },
+                "description": { "$ref": "common.schema.json#/$defs/markdown" }
+              },
+              "required": ["id", "description"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["type", "name", "rating"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["schema_version", "updated", "id", "type", "name", "options"],
+  "additionalProperties": false
+}

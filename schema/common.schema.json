@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "common.schema.json",
+  "title": "Common definitions",
+  "description": "PRELIMINARY. Describes the formats as the app uses them today; it isn't a spec to design against, and it changes whenever development needs it. Background and decisions: docs/Schema Notes.md. Shared by playbook.schema.json, basic-moves.schema.json and hunter.schema.json.",
+  "$defs": {
+    "id": {
+      "description": "An id: lowercase, digits, underscores. Usually left out: auto-assigned from `name` (\"Could've Been Worse\" -> couldve_been_worse).",
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "reference": {
+      "description": "A reference: `@` + a path of ids. Root-relative unless the first segment is a file id (`@basic_moves.use_magic.heal`, `@the_expert.haven`). Special: `@this` (the object it's written in), `@textbox` (free text), `@*.moves` (that list in every other playbook), `@...` (in an on_edit / on_view array: the object's own value), `@.name` (escape hatch for a relative name that collides with a file id).",
+      "type": "string",
+      "pattern": "^@(this|textbox|\\.\\.\\.|\\*\\.[a-z0-9_]+(\\.[a-z0-9_]+)*|\\.?[a-z0-9_]+(\\.[a-z0-9_]+)*)$"
+    },
+    "plainText": {
+      "description": "A plain value, not a reference: anything not starting with `@` (a plain-string option, a look option, a history option).",
+      "type": "string",
+      "pattern": "^[^@]"
+    },
+    "markdown": {
+      "description": "Display text: a markdown subset plus [[wikilinks]] and <span class='...'> (src/Markdown.js).",
+      "type": "string"
+    },
+    "paragraphs": {
+      "description": "One paragraph as a string, or several as an array of strings.",
+      "oneOf": [
+        { "$ref": "#/$defs/markdown" },
+        { "type": "array", "items": { "$ref": "#/$defs/markdown" }, "minItems": 1 }
+      ]
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "schemaVersion": {
+      "description": "0.1.yyyy.mm.dd: the date of the last breaking change, plus .1, .2... if it breaks again on a day it was already pushed.",
+      "type": "string",
+      "pattern": "^0\\.1\\.\\d{4}\\.\\d{2}\\.\\d{2}(\\.\\d+)?$"
+    },
+    "rating": {
+      "enum": ["charm", "cool", "sharp", "tough", "weird"]
+    },
+    "ratings": {
+      "description": "A ratings line: one value per rating.",
+      "type": "object",
+      "properties": {
+        "charm": { "type": "integer" },
+        "cool": { "type": "integer" },
+        "sharp": { "type": "integer" },
+        "tough": { "type": "integer" },
+        "weird": { "type": "integer" }
+      },
+      "required": ["charm", "cool", "sharp", "tough", "weird"],
+      "additionalProperties": false
+    },
+    "tags": {
+      "description": "Gear and attack tags, one word each: \"2-harm\", \"close\", \"+1-armour\".",
+      "type": "array",
+      "items": { "type": "string", "pattern": "^\\S+$" }
+    },
+    "chooseRule": {
+      "description": "One `choose` rule: where to choose from (`from`, default `@this`) and exactly one verb with its count. pick: add it; cross: strike it out, still visible; remove: undo an earlier pick; attach: attach this option to one of your picks, without picking it again. `min` (default: the count) allows fewer; `limits` sets min / max per sub-list.",
+      "type": "object",
+      "properties": {
+        "from": { "$ref": "#/$defs/reference" },
+        "pick": { "type": "integer", "minimum": 1 },
+        "cross": { "type": "integer", "minimum": 1 },
+        "remove": { "type": "integer", "minimum": 1 },
+        "attach": { "type": "integer", "minimum": 1 },
+        "min": { "type": "integer", "minimum": 0 },
+        "limits": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/reference" },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "min": { "type": "integer", "minimum": 0 },
+              "max": { "type": "integer", "minimum": 0 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "oneOf": [
+        { "required": ["pick"] },
+        { "required": ["cross"] },
+        { "required": ["remove"] },
+        { "required": ["attach"] }
+      ],
+      "additionalProperties": false
+    },
+    "choose": {
+      "description": "One rule, or several (improvements that do more than one thing).",
+      "oneOf": [
+        { "$ref": "#/$defs/chooseRule" },
+        { "type": "array", "items": { "$ref": "#/$defs/chooseRule" }, "minItems": 1 }
+      ]
+    },
+    "grant": {
+      "description": "What you gain outright: a reference or several. Granting a list grants everything in it.",
+      "oneOf": [
+        { "$ref": "#/$defs/reference" },
+        { "type": "array", "items": { "$ref": "#/$defs/reference" } }
+      ]
+    },
+    "effect": {
+      "description": "A fixed effect: a rating change (respecting `max`), luck (one-off, when taken), or marking this object's picks of basic moves as advanced.",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "rating": { "$ref": "#/$defs/rating" },
+            "add": { "type": "integer" },
+            "max": { "type": "integer" }
+          },
+          "required": ["rating", "add"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": { "luck": { "type": "integer" } },
+          "required": ["luck"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": { "advance_basic": { "const": true } },
+          "required": ["advance_basic"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "details": {
+      "description": "Display-only sub-items, chosen during play rather than when building the hunter (Could've Been Worse's options, Dark Past's questions).",
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/markdown" },
+          {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "$ref": "#/$defs/markdown" }
+            },
+            "required": ["name", "description"],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "pageOverride": {
+      "description": "on_edit / on_view: keys that replace the object's own on that page. In an array, `@...` stands for the object's own value.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "$ref": "#/$defs/paragraphs" },
+        "heading": { "$ref": "#/$defs/markdown" },
+        "details": { "$ref": "#/$defs/details" }
+      },
+      "additionalProperties": false,
+      "minProperties": 1
+    }
+  }
+}

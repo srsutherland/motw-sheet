@@ -3,6 +3,7 @@
 import { reactive } from 'vue';
 import { createServer } from 'vite';
 import { check, finish } from './check.mjs';
+import { validate } from './schema.mjs';
 
 const server = await createServer({
     server: { middlewareMode: true },
@@ -277,5 +278,13 @@ check('monstrous: saved features', msaved.computed.features.map((f) => [f.name, 
     ['Haven', ['@oubliette', '@panic_room']],
 ]);
 check('monstrous: saved crossed curse', msaved.computed.features[1].crossed, ['@pure_drive']);
+
+// Saved hunters against schema/hunter.schema.json: fresh ones, and the ones built above
+for (const playbook of playbooks) {
+    check(`schema: new ${playbook.name}`, validate('hunter.schema.json', toSaved(new Hunter(playbook, 'New'))), []);
+}
+for (const [label, hunter] of [['Spell-Slinger', h], ['Expert', e], ['Monstrous', m]]) {
+    check(`schema: built ${label}`, validate('hunter.schema.json', JSON.parse(JSON.stringify(toSaved(hunter)))), []);
+}
 await server.close();
 finish();

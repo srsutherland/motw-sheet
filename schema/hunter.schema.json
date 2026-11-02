@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hunter.schema.json",
+  "title": "Hunter",
+  "description": "PRELIMINARY. Describes a saved hunter (localStorage or an exported file) as the app writes it today; it changes whenever development needs it. Background and decisions: docs/Schema Notes.md (\"Hunter JSON\"). The hunter stores choices and plain values; ratings, moves, gear and features are computed by replaying getting_started, then each improvement in the order taken. Only this exact schema_version loads; other versions are \"old format\".",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "description": "src/Hunter.js: SCHEMA_VERSION.",
+      "const": "0.1.2026.10.16"
+    },
+    "uid": { "type": "string", "minLength": 1 },
+    "created": {
+      "description": "Empty if unknown (hunters converted from older formats).",
+      "anyOf": [{ "$ref": "#/$defs/timestamp" }, { "const": "" }]
+    },
+    "updated": { "description": "Added when saved.", "$ref": "#/$defs/timestamp" },
+    "playbook_name": { "type": "string" },
+    "playbook_updated": {
+      "description": "The playbook's `updated` date when this hunter was made.",
+      "anyOf": [{ "$ref": "common.schema.json#/$defs/date" }, { "const": "" }]
+    },
+    "name": { "type": "string" },
+    "pronouns": { "type": "string" },
+    "look": {
+      "description": "Look list key -> the pick, or what was written in.",
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "ratings_base": {
+      "description": "A copy of the chosen ratings line.",
+      "anyOf": [{ "$ref": "common.schema.json#/$defs/ratings" }, { "type": "null" }]
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "option": { "type": "string" },
+          "notes": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "getting_started": {
+      "description": "Mirrors the playbook's getting_started: a record per grant, and the choices for its choose rule(s).",
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/choices" }],
+      "properties": {
+        "grant": { "type": "array", "items": { "$ref": "#/$defs/record" } }
+      },
+      "required": ["grant"],
+      "unevaluatedProperties": false
+    },
+    "improvements": {
+      "description": "In the order taken.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/record" }
+    },
+    "extra_gear": {
+      "description": "Gear added during play.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "tags": { "$ref": "common.schema.json#/$defs/tags" }
+        },
+        "required": ["name", "tags"],
+        "additionalProperties": false
+      }
+    },
+    "harm": { "type": "integer", "minimum": 0 },
+    "unstable": { "type": "boolean" },
+    "luck_used": { "type": "integer", "minimum": 0 },
+    "experience": { "type": "integer", "minimum": 0 },
+    "level": { "type": "integer", "minimum": 0 },
+    "computed": { "$ref": "#/$defs/computed" },
+    "playbook": {
+      "description": "The hunter's own copy of its playbook (\"full\" format); saved last.",
+      "$ref": "playbook.schema.json"
+    }
+  },
+  "required": [
+    "schema_version", "uid", "created", "playbook_name", "name", "look", "ratings_base",
+    "history", "getting_started", "improvements", "extra_gear", "harm", "unstable",
+    "luck_used", "experience", "level", "playbook"
+  ],
+  "additionalProperties": false,
+
+  "$defs": {
+    "timestamp": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T"
+    },
+    "choices": {
+      "description": "The hunter's side of an object's choose rule(s). One rule: `chosen` directly. Several: `choose`, mirroring the playbook (the nth rule with a given `from` goes with the nth entry with that `from`). No rules: neither.",
+      "type": "object",
+      "properties": {
+        "chosen": { "type": "array", "items": { "$ref": "#/$defs/choice" } },
+        "choose": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": { "$ref": "common.schema.json#/$defs/reference" },
+              "chosen": { "type": "array", "items": { "$ref": "#/$defs/choice" } }
+            },
+            "required": ["from", "chosen"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "not": { "required": ["chosen", "choose"] }
+    },
+    "choice": {
+      "description": "One choice, written relative to the container it's chosen from (`@bases.blast`), as written there if the option is itself a reference (`@basic_moves.use_magic.heal`), or absolute for another playbook (`@the_spellslinger.moves.practitioner`). A plain-string option is stored as written. Free text: { ref: \"@textbox\", text }. A choice with its own choices: { ref, chosen } / { ref, choose }.",
+      "anyOf": [
+        { "$ref": "common.schema.json#/$defs/reference" },
+        { "$ref": "common.schema.json#/$defs/plainText" },
+        { "$ref": "#/$defs/textChoice" },
+        { "$ref": "#/$defs/record" }
+      ]
+    },
+    "textChoice": {
+      "type": "object",
+      "properties": {
+        "ref": { "const": "@textbox" },
+        "text": { "type": "string", "minLength": 1 }
+      },
+      "required": ["ref", "text"],
+      "additionalProperties": false
+    },
+    "record": {
+      "description": "The hunter's side of a playbook object (a grant, an improvement, a pick with its own choices). Just its reference when nothing's attached; otherwise { ref, ... }. Improvements: root-relative (`@improvements.weird`); `cost` if it cost more than 1; `pending` while being picked (dropped on load).",
+      "anyOf": [
+        { "$ref": "common.schema.json#/$defs/reference" },
+        {
+          "type": "object",
+          "allOf": [{ "$ref": "#/$defs/choices" }],
+          "properties": {
+            "ref": { "$ref": "common.schema.json#/$defs/reference" },
+            "cost": { "type": "integer", "minimum": 1 },
+            "pending": { "const": true }
+          },
+          "required": ["ref"],
+          "unevaluatedProperties": false
+        }
+      ]
+    },
+    "computed": {
+      "description": "What the sheet shows, for readers of the file; ignored on load. Moves and features are copies of the playbook objects, plus `selected` (picked from their options, written like `chosen`) and `crossed`.",
+      "type": "object",
+      "properties": {
+        "ratings": { "$ref": "common.schema.json#/$defs/ratings" },
+        "moves": { "type": "array", "items": { "$ref": "#/$defs/computedItem" } },
+        "gear": { "type": "array", "items": { "type": "object" } },
+        "features": { "type": "array", "items": { "$ref": "#/$defs/computedItem" } }
+      },
+      "required": ["ratings", "moves", "gear", "features"],
+      "additionalProperties": false
+    },
+    "computedItem": {
+      "type": "object",
+      "properties": {
+        "selected": { "type": "array", "items": { "$ref": "#/$defs/choice" } },
+        "crossed": { "type": "array", "items": { "$ref": "#/$defs/choice" } }
+      }
+    }
+  }
+}

@@ -8,8 +8,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --fix --cache",
-    "test": "npm run test:engine && npm run test:e2e",
+    "test": "npm run test:engine && npm run test:schema && npm run test:e2e",
     "test:engine": "node tests/engine.test.mjs",
+    "test:schema": "node tests/schema.test.mjs",
     "test:e2e": "node tests/e2e/run.mjs"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
     "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@vitejs/plugin-vue": "^6.0.9",
+    "ajv": "^8.20.0",
     "eslint": "^10.11.0",
     "eslint-plugin-vue": "^10.11.0",
     "globals": "^17.12.0",

@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "playbook.schema.json",
+  "title": "Playbook",
+  "description": "PRELIMINARY. Describes playbooks/the-*.json as the app uses them today; it isn't a spec to design against, and it changes whenever development needs it. Background and decisions: docs/Schema Notes.md. A hunter file carries its own copy of its playbook in this format.",
+  "type": "object",
+  "properties": {
+    "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "updated": { "$ref": "common.schema.json#/$defs/date" },
+    "id": {
+      "description": "The file id: absolute references start with it (`@the_expert.haven`).",
+      "type": "string",
+      "pattern": "^the_[a-z0-9_]+$"
+    },
+    "type": { "const": "playbook" },
+    "name": { "type": "string" },
+    "emoji": { "type": "string" },
+    "quote": { "$ref": "common.schema.json#/$defs/markdown" },
+    "luck": {
+      "type": "object",
+      "properties": {
+        "max": { "type": "integer", "minimum": 1 },
+        "special": { "$ref": "common.schema.json#/$defs/markdown" }
+      },
+      "required": ["max", "special"],
+      "additionalProperties": false
+    },
+    "harm": {
+      "type": "object",
+      "properties": {
+        "max": { "type": "integer", "minimum": 1 },
+        "unstable": { "description": "Harm at which wounds become unstable.", "type": "integer", "minimum": 1 }
+      },
+      "required": ["max", "unstable"],
+      "additionalProperties": false
+    },
+    "pre_moves": {
+      "description": "Features shown before the moves (Combat Magic, Monster Breed).",
+      "type": "array",
+      "items": { "$ref": "#/$defs/feature" }
+    },
+    "moves": { "$ref": "#/$defs/moveList" },
+    "post_moves": {
+      "description": "Features shown after the moves (Haven).",
+      "type": "array",
+      "items": { "$ref": "#/$defs/feature" }
+    },
+    "starting_gear": { "$ref": "#/$defs/gearList" },
+    "getting_started": { "$ref": "#/$defs/gettingStarted" },
+    "look": { "$ref": "#/$defs/look" },
+    "ratings_base": {
+      "type": "object",
+      "properties": {
+        "heading": { "type": "string" },
+        "options": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/ratings" }, "minItems": 1 }
+      },
+      "required": ["options"],
+      "additionalProperties": false
+    },
+    "introductions": { "$ref": "#/$defs/text" },
+    "history": {
+      "description": "Plain values: pre-fills the hunter can edit freely.",
+      "type": "object",
+      "properties": {
+        "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
+        "options": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/plainText" } }
+      },
+      "required": ["options"],
+      "additionalProperties": false
+    },
+    "leveling_up": { "$ref": "#/$defs/text" },
+    "improvements": { "$ref": "#/$defs/improvementList" },
+    "improvements_advanced": { "$ref": "#/$defs/improvementList" },
+    "improvements_mythic": {
+      "description": "Homebrew: not on the paper playbook.",
+      "$ref": "#/$defs/improvementList"
+    }
+  },
+  "required": [
+    "schema_version", "updated", "id", "type", "name", "luck", "harm", "moves",
+    "starting_gear", "getting_started", "look", "ratings_base", "history", "improvements"
+  ],
+  "additionalProperties": false,
+
+  "$defs": {
+    "text": {
+      "type": "object",
+      "properties": { "description": { "$ref": "common.schema.json#/$defs/paragraphs" } },
+      "required": ["description"],
+      "additionalProperties": false
+    },
+    "option": {
+      "description": "An entry in `options`: a reference (`@basic_moves.use_magic.heal`, `@textbox`), a plain string (stored as written), or an object.",
+      "anyOf": [
+        { "$ref": "common.schema.json#/$defs/reference" },
+        { "$ref": "common.schema.json#/$defs/plainText" },
+        { "$ref": "#/$defs/node" }
+      ]
+    },
+    "node": {
+      "description": "A playbook object. Its `type` says where it goes when gained (move, gear, feature); options inside a feature or move usually have none. An untyped object with `options` and no `choose` is a sub-list (Combat Magic's bases): its options are offered with the container's, grouped. With its own `choose`, it's an option with its own choice (Pure Drive's emotion).",
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "type": { "enum": ["move", "gear", "feature"] },
+        "name": { "type": "string" },
+        "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
+        "heading": { "$ref": "common.schema.json#/$defs/markdown" },
+        "tags": { "$ref": "common.schema.json#/$defs/tags" },
+        "options": { "type": "array", "items": { "$ref": "#/$defs/option" } },
+        "choose": { "$ref": "common.schema.json#/$defs/choose" },
+        "effects": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/effect" } },
+        "details": { "$ref": "common.schema.json#/$defs/details" },
+        "on_edit": { "$ref": "common.schema.json#/$defs/pageOverride" },
+        "on_view": { "$ref": "common.schema.json#/$defs/pageOverride" }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        { "required": ["id"] },
+        { "required": ["name"] },
+        { "required": ["description"] }
+      ]
+    },
+    "feature": {
+      "description": "A playbook-specific section that isn't a move (Combat Magic, Haven, Curse). Its options are chosen in getting_started (or improvements) and shown inside it.",
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/node" }],
+      "properties": { "type": { "const": "feature" } },
+      "required": ["type", "name"]
+    },
+    "move": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/node" }],
+      "properties": { "type": { "const": "move" } },
+      "required": ["type", "name", "description"]
+    },
+    "gear": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/node" }],
+      "properties": { "type": { "const": "gear" } },
+      "required": ["type", "name", "tags"]
+    },
+    "moveList": {
+      "type": "object",
+      "properties": {
+        "id": { "const": "moves" },
+        "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
+        "options": { "type": "array", "items": { "$ref": "#/$defs/move" } }
+      },
+      "required": ["id", "options"],
+      "additionalProperties": false
+    },
+    "gearList": {
+      "type": "object",
+      "properties": {
+        "id": { "const": "starting_gear" },
+        "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
+        "heading": { "$ref": "common.schema.json#/$defs/markdown" },
+        "options": { "type": "array", "items": { "$ref": "#/$defs/gear" } }
+      },
+      "required": ["id", "options"],
+      "additionalProperties": false
+    },
+    "gettingStarted": {
+      "description": "Character creation, in the same shape as an improvement: what you're granted, and the choices you make. Look, ratings and history aren't in it. Every hunter has the basic moves without a grant.",
+      "type": "object",
+      "properties": {
+        "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
+        "grant": { "$ref": "common.schema.json#/$defs/grant" },
+        "choose": { "$ref": "common.schema.json#/$defs/choose" }
+      },
+      "additionalProperties": false
+    },
+    "look": {
+      "description": "Lists to pick one from each, keyed by what they describe (clothes, eyes, aura...).",
+      "type": "object",
+      "properties": {
+        "heading": { "type": "string" }
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "format": {
+            "description": "How the pick reads on the sheet: `___` stands for it (\"___ clothes\").",
+            "type": "string",
+            "pattern": "___"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                { "$ref": "common.schema.json#/$defs/plainText" },
+                { "const": "@textbox" }
+              ]
+            }
+          }
+        },
+        "required": ["format", "options"],
+        "additionalProperties": false
+      }
+    },
+    "improvementList": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
+        "requires": {
+          "description": "When the list unlocks. level: level ups completed before the one being spent; improvements: improvements taken.",
+          "type": "object",
+          "properties": {
+            "level": { "type": "integer", "minimum": 0 },
+            "improvements": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "cost": {
+          "description": "Improvements each one costs (mythic: 2).",
+          "type": "integer",
+          "minimum": 1
+        },
+        "options": { "type": "array", "items": { "$ref": "#/$defs/improvement" } }
+      },
+      "required": ["id", "options"],
+      "additionalProperties": false
+    },
+    "improvement": {
+      "description": "Ids are explicit and unique across all improvement lists (mythic ones prefixed mythic_). `special`: recorded only (change playbook, second hunter, retire...).",
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "type": { "const": "improvement" },
+        "description": { "$ref": "common.schema.json#/$defs/markdown" },
+        "grant": { "$ref": "common.schema.json#/$defs/grant" },
+        "choose": { "$ref": "common.schema.json#/$defs/choose" },
+        "effects": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/effect" } },
+        "special": { "type": "string", "pattern": "^[a-z_]+$" },
+        "cost": { "type": "integer", "minimum": 1 },
+        "options": {
+          "description": "Its own options, for `choose` without `from` (\"+1 to any rating\": one per rating).",
+          "type": "array",
+          "items": { "$ref": "#/$defs/option" }
+        }
+      },
+      "required": ["id", "type", "description"],
+      "additionalProperties": false
+    }
+  }
+}
