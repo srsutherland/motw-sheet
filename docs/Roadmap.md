@@ -71,6 +71,8 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - Responsive columns (DESIGN.md)
 - Tests in the deploy pipeline
 - Rating colors: check them in light and dark mode
+- Monstrous: Monster Breed's layout on the view page needs a design
+- Monstrous: natural attack extras show the sheet's full wording on their base ("teeth (3-harm intimate) (Add +1 harm to a base)"); maybe a shorter `on_view` text
 
 # Later
 
@@ -90,3 +92,5 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - `[[wikilinks]]` render as dotted-underline text, no popup yet
 - A hunter's playbook copy is indexed once; editing the copy (it's meant to be modifiable) won't re-index it. Nothing edits it yet.
 - ESLint `max-len` with `ignoreStrings` skips any line that contains a string, so most long lines aren't reported
+- Look (edit page): a write-your-own entry clears when its radio is selected again
+- Look (edit page): no browser test for selecting write-your-own's radio while its field is empty
