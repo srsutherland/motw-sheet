@@ -45,6 +45,7 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
    - A big comment on each: preliminary and descriptive, not prescriptive; changes if development needs it
    - `npm run validate` (ajv) if it's worth it
 - Settle the schema (after the second playbook)
+   - What "optional" means: a liberal loader vs the schema's "proper" shape; some notation for the difference
 - Discuss moving some logic to the model (mirror the schema in code)
    - e.g. define node interface, then move some of the parsing/export logic there?
    - Node types like "choices", "options", etc following the schema
@@ -69,6 +70,8 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 
 # Minor
 
+- Decide which keys `on_edit` / `on_view` may override (the schema allows `name`, `description`, `heading`, `details` for now)
+- Starting gear's `heading` ("Pick one:", "Monster-slaying weapons (pick three):") isn't shown on the edit page
 - Replace `confirm`/`alert` in `ActionList.vue`, `Storage.js`, and leveling down
 - Responsive columns (DESIGN.md)
 - Tests in the deploy pipeline
