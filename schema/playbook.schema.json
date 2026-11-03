@@ -99,7 +99,7 @@
       ]
     },
     "node": {
-      "description": "A playbook object. Its `type` says where it goes when gained (move, gear, feature); options inside a feature or move usually have none. An untyped object with `options` and no `choose` is a sub-list (Combat Magic's bases): its options are offered with the container's, grouped. With its own `choose`, it's an option with its own choice (Pure Drive's emotion).",
+      "description": "A playbook object. Its `type` says where it goes when gained (move, gear, feature); options inside a feature or move usually have none. An untyped object with `options` and no `choose` is a sub-list (Combat Magic's bases): its options are offered with the container's, grouped. With its own `choose`, it's an option with its own choice (Pure Drive's emotion). It needs an `id`, or a `name` to make one from: choices are stored by path.",
       "type": "object",
       "properties": {
         "id": { "$ref": "common.schema.json#/$defs/id" },
@@ -118,8 +118,7 @@
       "additionalProperties": false,
       "anyOf": [
         { "required": ["id"] },
-        { "required": ["name"] },
-        { "required": ["description"] }
+        { "required": ["name"] }
       ]
     },
     "feature": {
