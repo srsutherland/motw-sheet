@@ -29,7 +29,7 @@ motw-sheet/
 │   ├── md/                   # Reference transcription of the PDFs
 │   ├── html/                 # md rendered, to compare against the PDF
 │   └── scripts/              # PDF extraction, md -> html (Python)
-├── schema/                   # JSON Schemas (preliminary, descriptive): playbook, hunter, basic moves, common
+├── schema/                   # JSON Schemas
 ├── samples/                  # Sample hunter files (used by tests)
 ├── tests/                    # Engine and browser tests
 ├── res/                      # Styles, font, icon
