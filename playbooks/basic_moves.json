@@ -1,4 +1,5 @@
 {
+  "$schema": "../schema/basic-moves.schema.json",
   "schema_version": "0.1.2026.10.02",
   "updated": "2026-10-02",
   "id": "basic_moves",

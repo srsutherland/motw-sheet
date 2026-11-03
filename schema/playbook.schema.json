@@ -3,9 +3,9 @@
   "$id": "playbook.schema.json",
   "title": "Playbook",
   "$comment": "PRELIMINARY. Describes the format as the app uses it today; it isn't a spec to design against, and it changes whenever development needs it. Background and decisions: docs/Schema Notes.md.",
-  "description": "A hunter file carries its own copy of its playbook in this format.",
   "type": "object",
   "properties": {
+    "$schema": { "description": "This file's schema, for editors.", "type": "string" },
     "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
     "updated": { "$ref": "common.schema.json#/$defs/date" },
     "id": {
@@ -122,7 +122,7 @@
       ]
     },
     "feature": {
-      "description": "A playbook-specific section that isn't a move (Combat Magic, Haven, Curse). Its options are chosen in getting_started (or improvements) and shown inside it.",
+      "description": "A playbook-specific section that isn't a move (Combat Magic, Haven, Curse).",
       "type": "object",
       "allOf": [{ "$ref": "#/$defs/node" }],
       "properties": { "type": { "const": "feature" } },
@@ -162,7 +162,7 @@
       "additionalProperties": false
     },
     "gettingStarted": {
-      "description": "Character creation, in the same shape as an improvement: what you're granted, and the choices you make. Look, ratings and history aren't in it. Every hunter has the basic moves without a grant.",
+      "description": "Character creation: what you're granted and the choices you make, in the same shape as an improvement.",
       "type": "object",
       "properties": {
         "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
@@ -190,7 +190,7 @@
             "items": {
               "anyOf": [
                 { "$ref": "common.schema.json#/$defs/plainText" },
-                { "const": "@textbox" }
+                { "$ref": "common.schema.json#/$defs/refTextbox" }
               ]
             }
           }
@@ -214,7 +214,7 @@
           "additionalProperties": false
         },
         "cost": {
-          "description": "Improvements each one costs (mythic: 2).",
+          "description": "Improvements each one costs.",
           "type": "integer",
           "minimum": 1
         },
@@ -224,7 +224,7 @@
       "additionalProperties": false
     },
     "improvement": {
-      "description": "Ids are explicit and unique across all improvement lists (mythic ones prefixed mythic_). `special`: recorded only (change playbook, second hunter, retire...).",
+      "description": "Ids are explicit and unique across all improvement lists (mythic ones prefixed mythic_).",
       "type": "object",
       "properties": {
         "id": { "$ref": "common.schema.json#/$defs/id" },
@@ -236,7 +236,7 @@
         "special": { "enum": ["change_playbook", "second_hunter", "retire", "turn_evil"] },
         "cost": { "type": "integer", "minimum": 1 },
         "options": {
-          "description": "Its own options, for `choose` without `from` (\"+1 to any rating\": one per rating).",
+          "description": "Its own options (\"+1 to any rating\": one per rating).",
           "type": "array",
           "items": { "$ref": "#/$defs/option" }
         }

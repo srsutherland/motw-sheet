@@ -21,6 +21,7 @@ const h = new Hunter(spellslinger, 'Alice');
 const pb = h.playbook;
 const sp = 'the_spellslinger';
 check('copy, not shared', h.playbook !== spellslinger, true);
+check('copy without the file\'s $schema', ['$schema' in spellslinger, '$schema' in h.playbook], [true, false]);
 check('getting_started mirrors the playbook', h.getting_started.choose.map((c) => c.from), ['@combat_magic', '@moves', '@starting_gear']);
 check('granted records', h.getting_started.grant, [{ ref: '@moves.tools_and_techniques', chosen: [] }]);
 check('version', h.schema_version, '0.1.2026.10.16');

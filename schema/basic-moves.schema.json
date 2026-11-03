@@ -3,9 +3,10 @@
   "$id": "basic-moves.schema.json",
   "title": "Basic moves",
   "$comment": "PRELIMINARY. Describes the format as the app uses it today; it isn't a spec to design against, and it changes whenever development needs it. Background and decisions: docs/Schema Notes.md.",
-  "description": "playbooks/basic_moves.json. Every hunter has these moves; referenced as `@basic_moves...` (docs/Schema Notes.md: \"Other content\").",
+  "description": "The moves every hunter has.",
   "type": "object",
   "properties": {
+    "$schema": { "description": "This file's schema, for editors.", "type": "string" },
     "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
     "updated": { "$ref": "common.schema.json#/$defs/date" },
     "id": { "const": "basic_moves" },
@@ -22,7 +23,7 @@
           "rating": { "$ref": "common.schema.json#/$defs/rating" },
           "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
           "options": {
-            "description": "Use magic's effects (Practitioner picks from them).",
+            "description": "Use magic's effects.",
             "type": "array",
             "items": {
               "type": "object",

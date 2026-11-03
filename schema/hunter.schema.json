@@ -3,16 +3,14 @@
   "$id": "hunter.schema.json",
   "title": "Hunter",
   "$comment": "PRELIMINARY. Describes the format as the app uses it today; it isn't a spec to design against, and it changes whenever development needs it. Background and decisions: docs/Schema Notes.md.",
-  "description": "A saved hunter (docs/Schema Notes.md: \"Hunter JSON\"). It stores choices and plain values; ratings, moves, gear and features are computed by replaying getting_started, then each improvement in the order taken. Only this exact schema_version loads; other versions are \"old format\".",
+  "description": "Choices and plain values; ratings, moves, gear and features follow from replaying getting_started, then each improvement in the order taken.",
   "type": "object",
   "properties": {
-    "schema_version": {
-      "description": "src/Hunter.js: SCHEMA_VERSION.",
-      "const": "0.1.2026.10.16"
-    },
+    "$schema": { "description": "This file's schema, for editors.", "type": "string" },
+    "schema_version": { "const": "0.1.2026.10.16" },
     "uid": { "type": "string", "minLength": 1 },
     "created": { "$ref": "#/$defs/timestamp" },
-    "updated": { "description": "Added when saved.", "$ref": "#/$defs/timestamp" },
+    "updated": { "description": "When last saved.", "$ref": "#/$defs/timestamp" },
     "playbook_name": { "type": "string" },
     "playbook_updated": {
       "description": "The playbook's `updated` date when this hunter was made.",
@@ -76,7 +74,7 @@
     "level": { "type": "integer", "minimum": 0 },
     "computed": { "$ref": "#/$defs/computed" },
     "playbook": {
-      "description": "The hunter's own copy of its playbook (\"full\" format); saved last.",
+      "description": "The hunter's own copy of its playbook (\"full\" format).",
       "$ref": "playbook.schema.json"
     }
   },
@@ -131,7 +129,7 @@
       "additionalProperties": false
     },
     "record": {
-      "description": "The hunter's side of a playbook object (a grant, an improvement, a pick with its own choices). Just its reference when nothing's attached; otherwise { ref, ... }. Improvements: root-relative (`@improvements.weird`); `cost` if it cost more than 1; `pending` while being picked (dropped on load).",
+      "description": "The hunter's side of a playbook object (a grant, an improvement, a pick with its own choices). Just its reference when nothing's attached; otherwise { ref, ... }. Improvements: root-relative (`@improvements.weird`); `cost` if it cost more than 1; `pending` while being picked.",
       "anyOf": [
         { "$ref": "common.schema.json#/$defs/reference" },
         {
@@ -148,7 +146,7 @@
       ]
     },
     "computed": {
-      "description": "What the sheet shows, for readers of the file; ignored on load. Moves and features are copies of the playbook objects, plus `selected` (picked from their options, written like `chosen`) and `crossed`.",
+      "description": "What the sheet shows, derived from the rest; not authoritative. Moves and features are copies of the playbook objects, plus `selected` (picked from their options, written like `chosen`) and `crossed`.",
       "type": "object",
       "properties": {
         "ratings": { "$ref": "common.schema.json#/$defs/ratings" },

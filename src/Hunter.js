@@ -58,7 +58,9 @@ class Hunter {
     constructor(playbook, name) {
         this.uid = crypto.randomUUID();
         this.created = new Date().toISOString();
-        this.playbook = structuredClone(playbook);
+        // its own copy, without the playbook file's $schema (a path relative to that file)
+        const { $schema, ...copy } = playbook; // eslint-disable-line no-unused-vars
+        this.playbook = structuredClone(copy);
         this.playbook_name = playbook.name;
         this.playbook_updated = playbook.updated ?? '';
         if (name) {
@@ -76,8 +78,8 @@ class Hunter {
         if (data?.schema_version !== SCHEMA_VERSION) {
             return null;
         }
-        // computed on save, for readers of the file; recomputed here
-        const { computed, ...stored } = data; // eslint-disable-line no-unused-vars
+        // computed: for readers of the file, recomputed here; $schema: for editors
+        const { computed, $schema, ...stored } = data; // eslint-disable-line no-unused-vars
         const hunter = Object.assign(Object.create(Hunter.prototype), stored);
         // an improvement still being picked when the page was closed
         hunter.improvements = hunter.improvements.filter((taken) => !taken?.pending);

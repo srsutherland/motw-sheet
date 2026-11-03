@@ -3,25 +3,66 @@
   "$id": "common.schema.json",
   "title": "Common definitions",
   "$comment": "PRELIMINARY. Describes the format as the app uses it today; it isn't a spec to design against, and it changes whenever development needs it. Background and decisions: docs/Schema Notes.md.",
-  "description": "Shared by playbook.schema.json, basic-moves.schema.json and hunter.schema.json.",
   "$defs": {
     "id": {
-      "description": "An id: lowercase, digits, underscores. Usually left out: auto-assigned from `name` (\"Could've Been Worse\" -> couldve_been_worse).",
+      "description": "Lowercase letters, digits and underscores. Without one, an object's id is made from its `name` (\"Could've Been Worse\" -> couldve_been_worse).",
       "type": "string",
       "pattern": "^[a-z0-9_]+$"
     },
     "reference": {
-      "description": "A reference: `@` + a path of ids. Root-relative unless the first segment is a file id (`@basic_moves.use_magic.heal`, `@the_expert.haven`). Special: `@this` (the object it's written in), `@textbox` (free text), `@*.moves` (that list in every other playbook), `@...` (in an on_edit / on_view array: the object's own value), `@.name` (escape hatch for a relative name that collides with a file id).",
+      "description": "Any reference: `@` and what it refers to.",
+      "anyOf": [
+        { "$ref": "#/$defs/refPath" },
+        { "$ref": "#/$defs/refRelative" },
+        { "$ref": "#/$defs/refThis" },
+        { "$ref": "#/$defs/refEveryPlaybook" },
+        { "$ref": "#/$defs/refTextbox" },
+        { "$ref": "#/$defs/refSplice" }
+      ]
+    },
+    "refPath": {
+      "description": "A path of ids. Root-relative, unless the first segment is a file id: `@combat_magic.bases`, `@basic_moves.use_magic.heal`, `@the_expert.haven`.",
       "type": "string",
-      "pattern": "^@(this|textbox|\\.\\.\\.|\\*\\.[a-z0-9_]+(\\.[a-z0-9_]+)*|\\.?[a-z0-9_]+(\\.[a-z0-9_]+)*)$"
+      "pattern": "^@[a-z0-9_]+(\\.[a-z0-9_]+)*$"
+    },
+    "refRelative": {
+      "description": "A root-relative path whose first segment would otherwise read as a file id: `@.basic_moves`.",
+      "type": "string",
+      "pattern": "^@\\.[a-z0-9_]+(\\.[a-z0-9_]+)*$"
+    },
+    "refThis": {
+      "description": "The object the reference is written in.",
+      "const": "@this"
+    },
+    "refEveryPlaybook": {
+      "description": "That list in every other playbook: `@*.moves`.",
+      "type": "string",
+      "pattern": "^@\\*\\.[a-z0-9_]+(\\.[a-z0-9_]+)*$"
+    },
+    "refTextbox": {
+      "description": "A free-text option. Chosen: { \"ref\": \"@textbox\", \"text\": \"...\" }.",
+      "const": "@textbox"
+    },
+    "refSplice": {
+      "description": "In an on_edit / on_view array: the object's own value.",
+      "const": "@..."
+    },
+    "refFrom": {
+      "description": "What a choose rule chooses from.",
+      "anyOf": [
+        { "$ref": "#/$defs/refPath" },
+        { "$ref": "#/$defs/refRelative" },
+        { "$ref": "#/$defs/refThis" },
+        { "$ref": "#/$defs/refEveryPlaybook" }
+      ]
     },
     "plainText": {
-      "description": "A plain value, not a reference: anything not starting with `@` (a plain-string option, a look option, a history option).",
+      "description": "A plain value, not a reference: anything not starting with `@`.",
       "type": "string",
       "pattern": "^[^@]"
     },
     "markdown": {
-      "description": "Display text: a markdown subset plus [[wikilinks]] and <span class='...'> (src/Markdown.js).",
+      "description": "Display text: a markdown subset plus [[wikilinks]] and <span class='...'>.",
       "type": "string"
     },
     "paragraphs": {
@@ -65,7 +106,7 @@
       "description": "One `choose` rule: where to choose from (`from`, default `@this`) and exactly one verb with its count. pick: add it; cross: strike it out, still visible; remove: undo an earlier pick; attach: attach this option to one of your picks, without picking it again. `min` (default: the count) allows fewer; `limits` sets min / max per sub-list.",
       "type": "object",
       "properties": {
-        "from": { "$ref": "#/$defs/reference" },
+        "from": { "$ref": "#/$defs/refFrom" },
         "pick": { "type": "integer", "minimum": 1 },
         "cross": { "type": "integer", "minimum": 1 },
         "remove": { "type": "integer", "minimum": 1 },
@@ -73,7 +114,7 @@
         "min": { "type": "integer", "minimum": 0 },
         "limits": {
           "type": "object",
-          "propertyNames": { "$ref": "#/$defs/reference" },
+          "propertyNames": { "$ref": "#/$defs/refPath" },
           "additionalProperties": {
             "type": "object",
             "properties": {
@@ -93,7 +134,7 @@
       "additionalProperties": false
     },
     "choose": {
-      "description": "One rule, or several (improvements that do more than one thing).",
+      "description": "One rule, or several.",
       "oneOf": [
         { "$ref": "#/$defs/chooseRule" },
         { "type": "array", "items": { "$ref": "#/$defs/chooseRule" }, "minItems": 1 }
@@ -102,8 +143,8 @@
     "grant": {
       "description": "What you gain outright: a reference or several. Granting a list grants everything in it.",
       "oneOf": [
-        { "$ref": "#/$defs/reference" },
-        { "type": "array", "items": { "$ref": "#/$defs/reference" } }
+        { "$ref": "#/$defs/refPath" },
+        { "type": "array", "items": { "$ref": "#/$defs/refPath" } }
       ]
     },
     "effect": {
