@@ -1,10 +1,10 @@
 {
   "schema_version": "0.1.2026.10.16",
   "uid": "39e87fd3-0bda-456c-b659-6f672d508cc5",
-  "created": "",
+  "created": "2026-10-09T21:18:06.045Z",
   "updated": "2026-10-09T21:18:06.045Z",
   "playbook_name": "The Spell-Slinger",
-  "playbook_updated": "2026-10-07",
+  "playbook_updated": "2026-10-17",
   "name": "Dave Johnson",
   "pronouns": "He/Him",
   "look": {
@@ -32,7 +32,6 @@
   ],
   "getting_started": {
     "grant": [
-      "@basic_moves",
       {
         "ref": "@moves.tools_and_techniques",
         "chosen": [
@@ -133,15 +132,14 @@
         "id": "tools_and_techniques",
         "type": "move",
         "name": "Tools and Techniques",
-        "description": "To use your combat magic effectively you rely on a collection of tools and techniques. Cross off one; you'll need the rest.",
+        "description": "To use your combat magic effectively, you rely on a collection of tools and techniques. Cross off one; you'll need the rest.",
         "choose": {
-          "from": "@this",
           "cross": 1
         },
         "options": [
           {
             "name": "Consumables",
-            "description": "You need certain supplies— powders, oils, etc— on hand, some will be used up each cast. If you don't have them, take 1-harm ignore-armour when you cast."
+            "description": "You need certain supplies— powders, oils, etc—on hand, some will be used up each cast. If you don't have them, take 1-harm ignore-armour when you cast."
           },
           {
             "name": "Foci",
@@ -156,14 +154,14 @@
             "description": "You must speak in an arcane language to control your magic. If you use combat magic without speaking, [[act under pressure]] to avoid scrambling your thoughts."
           }
         ],
-        "selected": [
+        "crossed": [
           "@consumables"
         ]
       },
       {
         "type": "move",
         "name": "Forensic Divination",
-        "description": "When you successfully [[investigate a mystery]], ask \"What magic was done here?\" as a free extra question."
+        "description": "When you successfully [[investigate a mystery]], you may ask \"What magic was done here?\" as a free extra question."
       },
       {
         "type": "move",
@@ -175,7 +173,6 @@
         "name": "Practitioner",
         "description": "Choose two effects available to you under [[use magic]]. Take +1 to [[use magic]] whenever you choose one of those effects.",
         "choose": {
-          "from": "@this",
           "pick": 2
         },
         "options": [
@@ -204,7 +201,7 @@
         "id": "couldve_been_worse",
         "type": "move",
         "name": "Could've Been Worse",
-        "description": "When you miss a [[use magic]] roll, choose one of the following options instead of losing control of the magic: Fizzle or This Is Gonna Suck.",
+        "description": "When you miss a [[use magic]] roll you can choose one of the following options instead of losing control of the magic:",
         "details": [
           {
             "name": "Fizzle",
@@ -240,7 +237,10 @@
         "id": "combat_magic",
         "type": "feature",
         "name": "Combat Magic",
-        "description": "You have a few attack spells you can use as weapons. When you use these spells to [[kick some ass]], roll <span class='roll'>+Weird</span> instead of +Tough. Sometimes the situation may require you to [[act under pressure]] to cast your spell without problems.\n\nYour combat spells can combine any of your base spells with any of your effects.",
+        "description": [
+          "You have a few attack spells you can use as weapons. When you use these spells to [[kick some ass]], roll <span class='roll'>+Weird</span> instead of +Tough. Sometimes the situation may require you to [[act under pressure]] to cast your spell without problems.",
+          "Your combat spells can combine any of your base spells with any of your effects."
+        ],
         "heading": "Combat magic, pick three (with at least one base):",
         "options": [
           {
@@ -339,7 +339,7 @@
   },
   "playbook": {
     "schema_version": "0.1.2026.10.02",
-    "updated": "2026-10-07",
+    "updated": "2026-10-17",
     "id": "the_spellslinger",
     "type": "playbook",
     "name": "The Spell-Slinger",
@@ -347,7 +347,7 @@
     "quote": "Fight fire with **fire magic**.",
     "luck": {
       "max": 7,
-      "special": "**Spell-slinger Special:** When you spend a point of Luck, the official council of wizards is going to poke their nose into your business..."
+      "special": "**Spell-slinger special**: When you spend a point of Luck, the official council of wizards is going to poke their nose into your business."
     },
     "harm": {
       "max": 7,
@@ -358,7 +358,10 @@
         "id": "combat_magic",
         "type": "feature",
         "name": "Combat Magic",
-        "description": "You have a few attack spells you can use as weapons. When you use these spells to [[kick some ass]], roll <span class='roll'>+Weird</span> instead of +Tough. Sometimes the situation may require you to [[act under pressure]] to cast your spell without problems.\n\nYour combat spells can combine any of your base spells with any of your effects.",
+        "description": [
+          "You have a few attack spells you can use as weapons. When you use these spells to [[kick some ass]], roll <span class='roll'>+Weird</span> instead of +Tough. Sometimes the situation may require you to [[act under pressure]] to cast your spell without problems.",
+          "Your combat spells can combine any of your base spells with any of your effects."
+        ],
         "heading": "Combat magic, pick three (with at least one base):",
         "options": [
           {
@@ -455,15 +458,14 @@
           "id": "tools_and_techniques",
           "type": "move",
           "name": "Tools and Techniques",
-          "description": "To use your combat magic effectively you rely on a collection of tools and techniques. Cross off one; you'll need the rest.",
+          "description": "To use your combat magic effectively, you rely on a collection of tools and techniques. Cross off one; you'll need the rest.",
           "choose": {
-            "from": "@this",
             "cross": 1
           },
           "options": [
             {
               "name": "Consumables",
-              "description": "You need certain supplies— powders, oils, etc— on hand, some will be used up each cast. If you don't have them, take 1-harm ignore-armour when you cast."
+              "description": "You need certain supplies— powders, oils, etc—on hand, some will be used up each cast. If you don't have them, take 1-harm ignore-armour when you cast."
             },
             {
               "name": "Foci",
@@ -487,9 +489,8 @@
         {
           "type": "move",
           "name": "Arcane Reputation",
-          "description": "Pick three big organizations or groups in the supernatural community. They've heard of you and respect your power. With affected humans, take +1 forward when you [[manipulate someone|manipulate]] them. You may [[manipulate someone|manipulate]] affected monsters as if they were human, with no bonus.",
+          "description": "Pick three big organizations or groups in the supernatural community, which can include some of the more sociable types of monsters. They've heard of you and respect your power. With affected humans, take +1 forward when you [[manipulate someone|manipulate]] them. You may [[manipulate someone|manipulate]] affected monsters as if they were human, with no bonus.",
           "choose": {
-            "from": "@this",
             "pick": 3
           },
           "options": [
@@ -502,7 +503,7 @@
           "id": "couldve_been_worse",
           "type": "move",
           "name": "Could've Been Worse",
-          "description": "When you miss a [[use magic]] roll, choose one of the following options instead of losing control of the magic: Fizzle or This Is Gonna Suck.",
+          "description": "When you miss a [[use magic]] roll you can choose one of the following options instead of losing control of the magic:",
           "details": [
             {
               "name": "Fizzle",
@@ -519,7 +520,6 @@
           "name": "Enchanted Clothing",
           "description": "Pick an article of everyday clothing—it's enchanted without any change in appearance. Take -1 harm from any source that tries to get at you through the garment.",
           "choose": {
-            "from": "@this",
             "pick": 1
           },
           "options": [
@@ -529,7 +529,7 @@
         {
           "type": "move",
           "name": "Forensic Divination",
-          "description": "When you successfully [[investigate a mystery]], ask \"What magic was done here?\" as a free extra question."
+          "description": "When you successfully [[investigate a mystery]], you may ask \"What magic was done here?\" as a free extra question."
         },
         {
           "type": "move",
@@ -539,14 +539,13 @@
         {
           "type": "move",
           "name": "Not My Fault",
-          "description": "+1 to [[act under pressure]] when dealing with the consequences of your own spell-casting."
+          "description": "+1 to [[act under pressure]] when you are dealing with the consequences of your own spell-casting."
         },
         {
           "type": "move",
           "name": "Practitioner",
           "description": "Choose two effects available to you under [[use magic]]. Take +1 to [[use magic]] whenever you choose one of those effects.",
           "choose": {
-            "from": "@this",
             "pick": 2
           },
           "options": [
@@ -612,7 +611,6 @@
     "getting_started": {
       "description": "To make your Spell-slinger, first pick a name. Then follow the instructions below to decide your look, ratings, Combat Magic, moves, and gear. Finally, introduce yourself and pick history.",
       "grant": [
-        "@basic_moves",
         "@moves.tools_and_techniques"
       ],
       "choose": [
@@ -699,7 +697,10 @@
       ]
     },
     "introductions": {
-      "description": "When you get here, wait for everyone to catch up so you can do your introductions together.\n\nGo around the group. On your turn, introduce your Spell-slinger by name and look, and tell the group what they know about you."
+      "description": [
+        "When you get here, wait for everyone to catch up so you can do your introductions together.",
+        "Go around the group. On your turn, introduce your Spell-slinger by name and look, and tell the group what they know about you."
+      ]
     },
     "history": {
       "description": "Go around the group again. On your turn, pick one for each of the other hunters:",
@@ -771,7 +772,7 @@
         {
           "id": "move_1",
           "type": "improvement",
-          "description": "Take another Spell-slinger move",
+          "description": "Take another Spell-Slinger move",
           "choose": {
             "from": "@moves",
             "pick": 1
@@ -780,7 +781,7 @@
         {
           "id": "move_2",
           "type": "improvement",
-          "description": "Take another Spell-slinger move",
+          "description": "Take another Spell-Slinger move",
           "choose": {
             "from": "@moves",
             "pick": 1
@@ -827,7 +828,6 @@
           "type": "improvement",
           "description": "Get +1 to any rating, max +3",
           "choose": {
-            "from": "@this",
             "pick": 1
           },
           "options": [
@@ -985,7 +985,7 @@
         {
           "id": "mythic_move",
           "type": "improvement",
-          "description": "Take another Spell-Slinger move.",
+          "description": "Take another Spell-Slinger move",
           "choose": {
             "from": "@moves",
             "pick": 1

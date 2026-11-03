@@ -2,7 +2,8 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "basic-moves.schema.json",
   "title": "Basic moves",
-  "description": "PRELIMINARY. Describes playbooks/basic_moves.json as the app uses it today; it changes whenever development needs it. Background: docs/Schema Notes.md (\"Other content\"). Every hunter has these moves; referenced as `@basic_moves...`.",
+  "$comment": "PRELIMINARY. Describes the format as the app uses it today; it isn't a spec to design against, and it changes whenever development needs it. Background and decisions: docs/Schema Notes.md.",
+  "description": "playbooks/basic_moves.json. Every hunter has these moves; referenced as `@basic_moves...` (docs/Schema Notes.md: \"Other content\").",
   "type": "object",
   "properties": {
     "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },

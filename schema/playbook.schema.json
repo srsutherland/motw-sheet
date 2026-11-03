@@ -2,7 +2,8 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "playbook.schema.json",
   "title": "Playbook",
-  "description": "PRELIMINARY. Describes playbooks/the-*.json as the app uses them today; it isn't a spec to design against, and it changes whenever development needs it. Background and decisions: docs/Schema Notes.md. A hunter file carries its own copy of its playbook in this format.",
+  "$comment": "PRELIMINARY. Describes the format as the app uses it today; it isn't a spec to design against, and it changes whenever development needs it. Background and decisions: docs/Schema Notes.md.",
+  "description": "A hunter file carries its own copy of its playbook in this format.",
   "type": "object",
   "properties": {
     "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
@@ -233,7 +234,7 @@
         "grant": { "$ref": "common.schema.json#/$defs/grant" },
         "choose": { "$ref": "common.schema.json#/$defs/choose" },
         "effects": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/effect" } },
-        "special": { "type": "string", "pattern": "^[a-z_]+$" },
+        "special": { "enum": ["change_playbook", "second_hunter", "retire", "turn_evil"] },
         "cost": { "type": "integer", "minimum": 1 },
         "options": {
           "description": "Its own options, for `choose` without `from` (\"+1 to any rating\": one per rating).",

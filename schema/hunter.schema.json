@@ -2,7 +2,8 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "hunter.schema.json",
   "title": "Hunter",
-  "description": "PRELIMINARY. Describes a saved hunter (localStorage or an exported file) as the app writes it today; it changes whenever development needs it. Background and decisions: docs/Schema Notes.md (\"Hunter JSON\"). The hunter stores choices and plain values; ratings, moves, gear and features are computed by replaying getting_started, then each improvement in the order taken. Only this exact schema_version loads; other versions are \"old format\".",
+  "$comment": "PRELIMINARY. Describes the format as the app uses it today; it isn't a spec to design against, and it changes whenever development needs it. Background and decisions: docs/Schema Notes.md.",
+  "description": "A saved hunter (docs/Schema Notes.md: \"Hunter JSON\"). It stores choices and plain values; ratings, moves, gear and features are computed by replaying getting_started, then each improvement in the order taken. Only this exact schema_version loads; other versions are \"old format\".",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -10,10 +11,7 @@
       "const": "0.1.2026.10.16"
     },
     "uid": { "type": "string", "minLength": 1 },
-    "created": {
-      "description": "Empty if unknown (hunters converted from older formats).",
-      "anyOf": [{ "$ref": "#/$defs/timestamp" }, { "const": "" }]
-    },
+    "created": { "$ref": "#/$defs/timestamp" },
     "updated": { "description": "Added when saved.", "$ref": "#/$defs/timestamp" },
     "playbook_name": { "type": "string" },
     "playbook_updated": {

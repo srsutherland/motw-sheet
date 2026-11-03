@@ -2,7 +2,8 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "common.schema.json",
   "title": "Common definitions",
-  "description": "PRELIMINARY. Describes the formats as the app uses them today; it isn't a spec to design against, and it changes whenever development needs it. Background and decisions: docs/Schema Notes.md. Shared by playbook.schema.json, basic-moves.schema.json and hunter.schema.json.",
+  "$comment": "PRELIMINARY. Describes the format as the app uses it today; it isn't a spec to design against, and it changes whenever development needs it. Background and decisions: docs/Schema Notes.md.",
+  "description": "Shared by playbook.schema.json, basic-moves.schema.json and hunter.schema.json.",
   "$defs": {
     "id": {
       "description": "An id: lowercase, digits, underscores. Usually left out: auto-assigned from `name` (\"Could've Been Worse\" -> couldve_been_worse).",
