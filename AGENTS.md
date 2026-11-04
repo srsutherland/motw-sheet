@@ -31,6 +31,7 @@ A character sheet app for *Monster of the Week* players (hunters, not Keepers): 
 - **Don't present your own inventions as decided.** When documenting, new conventions go under a **Proposals** section, labelled as yours, until the maintainer agrees.
 - **Docs style:** terse lists and parentheticals, like the existing docs; record only what was decided, no extra detail. Tables: align the interior `|`s, don't pad the last column if it would bring it over ~80 chars.
 - **Format changes go in `schema/`.** Any change to the playbook or hunter JSON format (new keys, new verbs, new shapes) updates `schema/*.schema.json` in the same commit, so the maintainer can review format changes as schema diffs.
+- **Keep incidentals out of descriptions.** A description says what something is. Incidentals (who uses it, where its code lives, how one reader handles it, whether it's provisional) change for unrelated reasons and go stale: leave them out, and if one really must be written down, write it once.
 - **Write for a cold reader.** Docs and comments state how things are, not how they got that way: avoid corrections, contrasts ("not X"), or traces of the conversation that prompted them. Test: would it read naturally to someone who never saw that conversation?
 
 ## Git
@@ -39,7 +40,7 @@ A character sheet app for *Monster of the Week* players (hunters, not Keepers): 
 - `main` only moves by **fast-forward** (`git merge --ff-only`): no merge commits, no squashing. Rebase a branch onto `main` before it goes in. Where possible, also follow the same practice for feature branches.
 - Pushing `main` deploys the site (GitHub Pages).
 - `latest` points at the newest work: `main`, then each branch ahead of it in order, ending with the newest. After pushing work, force-move `latest` to it (`--force-with-lease`). Never merge, rebase or branch from `latest`.
-- Docs that *plan* (proposals, decisions, roadmap additions, design changes ahead of code) go on the `plan-docs` branch, rebased onto the relevant branch before you start and before it's merged. Docs that *record* a code change (renames, corrections, roadmap items the maintainer has called done) go with that change, in its commit or branch.
+- **Docs go with the work they come from.** Roadmap items, decisions and rules that come out of a branch's work (or the discussion around it) go on that branch, in its commits. `plan-docs` is for planning that isn't tied to the active feature branch: tangents, proposals, roadmap ideas, design changes ahead of any code. Keep it rebased onto `main`.
 - Group commits by concern (e.g. format change, UI fixes, docs). 
 - A formatting-only commit goes in `.git-blame-ignore-revs`.
 - Force-push only branches you own, with `--force-with-lease`.
