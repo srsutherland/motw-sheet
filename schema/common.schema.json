@@ -12,48 +12,48 @@
     "reference": {
       "description": "Any reference: `@` and what it refers to.",
       "anyOf": [
-        { "$ref": "#/$defs/refPath" },
-        { "$ref": "#/$defs/refRelative" },
-        { "$ref": "#/$defs/refThis" },
-        { "$ref": "#/$defs/refEveryPlaybook" },
-        { "$ref": "#/$defs/refTextbox" },
-        { "$ref": "#/$defs/refSplice" }
+        { "$ref": "#/$defs/ref_path" },
+        { "$ref": "#/$defs/ref_relative" },
+        { "$ref": "#/$defs/ref_this" },
+        { "$ref": "#/$defs/ref_everyPlaybook" },
+        { "$ref": "#/$defs/ref_textbox" },
+        { "$ref": "#/$defs/ref_splice" }
       ]
     },
-    "refPath": {
+    "ref_path": {
       "description": "A path of ids. Root-relative, unless the first segment is a file id: `@combat_magic.bases`, `@basic_moves.use_magic.heal`, `@the_expert.haven`.",
       "type": "string",
       "pattern": "^@[a-z0-9_]+(\\.[a-z0-9_]+)*$"
     },
-    "refRelative": {
+    "ref_relative": {
       "description": "A root-relative path whose first segment would otherwise read as a file id: `@.basic_moves`.",
       "type": "string",
       "pattern": "^@\\.[a-z0-9_]+(\\.[a-z0-9_]+)*$"
     },
-    "refThis": {
+    "ref_this": {
       "description": "The object the reference is written in.",
       "const": "@this"
     },
-    "refEveryPlaybook": {
+    "ref_everyPlaybook": {
       "description": "That list in every other playbook: `@*.moves`.",
       "type": "string",
       "pattern": "^@\\*\\.[a-z0-9_]+(\\.[a-z0-9_]+)*$"
     },
-    "refTextbox": {
+    "ref_textbox": {
       "description": "A free-text option. Chosen: { \"ref\": \"@textbox\", \"text\": \"...\" }.",
       "const": "@textbox"
     },
-    "refSplice": {
+    "ref_splice": {
       "description": "In an on_edit / on_view array: the object's own value.",
       "const": "@..."
     },
-    "refFrom": {
+    "ref_from": {
       "description": "What a choose rule chooses from.",
       "anyOf": [
-        { "$ref": "#/$defs/refPath" },
-        { "$ref": "#/$defs/refRelative" },
-        { "$ref": "#/$defs/refThis" },
-        { "$ref": "#/$defs/refEveryPlaybook" }
+        { "$ref": "#/$defs/ref_path" },
+        { "$ref": "#/$defs/ref_relative" },
+        { "$ref": "#/$defs/ref_this" },
+        { "$ref": "#/$defs/ref_everyPlaybook" }
       ]
     },
     "plainText": {
@@ -106,7 +106,7 @@
       "description": "One `choose` rule: where to choose from (`from`, default `@this`) and exactly one verb with its count. pick: add it; cross: strike it out, still visible; remove: undo an earlier pick; attach: attach this option to one of your picks, without picking it again. `min` (default: the count) allows fewer; `limits` sets min / max per sub-list.",
       "type": "object",
       "properties": {
-        "from": { "$ref": "#/$defs/refFrom" },
+        "from": { "$ref": "#/$defs/ref_from" },
         "pick": { "type": "integer", "minimum": 1 },
         "cross": { "type": "integer", "minimum": 1 },
         "remove": { "type": "integer", "minimum": 1 },
@@ -114,7 +114,7 @@
         "min": { "type": "integer", "minimum": 0 },
         "limits": {
           "type": "object",
-          "propertyNames": { "$ref": "#/$defs/refPath" },
+          "propertyNames": { "$ref": "#/$defs/ref_path" },
           "additionalProperties": {
             "type": "object",
             "properties": {
@@ -143,8 +143,8 @@
     "grant": {
       "description": "What you gain outright: a reference or several. Granting a list grants everything in it.",
       "oneOf": [
-        { "$ref": "#/$defs/refPath" },
-        { "type": "array", "items": { "$ref": "#/$defs/refPath" } }
+        { "$ref": "#/$defs/ref_path" },
+        { "type": "array", "items": { "$ref": "#/$defs/ref_path" } }
       ]
     },
     "effect": {

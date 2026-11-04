@@ -190,7 +190,7 @@
             "items": {
               "anyOf": [
                 { "$ref": "common.schema.json#/$defs/plainText" },
-                { "$ref": "common.schema.json#/$defs/refTextbox" }
+                { "$ref": "common.schema.json#/$defs/ref_textbox" }
               ]
             }
           }
