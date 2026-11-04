@@ -85,6 +85,7 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - Google Drive sync
 - Share by URL? (using a compressed, minified hunter json as a URL param)
 - Use info from the official "playbook menu" for playbook-choice workflow
+- Absolute URLs for the schemas (published with the site), so exported hunter files can name theirs in `$schema`
 
 # Known issues
 
