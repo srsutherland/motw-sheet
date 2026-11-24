@@ -64,5 +64,7 @@ ESLint enforces it (no Prettier: the maintainer tried it and rejected its layout
 Conventions:
 - `const props = defineProps(...)` and `const emit = defineEmits(...)` even when unused (lint allows it)
 - Comments explain *why*, sparingly; match the surrounding code
+- Functions get full JSDoc comments (`/** ... @param {type} name ... @returns {type} */`)
+- Regexes, except the most obvious, are named constants, one per job: `const re_<descriptiveName>`
 - Modern JS over utility libraries
 
