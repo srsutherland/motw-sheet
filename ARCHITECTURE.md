@@ -30,6 +30,7 @@ motw-sheet/
 │   ├── html/                 # md rendered, to compare against the PDF
 │   └── scripts/              # PDF extraction, md -> html (Python)
 ├── schema/                   # JSON Schemas
+│   └── json2ts/              # The schemas as TypeScript declarations (generated, for reading)
 ├── samples/                  # Sample hunter files (used by tests)
 ├── tests/                    # Engine and browser tests
 ├── res/                      # Styles, font, icon
@@ -159,7 +160,7 @@ Monitoring & Logging: none
 
 Local Setup Instructions: see `README.md`
 
-Testing Frameworks: `tests/engine.test.mjs` (real modules through Vite's `ssrLoadModule`); `tests/e2e/` (Playwright via `playwright-core`, driving an installed Edge or Chrome; `run.mjs` starts and stops the dev server); `tests/schema.test.mjs` (data files against `schema/`, with ajv); `tests/check.mjs` (assertions)
+Testing Frameworks: `tests/engine.test.mjs` (real modules through Vite's `ssrLoadModule`); `tests/e2e/` (Playwright via `playwright-core`, driving an installed Edge or Chrome; `run.mjs` starts and stops the dev server); `tests/schema.test.mjs` (data files against `schema/`, with ajv; `schema/json2ts/` up to date); `tests/check.mjs` (assertions)
 
 Code Quality Tools: ESLint with `@stylistic` and `eslint-plugin-vue` (formatting included; no Prettier). See `AGENTS.md`
 
