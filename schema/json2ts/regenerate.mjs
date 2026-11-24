@@ -3,9 +3,10 @@
 //   node schema/json2ts/regenerate.mjs           write them
 //   node schema/json2ts/regenerate.mjs --watch   and again whenever a schema changes
 //
-// json2ts's compile() puts every type in one file, so this runs its stages itself (as
-// compile() does) and generates each named type on its own, in its schema's file. The
-// stages aren't json2ts's public API, so its version is pinned.
+// json2ts's compile() takes one schema and returns one file of text, so this runs its
+// stages itself, as compile() does, to get at the parsed types: each is generated on its
+// own, in its schema's file. The stages aren't json2ts's public API, so its version is
+// pinned. Each workaround for json2ts's behavior says what it fixes (FIXES:).
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,25 +23,23 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const schemaDir = path.dirname(here);
 
 // Where a schema came from, written into json2ts's copy of it: "common.schema.json#/$defs/date"
-// for a $def, "hunter.schema.json#" for a whole file.
+// for a $def, "hunter.schema.json#" for a whole file. json2ts parses each schema object once,
+// so the types it makes from it can be traced back to it (see parseSchemas).
 const SOURCE = 'x-source';
 
 const re_schemaFile = /\.schema\.json$/;
 const re_defKey = /#\/\$defs\/(\w+)$/;
 
 /**
- * The schemas as json2ts gets them: each file and $def tagged with its SOURCE, and each $ref
- * beside other keywords wrapped (see wrapRefsWithSiblings).
+ * The schemas as json2ts gets them: tagged with their sources, and with each $ref beside
+ * other keywords wrapped.
  * @returns {Map<string, object>} file name ("common.schema.json") -> schema, in file name order
  */
 const readSchemas = () => {
     const schemas = new Map();
     for (const file of fs.readdirSync(schemaDir).filter((f) => re_schemaFile.test(f)).sort()) {
         const schema = JSON.parse(fs.readFileSync(path.join(schemaDir, file), 'utf8'));
-        schema[SOURCE] = `${file}#`;
-        for (const [key, definition] of Object.entries(schema.$defs ?? {})) {
-            definition[SOURCE] = `${file}#/$defs/${key}`;
-        }
+        tagSources(file, schema);
         wrapRefsWithSiblings(schema);
         schemas.set(file, schema);
     }
@@ -48,9 +47,26 @@ const readSchemas = () => {
 };
 
 /**
- * A $ref beside other keywords (a description) means the target and them both. json2ts
- * declares a copy of the target with them instead (Timestamp1 beside Timestamp); an allOf
- * of the one $ref means the same, and leaves the description on the property.
+ * Tags a schema file and each of its $defs with its SOURCE.
+ * FIXES: json2ts keeps no reliable record of where a type came from (references within a
+ * file are recorded without the file; circular ones not at all), so types couldn't be named
+ * after their $def keys (defName) or put in their schemas' files (generateFiles).
+ * @param {string} file "common.schema.json"
+ * @param {object} schema its contents, tagged in place
+ */
+const tagSources = (file, schema) => {
+    schema[SOURCE] = `${file}#`;
+    for (const [key, definition] of Object.entries(schema.$defs ?? {})) {
+        definition[SOURCE] = `${file}#/$defs/${key}`;
+    }
+};
+
+/**
+ * Rewrites each $ref beside other keywords as an allOf of the one $ref, which means the same.
+ * FIXES: for a $ref beside a description (hunter's `updated`), json2ts declares a numbered
+ * copy of the target (Timestamp1 beside Timestamp) and puts the description on that, not on
+ * the property; if the copy is parsed first, it takes the name and the original gets the
+ * number (Playbook got the hunter's description of its `playbook`).
  * @param {object} schema rewritten in place, with everything under it
  */
 const wrapRefsWithSiblings = (schema) => {
@@ -66,8 +82,11 @@ const wrapRefsWithSiblings = (schema) => {
 };
 
 /**
- * Where a schema json2ts is parsing came from. json2ts splits a schema with allOf beside
- * other keywords (a move) in two: an intersection, which stands for it, and the rest.
+ * Where a schema json2ts is parsing came from.
+ * FIXES: json2ts splits a schema with allOf beside other keywords (a move: allOf node, plus
+ * its own `type`) in two: a new intersection schema, which stands for it and takes its name,
+ * and the rest. The new one has no tag, and the rest still has it: read as they are, the move
+ * type would have no source, and the rest would be named too (Move1).
  * @param {object} schema
  * @returns {string | undefined} its SOURCE, if it's a file or a $def
  */
@@ -79,25 +98,31 @@ const sourceOfSchema = (schema) => {
 };
 
 /**
- * The type name for a $def: its key. (json2ts names a $def by its key only in the schema
- * it compiles, or when it's an object or array; elsewhere, a string or a union is inlined.)
- * Whole files keep their titles.
+ * The type name for a $def: its key. Whole files keep their titles.
+ * FIXES: json2ts names a $def by its key only in the schema it compiles, or when it's an
+ * object or array; a string or union $def from another file is inlined wherever it's used
+ * (`string` for every Markdown).
  * @param {object} schema
  * @returns {string | undefined}
  */
 const defName = (schema) => sourceOfSchema(schema)?.match(re_defKey)?.[1];
 
 /**
- * json2ts's options, reading the schemas from memory.
+ * json2ts's options.
  * @param {Map<string, object>} schemas from readSchemas
  * @returns {object}
  */
 const json2tsOptions = (schemas) => ({
     ...j2ts.DEFAULT_OPTIONS,
     cwd: `${schemaDir}/`,
+    // FIXES: an object that doesn't say additionalProperties (a move) would get an
+    // index signature, [k: string]: unknown
     additionalProperties: false,
+    // Each file gets its own (banner)
     bannerComment: '',
     customName: defName,
+    // FIXES: json2ts would read the files a $ref points to from disk, without the tags and
+    // wrapping from readSchemas
     $refOptions: {
         resolve: {
             schemas: {
@@ -110,21 +135,31 @@ const json2tsOptions = (schemas) => ({
 });
 
 /**
- * Parses the schemas together, through the stages of json2ts's compile() before code
- * generation: an index schema refers to each file with properties, so they share their
- * types. (common.schema.json has only $defs; its types come in through references.)
+ * A schema that refers to each schema file with properties, to parse them all at once.
+ * (common.schema.json has only $defs; its types come in through references.)
+ * FIXES: parsed one at a time, each file would declare its own copies of the types it
+ * shares with the others (Markdown in every file).
  * @param {Map<string, object>} schemas from readSchemas
- * @param {object} options from json2tsOptions
- * @returns {Promise<{ index: object, sourceOf: Map<object, string> }>} the index's AST, and
- *     each named type's SOURCE
+ * @returns {object}
  */
-const parseSchemas = async (schemas, options) => {
+const indexSchema = (schemas) => {
     const roots = [...schemas.keys()].filter((file) => schemas.get(file).properties);
-    const index = {
+    return {
         title: 'Index',
         type: 'object',
         properties: Object.fromEntries(roots.map((file) => [file, { $ref: file }])),
     };
+};
+
+/**
+ * Parses the schemas into json2ts's AST: the stages of its compile() before code generation.
+ * @param {Map<string, object>} schemas from readSchemas
+ * @param {object} options from json2tsOptions
+ * @returns {Promise<{ index: object, sourceOf: Map<object, string> }>} the index schema's
+ *     AST, and each named type's SOURCE
+ */
+const parseSchemas = async (schemas, options) => {
+    const index = indexSchema(schemas);
     j2ts.normalizeNullableRefs(index);
     const { dereferencedPaths, dereferencedSchema } = await j2ts.dereference(index, options);
     const linked = j2ts.link(dereferencedSchema);
@@ -133,7 +168,7 @@ const parseSchemas = async (schemas, options) => {
         throw new Error(errors.join('\n'));
     }
     const normalized = j2ts.normalize(linked, dereferencedPaths, 'Index', options);
-    const processed = new Map(); // schema -> its ASTs, by kind
+    const processed = new Map(); // filled by parse: schema -> its ASTs, by kind
     const usedNames = new Set();
     const ast = j2ts.parse(normalized, options, undefined, processed, usedNames);
     j2ts.nameAnonymousRecursiveTypes(ast, processed, dereferencedPaths, usedNames);
@@ -150,8 +185,11 @@ const parseSchemas = async (schemas, options) => {
 };
 
 /**
- * A named type's AST with each named type under it reduced to its name, so that generating
- * it declares only this type; and the named types it refers to.
+ * A copy of a named type's AST in which each named type under it is just its name (an AST
+ * node json2ts prints as-is), so that generating it declares only this type; and the named
+ * types it refers to, for its file's imports.
+ * FIXES: generating a type alias also declares the named types in it (Option would declare
+ * Reference and PlainText too), so they'd be declared again in the wrong files.
  * @param {object} ast a named type
  * @returns {{ outline: object, refs: Set<object> }}
  */
@@ -189,7 +227,7 @@ const outline = (ast) => {
 };
 
 /**
- * Every named type the index refers to, directly or not.
+ * Every named type the index refers to, directly or not (but not the index itself).
  * @param {object} index from parseSchemas
  * @returns {Map<object, { outline: object, refs: Set<object> }>} named type -> its outline
  */
@@ -225,7 +263,8 @@ const banner = (source) => `/**
  */`;
 
 /**
- * A module's declarations, importing the types it uses from other modules.
+ * A module's declarations, importing the types it uses from other modules, formatted the
+ * way compile() formats its output.
  * @param {string} module "common.schema"
  * @param {{ outline: object, refs: Set<object> }[]} types its types, in order
  * @param {Map<object, string>} sourceOf from parseSchemas
