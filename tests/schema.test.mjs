@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import { check, finish } from './check.mjs';
 import { validate } from './schema.mjs';
-import { generate } from '../schema/json2ts/regenerate.mjs';
+import { generateFiles } from '../schema/json2ts/regenerate.mjs';
 
 const json = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
 
@@ -23,7 +23,7 @@ check('rejects a bad reference', validate('common.schema.json#/$defs/reference',
 
 // The TypeScript declarations match the schemas
 const typesDir = 'schema/json2ts';
-const generated = await generate();
+const generated = await generateFiles();
 const onDisk = fs.readdirSync(typesDir).filter((f) => f.endsWith('.d.ts'));
 // (checkouts may turn LF into CRLF)
 const read = (file) => fs.readFileSync(`${typesDir}/${file}`, 'utf8').replace(/\r\n/g, '\n');
