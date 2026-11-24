@@ -11,6 +11,7 @@
     "test": "npm run test:engine && npm run test:schema && npm run test:e2e",
     "test:engine": "node tests/engine.test.mjs",
     "test:schema": "node tests/schema.test.mjs",
+    "schema:types": "node schema/json2ts/regenerate.mjs",
     "test:e2e": "node tests/e2e/run.mjs"
   },
   "dependencies": {
@@ -24,6 +25,7 @@
     "eslint": "^10.11.0",
     "eslint-plugin-vue": "^10.11.0",
     "globals": "^17.12.0",
+    "json-schema-to-typescript": "^16.0.0",
     "playwright-core": "^1.63.0",
     "vite": "^8.3.0",
     "vite-plugin-vue-devtools": "^8.2.1"

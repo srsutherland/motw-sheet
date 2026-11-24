@@ -20,9 +20,9 @@ export default defineConfig([
         },
     },
 
-    // test scripts run in Node
+    // tests and scripts run in Node
     {
-        files: ['tests/**'],
+        files: ['tests/**', 'schema/**/*.mjs'],
         languageOptions: {
             globals: {
                 ...globals.node,

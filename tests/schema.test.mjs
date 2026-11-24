@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import { check, finish } from './check.mjs';
 import { validate } from './schema.mjs';
+import { generate } from '../schema/json2ts/regenerate.mjs';
 
 const json = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
 
@@ -19,5 +20,15 @@ const pb = json('playbooks/the-expert.json');
 check('rejects an unknown key', validate('playbook.schema.json', { ...pb, colour: 'red' }).length > 0, true);
 check('rejects a rule with two verbs', validate('common.schema.json#/$defs/chooseRule', { pick: 1, cross: 1 }).length > 0, true);
 check('rejects a bad reference', validate('common.schema.json#/$defs/reference', '@Bad Ref').length > 0, true);
+
+// The TypeScript declarations match the schemas
+const typesDir = 'schema/json2ts';
+const generated = await generate();
+const onDisk = fs.readdirSync(typesDir).filter((f) => f.endsWith('.d.ts'));
+// (checkouts may turn LF into CRLF)
+const read = (file) => fs.readFileSync(`${typesDir}/${file}`, 'utf8').replace(/\r\n/g, '\n');
+const stale = [...new Set([...generated.keys(), ...onDisk])]
+    .filter((file) => !onDisk.includes(file) || generated.get(file) !== read(file));
+check('schema/json2ts is up to date (npm run schema:types)', stale, []);
 
 finish();

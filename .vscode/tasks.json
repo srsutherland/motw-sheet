@@ -1,0 +1,16 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Schema types (watch)",
+      "detail": "Regenerate schema/json2ts/*.d.ts whenever a schema is saved",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "schema:types", "--", "--watch"],
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "reveal": "silent", "panel": "dedicated" },
+      "runOptions": { "runOn": "folderOpen" }
+    }
+  ]
+}
