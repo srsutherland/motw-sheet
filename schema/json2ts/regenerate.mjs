@@ -9,17 +9,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DEFAULT_OPTIONS } from 'json-schema-to-typescript';
-import { format } from 'json-schema-to-typescript/dist/src/formatter.js';
-import { generate } from 'json-schema-to-typescript/dist/src/generator.js';
-import { link } from 'json-schema-to-typescript/dist/src/linker.js';
-import { normalize, normalizeNullableRefs } from 'json-schema-to-typescript/dist/src/normalizer.js';
-import { optimize } from 'json-schema-to-typescript/dist/src/optimizer.js';
-import { nameAnonymousRecursiveTypes, parse } from 'json-schema-to-typescript/dist/src/parser.js';
-import { dereference } from 'json-schema-to-typescript/dist/src/resolver.js';
-import { Intersection, Parent } from 'json-schema-to-typescript/dist/src/types/JSONSchema.js';
-import { toSafeString } from 'json-schema-to-typescript/dist/src/utils.js';
-import { validate } from 'json-schema-to-typescript/dist/src/validator.js';
+import { createRequire } from 'node:module';
+
+// json2ts's modules as one namespace (no two share an export name)
+const require = createRequire(import.meta.url);
+const j2ts = Object.assign({}, ...[
+    'index', 'formatter', 'generator', 'linker', 'normalizer', 'optimizer', 'parser',
+    'resolver', 'types/JSONSchema', 'utils', 'validator',
+].map((module) => require(`json-schema-to-typescript/dist/src/${module}.js`)));
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const schemaDir = path.dirname(here);
@@ -75,10 +72,10 @@ const wrapRefsWithSiblings = (schema) => {
  * @returns {string | undefined} its SOURCE, if it's a file or a $def
  */
 const sourceOfSchema = (schema) => {
-    if (schema[Parent]?.[Intersection] === schema) {
-        return schema[Parent][SOURCE];
+    if (schema[j2ts.Parent]?.[j2ts.Intersection] === schema) {
+        return schema[j2ts.Parent][SOURCE];
     }
-    return schema[Intersection] ? undefined : schema[SOURCE];
+    return schema[j2ts.Intersection] ? undefined : schema[SOURCE];
 };
 
 /**
@@ -96,7 +93,7 @@ const defName = (schema) => sourceOfSchema(schema)?.match(re_defKey)?.[1];
  * @returns {object}
  */
 const json2tsOptions = (schemas) => ({
-    ...DEFAULT_OPTIONS,
+    ...j2ts.DEFAULT_OPTIONS,
     cwd: `${schemaDir}/`,
     additionalProperties: false,
     bannerComment: '',
@@ -128,18 +125,18 @@ const parseSchemas = async (schemas, options) => {
         type: 'object',
         properties: Object.fromEntries(roots.map((file) => [file, { $ref: file }])),
     };
-    normalizeNullableRefs(index);
-    const { dereferencedPaths, dereferencedSchema } = await dereference(index, options);
-    const linked = link(dereferencedSchema);
-    const errors = validate(linked, 'Index');
+    j2ts.normalizeNullableRefs(index);
+    const { dereferencedPaths, dereferencedSchema } = await j2ts.dereference(index, options);
+    const linked = j2ts.link(dereferencedSchema);
+    const errors = j2ts.validate(linked, 'Index');
     if (errors.length) {
         throw new Error(errors.join('\n'));
     }
-    const normalized = normalize(linked, dereferencedPaths, 'Index', options);
+    const normalized = j2ts.normalize(linked, dereferencedPaths, 'Index', options);
     const processed = new Map(); // schema -> its ASTs, by kind
     const usedNames = new Set();
-    const ast = parse(normalized, options, undefined, processed, usedNames);
-    nameAnonymousRecursiveTypes(ast, processed, dereferencedPaths, usedNames);
+    const ast = j2ts.parse(normalized, options, undefined, processed, usedNames);
+    j2ts.nameAnonymousRecursiveTypes(ast, processed, dereferencedPaths, usedNames);
 
     const sourceOf = new Map();
     for (const [schema, asts] of processed) {
@@ -149,7 +146,7 @@ const parseSchemas = async (schemas, options) => {
             }
         }
     }
-    return { index: optimize(ast, options), sourceOf };
+    return { index: j2ts.optimize(ast, options), sourceOf };
 };
 
 /**
@@ -164,7 +161,7 @@ const outline = (ast) => {
     const visit = (node) => {
         if (node !== ast && node.standaloneName) {
             refs.add(node);
-            return { type: 'CUSTOM_TYPE', params: toSafeString(node.standaloneName) };
+            return { type: 'CUSTOM_TYPE', params: j2ts.toSafeString(node.standaloneName) };
         }
         switch (node.type) {
             case 'ARRAY':
@@ -216,6 +213,18 @@ const namedTypes = (index) => {
 const moduleOf = (source) => source.split('#')[0].replace(/\.json$/, '');
 
 /**
+ * The comment at the top of each generated file.
+ * @param {string} source what it's generated from
+ * @returns {string}
+ */
+const banner = (source) => `/**
+ * This file was automatically generated from ${source}
+ * by \`./regenerate.mjs\`, using \`json-schema-to-typescript\`.
+ * DO NOT MODIFY IT BY HAND. Instead, modify the source JSON Schema,
+ * and run \`npm run schema:types\` to regenerate this file.
+ */`;
+
+/**
  * A module's declarations, importing the types it uses from other modules.
  * @param {string} module "common.schema"
  * @param {{ outline: object, refs: Set<object> }[]} types its types, in order
@@ -229,17 +238,17 @@ const moduleFile = async (module, types, sourceOf, options) => {
         const from = moduleOf(sourceOf.get(ref));
         if (from !== module) {
             const names = imports.get(from) ?? new Set();
-            imports.set(from, names.add(toSafeString(ref.standaloneName)));
+            imports.set(from, names.add(j2ts.toSafeString(ref.standaloneName)));
         }
     }
     const importLines = [...imports].sort(([a], [b]) => a.localeCompare(b))
         .map(([from, names]) => `import type {${[...names].sort().join(', ')}} from "./${from}";`);
     const code = [
-        `// Generated from ../${module}.json (npm run schema:types): edit the schema, not this.`,
+        banner(`\`../${module}.json\``),
         importLines.join('\n'),
-        ...types.map((type) => generate(type.outline, options)),
+        ...types.map((type) => j2ts.generate(type.outline, options)),
     ];
-    return format(code.filter(Boolean).join('\n\n'), options);
+    return j2ts.format(code.filter(Boolean).join('\n\n'), options);
 };
 
 /**
@@ -269,8 +278,9 @@ const generateFiles = async () => {
             files.set(`${module}.d.ts`, await moduleFile(module, types, sourceOf, options));
         }
     }
-    files.set('index.d.ts', [...files.keys()]
-        .map((file) => `export * from "./${file.replace(/\.d\.ts$/, '')}";\n`).join(''));
+    const exportLines = [...files.keys()]
+        .map((file) => `export * from "./${file.replace(/\.d\.ts$/, '')}";`);
+    files.set('index.d.ts', [banner('the schemas in `../`'), '', ...exportLines, ''].join('\n'));
     return files;
 };
 

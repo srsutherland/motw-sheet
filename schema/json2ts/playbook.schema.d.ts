@@ -1,4 +1,9 @@
-// Generated from ../playbook.schema.json (npm run schema:types): edit the schema, not this.
+/**
+ * This file was automatically generated from `../playbook.schema.json`
+ * by `./regenerate.mjs`, using `json-schema-to-typescript`.
+ * DO NOT MODIFY IT BY HAND. Instead, modify the source JSON Schema,
+ * and run `npm run schema:types` to regenerate this file.
+ */
 
 import type {
   Choose,

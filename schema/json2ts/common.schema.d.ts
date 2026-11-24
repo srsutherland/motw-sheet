@@ -1,4 +1,9 @@
-// Generated from ../common.schema.json (npm run schema:types): edit the schema, not this.
+/**
+ * This file was automatically generated from `../common.schema.json`
+ * by `./regenerate.mjs`, using `json-schema-to-typescript`.
+ * DO NOT MODIFY IT BY HAND. Instead, modify the source JSON Schema,
+ * and run `npm run schema:types` to regenerate this file.
+ */
 
 /**
  * Lowercase letters, digits and underscores. Without one, an object's id is made from its `name` ("Could've Been Worse" -> couldve_been_worse).
