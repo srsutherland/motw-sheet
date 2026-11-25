@@ -200,7 +200,7 @@ Date of Last Update: 2026-10-16
 
 - **Feature**: a playbook-specific thing that isn't a move (Combat Magic, Haven); shown before or after moves (pre-moves / post-moves)
 - **Options**: what the playbook offers to choose from
-- **`choose`**: a rule on a playbook object: `from` (where to choose) + one verb (`pick`, `cross`, `remove`) and its count
+- **`choose`**: a rule on a playbook object: `from` (where to choose), a `verb` (`pick`, `cross`, `remove`, `attach`) and its `count`
 - **Chosen**: what the hunter picked, stored with the `choose` rule's object
 - **Selected**: computed, on the object that has the options, from any source
 - **`id` / `ref`**: `id` defines something (playbook); `ref` points at it (hunter). A reference with nothing attached is just its string

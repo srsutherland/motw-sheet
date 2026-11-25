@@ -65,7 +65,7 @@ Sections: **Decided** (with where it was decided), **Needs** (from the playbook 
    - One form only; no explicit `.options`
 - `"grant"` takes the thing itself: you gain it
 - `"choose"` can be a list, for improvements that do more than one thing
-- One verb per `choose`; the hunter's stored choices are references, their meaning comes from the verb:
+- Each `choose` rule has a `verb` and its `count`; the hunter's stored choices are references, their meaning comes from the verb:
 
 | Verb     | Meaning                                    | Choosing from |
 | -------- | ------------------------------------------ | --- |
@@ -80,17 +80,17 @@ Sections: **Decided** (with where it was decided), **Needs** (from the playbook 
 
 ```jsonc
 // on the Tools and Techniques move
-{ "choose": { "cross": 1 } }
+{ "choose": { "verb": "cross", "count": 1 } }
 
 // Divine: change your mission (redo = remove + pick)
 { "choose": [
-    { "from": "@mission", "remove": 1 },
-    { "from": "@mission", "pick": 1 } ] }
+    { "from": "@mission", "verb": "remove", "count": 1 },
+    { "from": "@mission", "verb": "pick", "count": 1 } ] }
 
 // Flake: gain a haven
 { "description": "Gain a haven, like the Expert has, with two options",
   "grant": "@the_expert.haven",
-  "choose": { "from": "@the_expert.haven", "pick": 2 } }
+  "choose": { "from": "@the_expert.haven", "verb": "pick", "count": 2 } }
 ```
 
 ## Display-only sub-items
@@ -114,10 +114,10 @@ Limits on a `choose` (exact syntax not final):
 
 | Rule                                    | Covers |
 | --------------------------------------- | --- |
-| `"pick": 3`                             | most choices |
+| `"verb": "pick", "count": 3`            | most choices |
 | `"min": 1`, `"min": 2`                  | "one or more" (Wronged), "at least two" (Heat) |
-| `"min": 0, "pick": 1`                   | optional gear |
-| `"cross": 1`                            | Tools & Techniques |
+| `"verb": "pick", "count": 1, "min": 0`  | optional gear |
+| `"verb": "cross", "count": 1`           | Tools & Techniques |
 | limits per sub-list, keyed by reference | Combat Magic (3, at least 1 base), Monstrous natural attacks (2, at least 1 base, at most 1 extra), gear categories |
 
 - A feature with sub-lists is one container: Combat Magic's options are two sub-lists, `bases` and `effects`
@@ -126,12 +126,12 @@ Limits on a `choose` (exact syntax not final):
 
 ```jsonc
 // an extra; `extras` is a sub-list of natural_attacks
-{ "name": "Add +1 harm to a base", "choose": { "from": "@natural_attacks.bases", "attach": 1 } }
+{ "name": "Add +1 harm to a base", "choose": { "from": "@natural_attacks.bases", "verb": "attach", "count": 1 } }
 // hunter: { "ref": "@extras.add_1_harm_to_a_base", "chosen": ["@teeth"] }
 ```
 
 ```jsonc
-{ "choose": { "from": "@combat_magic", "pick": 3,
+{ "choose": { "from": "@combat_magic", "verb": "pick", "count": 3,
               "limits": { "@combat_magic.bases": { "min": 1 } } } }
 ```
 
@@ -173,7 +173,7 @@ Limits on a `choose` (exact syntax not final):
 - Chosen in a popup, or a dropdown if simple (DESIGN.md)
 - Specials that cost more than one improvement: ignore for now
 - Redo / remove improvements: implementation detail, not a design question
-- "+1 to any rating": sub-options, one per rating, each a fixed effect; `"choose": { "pick": 1 }`
+- "+1 to any rating": sub-options, one per rating, each a fixed effect; `"choose": { "verb": "pick", "count": 1 }`
 - Monstrous "Free yourself from the curse": `cross` the curse (stays visible, crossed off), plus -1 Weird
    - Long term, DRY it to `"from": "@shared.improve_any_rating"`
 - "Mark two basic moves as advanced": a pick plus an effect, `advance_basic`
