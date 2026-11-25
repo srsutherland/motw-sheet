@@ -52,7 +52,7 @@ Hunter (choices, stored) ──> HunterState.js (replays choices) ──> comput
 ```
 
 - A hunter stores only choices and plain values; ratings, moves, gear and features are computed by replaying `getting_started`, then each improvement in the order taken, then the choices on gained items
-- The hunter keeps its own copy of its playbook ("full" format); references resolve against that copy first
+- The hunter keeps its own copy of its playbook; references resolve against that copy first. Saved as a reference to the playbook file by default (loaded as a copy of it), or as the copy ("full" format)
 
 ## 3. Core Components
 
@@ -88,10 +88,10 @@ Deployment: GitHub Pages (see 6)
 - `Storage.js`
    - localStorage, one key per hunter
    - Import/export
-   - `toSaved`: adds `updated`, `computed`; playbook last
+   - `toSaved`: adds `updated`, `computed`; playbook last. Options: `playbookRef` (default true), `computed` (default true)
 - `Markdown.js`
    - Markdown subset for display text
-   - Escapes everything first (imported files carry their own playbook text)
+   - Escapes everything first (imported files can carry their own playbook text)
 - `Format.js`
    - `ratingLineHtml`: "Charm-1, Cool+1, ...", numbers colored by value
 - `Tags.js`
@@ -154,7 +154,7 @@ Monitoring & Logging: none
 ## 7. Security Considerations
 
 - No accounts, no server; data stays in the browser
-- Imported hunter files are untrusted: they carry their own playbook copy, whose text is rendered as HTML. `Markdown.js` escapes everything first; render display text only through it (`MarkdownText.vue`)
+- Imported hunter files are untrusted: they can carry their own playbook copy, whose text is rendered as HTML. `Markdown.js` escapes everything first; render display text only through it (`MarkdownText.vue`)
 
 ## 8. Development & Testing Environment
 

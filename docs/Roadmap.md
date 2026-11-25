@@ -66,6 +66,7 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - Better view and filter for "take a move from another playbook" choice picker
 - Need some way to add options to existing lists (for homebrew and bending the rules)
 - One component for an option's text ("**Name**: description (tags)"), now rendered separately in `ChooseRule`, `ViewFeature`, `Move` and `EditFeature`
+- Save/export options (`toSaved` has them; nothing sets them yet): the playbook as a reference (default) or a full copy; omit `computed` (the app recomputes it by replaying the sheet) for a smaller file
 - `ViewMoves`: the moves section is still inline in `ViewHunter`; match `EditMoves` and the other `View*` sections
 
 # Minor
@@ -93,7 +94,7 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - Edit page is too cluttered; more should be in popups
 - Mythic improvement costs are fixed at 2 (Keeper-chosen schemes are post-MVP)
 - Saves from older hunter formats can only be deleted (the sample was converted with one-off scripts)
-- Saves are always the "full" hunter JSON; the "slim" version (DESIGN.md) isn't built
+- Saves reference the playbook file by default; once something edits a hunter's playbook copy, those saves would lose the edits
 - `basic_moves.json` has names and ratings only, no descriptions (needed for popups)
 - `[[wikilinks]]` render as dotted-underline text, no popup yet
 - A hunter's playbook copy is indexed once; editing the copy (it's meant to be modifiable) won't re-index it. Nothing edits it yet.

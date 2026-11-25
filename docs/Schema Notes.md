@@ -212,6 +212,7 @@ Limits on a `choose` (exact syntax not final):
 
 - "Full" version (objects serialized all the way down) and "slim" version (references where possible) (DESIGN.md)
    - Full: the hunter keeps its own copy of the playbook, modifiable
+   - Saved with the playbook as a reference to its file by default (`"playbook": "@the_spellslinger"`); the full copy is an option
    - Slim: needs a stable id on everything it references
 - Schema version: `0.1.yyyy.mm.dd`, the date of the last breaking change (`.1`, `.2`... if it breaks again on a day it was already pushed)
    - Hunter and playbooks have separate schema versions
