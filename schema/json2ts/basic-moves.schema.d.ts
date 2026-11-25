@@ -11,9 +11,7 @@ import type {DateString, Id, Markdown, Paragraphs, Rating, SchemaVersion} from "
  * The moves every hunter has.
  */
 export interface BasicMoves {
-  /**
-   * This file's schema, for editors.
-   */
+  /** This file's schema, for editors. */
   $schema?: string;
   schema_version: SchemaVersion;
   updated: DateString;
@@ -26,9 +24,7 @@ export interface BasicMoves {
     name: string;
     rating: Rating;
     description?: Paragraphs;
-    /**
-     * Use magic's effects.
-     */
+    /** Use magic's effects. */
     options?: {
       id: Id;
       description: Markdown;

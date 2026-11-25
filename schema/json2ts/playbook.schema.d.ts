@@ -24,15 +24,11 @@ import type {
 } from "./common.schema";
 
 export interface Playbook {
-  /**
-   * This file's schema, for editors.
-   */
+  /** This file's schema, for editors. */
   $schema?: string;
   schema_version: SchemaVersion;
   updated: DateString;
-  /**
-   * The file id: absolute references start with it (`@the_expert.haven`).
-   */
+  /** The file id: absolute references start with it (`@the_expert.haven`). */
   id: string;
   type: "playbook";
   name: string;
@@ -44,34 +40,24 @@ export interface Playbook {
   };
   harm: {
     max: number;
-    /**
-     * Harm at which wounds become unstable.
-     */
+    /** Harm at which wounds become unstable. */
     unstable: number;
   };
-  /**
-   * Features shown before the moves (Combat Magic, Monster Breed).
-   */
+  /** Features shown before the moves (Combat Magic, Monster Breed). */
   pre_moves?: Feature[];
   moves: MoveList;
-  /**
-   * Features shown after the moves (Haven).
-   */
+  /** Features shown after the moves (Haven). */
   post_moves?: Feature[];
   starting_gear: GearList;
   getting_started: GettingStarted;
   look: Look;
   ratings_base: {
     heading?: string;
-    /**
-     * @minItems 1
-     */
+    /** @minItems 1 */
     options: Ratings[];
   };
   introductions?: Text;
-  /**
-   * Plain values: pre-fills the hunter can edit freely.
-   */
+  /** Plain values: pre-fills the hunter can edit freely. */
   history: {
     description?: Paragraphs;
     options: PlainText[];
@@ -79,9 +65,7 @@ export interface Playbook {
   leveling_up?: Text;
   improvements: ImprovementList;
   improvements_advanced?: ImprovementList;
-  /**
-   * Homebrew: not on the paper playbook.
-   */
+  /** Homebrew: not on the paper playbook. */
   improvements_mythic?: ImprovementList;
 }
 
@@ -166,9 +150,7 @@ export interface Look {
   heading?: string;
   [k: string]:
     | {
-        /**
-         * How the pick reads on the sheet: `___` stands for it ("___ clothes").
-         */
+        /** How the pick reads on the sheet: `___` stands for it ("___ clothes"). */
         format: string;
         options: (PlainText | RefTextbox)[];
       }
@@ -188,9 +170,7 @@ export interface ImprovementList {
     level?: number;
     improvements?: number;
   };
-  /**
-   * Improvements each one costs.
-   */
+  /** Improvements each one costs. */
   cost?: number;
   options: Improvement[];
 }
@@ -207,8 +187,6 @@ export interface Improvement {
   effects?: Effect[];
   special?: "change_playbook" | "second_hunter" | "retire" | "turn_evil";
   cost?: number;
-  /**
-   * Its own options ("+1 to any rating": one per rating).
-   */
+  /** Its own options ("+1 to any rating": one per rating). */
   options?: Option[];
 }

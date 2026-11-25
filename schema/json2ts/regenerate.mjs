@@ -36,6 +36,9 @@ const re_defKey = /#\/\$defs\/(\w+)$/;
 const re_commentLine = /^(\s*\* )(.*)$/; // in a /** */ comment: its " * ", then its text
 const re_clauseEnd = /(?<=[^.][.;]) +(?=\S)/; // after ". " or "; " (not "... ")
 const re_listItem = /^- /;
+// A doc comment with one line of text, indented (on a property, not a type): the indent, then
+// the text
+const re_oneLineComment = /^( +)\/\*\*\n *\* (.*)\n *\*\/$/gm;
 
 /**
  * The schemas as json2ts gets them: tagged with their sources, and with each $ref beside
@@ -286,9 +289,10 @@ const wrapLine = (text, prefix, hanging) => {
 
 /**
  * Lays out the comments in formatted code: a line per sentence or clause, wrapped to WIDTH
- * (list items with a hanging indent).
+ * (list items with a hanging indent); a property's comment with one short line of text, on
+ * one line.
  * FIXES: Prettier doesn't wrap comments, and json2ts writes each description on one line (one
- * ran to over 400 characters).
+ * ran to over 400 characters), in a comment of at least three lines.
  * @param {string} code
  * @returns {string}
  */
@@ -300,7 +304,10 @@ const layOutComments = (code) => code.split('\n').flatMap((line) => {
     const hanging = re_listItem.test(text) ? `${prefix}  ` : prefix;
     return text.split(re_clauseEnd)
         .flatMap((clause, i) => wrapLine(clause, i === 0 ? prefix : hanging, hanging));
-}).join('\n');
+}).join('\n').replace(re_oneLineComment, (comment, indent, text) => {
+    const oneLine = `${indent}/** ${text} */`;
+    return oneLine.length <= WIDTH ? oneLine : comment;
+});
 
 /**
  * The comment at the top of each generated file.

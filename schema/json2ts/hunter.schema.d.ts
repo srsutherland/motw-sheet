@@ -14,33 +14,23 @@ import type {Playbook} from "./playbook.schema";
  * the order taken.
  */
 export interface Hunter {
-  /**
-   * This file's schema, for editors.
-   */
+  /** This file's schema, for editors. */
   $schema?: string;
   schema_version: "0.1.2026.11.24";
   uid: string;
   created: Timestamp;
-  /**
-   * When last saved.
-   */
+  /** When last saved. */
   updated?: Timestamp;
   playbook_name: string;
-  /**
-   * The playbook's `updated` date when this hunter was made.
-   */
+  /** The playbook's `updated` date when this hunter was made. */
   playbook_updated?: DateString | "";
   name: string;
   pronouns?: string;
-  /**
-   * Look list key -> the pick, or what was written in.
-   */
+  /** Look list key -> the pick, or what was written in. */
   look: {
     [k: string]: string;
   };
-  /**
-   * A copy of the chosen ratings line.
-   */
+  /** A copy of the chosen ratings line. */
   ratings_base: Ratings | null;
   history: {
     name?: string;
@@ -54,13 +44,9 @@ export interface Hunter {
   getting_started: Choices & {
     grant: RefWithChoices[];
   };
-  /**
-   * In the order taken.
-   */
+  /** In the order taken. */
   improvements: RefWithChoices[];
-  /**
-   * Gear added during play.
-   */
+  /** Gear added during play. */
   extra_gear: {
     name: string;
     tags: Tags;
