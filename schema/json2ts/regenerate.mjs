@@ -118,6 +118,9 @@ const json2tsOptions = (schemas) => ({
     // FIXES: an object that doesn't say additionalProperties (a move) would get an
     // index signature, [k: string]: unknown
     additionalProperties: false,
+    // FIXES: an array with minItems (paragraphs) would be a tuple,
+    // [Markdown, ...Markdown[]], instead of Markdown[]
+    ignoreMinAndMaxItems: true,
     // Each file gets its own (banner)
     bannerComment: '',
     customName: defName,

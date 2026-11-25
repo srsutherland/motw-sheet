@@ -63,7 +63,7 @@ export type Markdown = string;
 /**
  * One paragraph as a string, or several as an array of strings.
  */
-export type Paragraphs = Markdown | [Markdown, ...Markdown[]];
+export type Paragraphs = Markdown | Markdown[];
 
 export type DateString = string;
 
@@ -113,7 +113,7 @@ export type ChooseRule = {
 /**
  * One rule, or several.
  */
-export type Choose = ChooseRule | [ChooseRule, ...ChooseRule[]];
+export type Choose = ChooseRule | ChooseRule[];
 
 /**
  * What you gain outright: a reference or several. Granting a list grants everything in it.

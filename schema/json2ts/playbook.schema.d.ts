@@ -66,7 +66,7 @@ export interface Playbook {
     /**
      * @minItems 1
      */
-    options: [Ratings, ...Ratings[]];
+    options: Ratings[];
   };
   introductions?: Text;
   /**
