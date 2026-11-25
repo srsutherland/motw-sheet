@@ -36,9 +36,17 @@ const computedFor = (hunter) => {
     };
 };
 
-// The hunter as saved: its own data, `updated`, the computed view, then the playbook copy
-// last (it's most of the file).
-const toSaved = (hunter) => {
+/**
+ * The hunter as saved: its own data, `updated`, the computed view, then the playbook last
+ * (as a copy, it's most of the file).
+ * @param {Hunter} hunter
+ * @param {object} [options]
+ * @param {boolean} [options.playbookRef] the playbook as a reference to its file
+ *     ("@the_spellslinger"), or false for the hunter's own copy ("full")
+ * @param {boolean} [options.computed] include `computed` (loading recomputes it)
+ * @returns {object}
+ */
+const toSaved = (hunter, { playbookRef = true, computed = true } = {}) => {
     // eslint-disable-next-line no-unused-vars
     const { playbook, updated, ...own } = JSON.parse(JSON.stringify(hunter));
     const saved = {};
@@ -48,8 +56,10 @@ const toSaved = (hunter) => {
             saved.updated = new Date().toISOString();
         }
     }
-    saved.computed = computedFor(hunter);
-    saved.playbook = playbook;
+    if (computed) {
+        saved.computed = computedFor(hunter);
+    }
+    saved.playbook = playbookRef ? `@${playbook.id}` : playbook;
     return saved;
 };
 

@@ -69,9 +69,9 @@ export interface Hunter {
   level: number;
   computed?: Computed;
   /**
-   * The hunter's own copy of its playbook ("full" format).
+   * Its playbook: a reference to the file (`@the_spellslinger`), loaded as a copy of it, or the hunter's own copy ("full" format).
    */
-  playbook: Playbook;
+  playbook: string | Playbook;
 }
 
 export type Timestamp = string;

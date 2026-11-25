@@ -1,3 +1,4 @@
+import { files } from '@/Playbooks';
 import { resolve } from '@/PlaybookData';
 
 // Date of the last breaking change to the hunter format (0.1.yyyy.mm.dd, plus .1, .2...
@@ -28,6 +29,12 @@ const makeChoices = (holder) => {
 // { ref, chosen }; anything else is just its reference, a string.
 const makeRecord = (ref, node) => (node?.choose ? { ref, ...makeChoices(node) } : ref);
 
+// A hunter's own copy of a playbook, without the file's $schema (a path relative to that file)
+const copyOf = (playbook) => {
+    const { $schema, ...copy } = playbook; // eslint-disable-line no-unused-vars
+    return structuredClone(copy);
+};
+
 // "{name} the {playbook}"; playbook names already start with "The"
 const hunterTitle = (name, playbookName) => {
     const playbook = (playbookName || '<Unknown Playbook>').replace(/^the\s+/i, '');
@@ -38,7 +45,7 @@ class Hunter {
     schema_version = SCHEMA_VERSION;
     uid = undefined;
     created = ''; // ISO timestamp; "updated" is added when saved (Storage.js)
-    playbook = undefined; // the hunter's own, modifiable copy (DESIGN.md: "full" hunter JSON)
+    playbook = undefined; // the hunter's own, modifiable copy (saved as a reference by default)
     playbook_name = '';
     playbook_updated = ''; // the playbook's "updated" date when this hunter was made
     name = '';
@@ -58,9 +65,7 @@ class Hunter {
     constructor(playbook, name) {
         this.uid = crypto.randomUUID();
         this.created = new Date().toISOString();
-        // its own copy, without the playbook file's $schema (a path relative to that file)
-        const { $schema, ...copy } = playbook; // eslint-disable-line no-unused-vars
-        this.playbook = structuredClone(copy);
+        this.playbook = copyOf(playbook);
         this.playbook_name = playbook.name;
         this.playbook_updated = playbook.updated ?? '';
         if (name) {
@@ -81,6 +86,14 @@ class Hunter {
         // computed: for readers of the file, recomputed here; $schema: for editors
         const { computed, $schema, ...stored } = data; // eslint-disable-line no-unused-vars
         const hunter = Object.assign(Object.create(Hunter.prototype), stored);
+        // saved as a reference to its file ("@the_spellslinger"): a copy of that file
+        if (typeof hunter.playbook === 'string') {
+            const file = files.get(hunter.playbook.slice(1));
+            if (!file) {
+                throw new Error(`Unknown playbook ${hunter.playbook}`);
+            }
+            hunter.playbook = copyOf(file);
+        }
         // an improvement still being picked when the page was closed
         hunter.improvements = hunter.improvements.filter((taken) => !taken?.pending);
         return hunter;

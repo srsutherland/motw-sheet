@@ -156,6 +156,18 @@ const round = Hunter.fromJSON(JSON.parse(JSON.stringify(saved)));
 check('JSON round trip state', JSON.stringify(S.hunterState(round).ratings), JSON.stringify(st.ratings));
 check('computed ignored on load', round.computed, undefined);
 check('old save rejected', Hunter.fromJSON({ schema_version: '0.1.2026.10.09.1', uid: 'x', playbook: {} }), null);
+check('saved: playbook as a reference', saved.playbook, '@the_spellslinger');
+check('loaded: reference -> copy of the file', [round.playbook !== spellslinger, JSON.stringify(round.playbook) === JSON.stringify(h.playbook)], [true, true]);
+const full = toSaved(h, { playbookRef: false, computed: false });
+check('saved full: the copy, no computed', [full.playbook.id, 'computed' in full, Object.keys(full).at(-1)], ['the_spellslinger', false, 'playbook']);
+check('loaded full', S.hunterState(Hunter.fromJSON(JSON.parse(JSON.stringify(full)))).moves.length, st.moves.length);
+check('unknown playbook', (() => {
+    try {
+        Hunter.fromJSON({ ...saved, playbook: '@the_unknown' });
+    } catch (e) {
+        return e.message;
+    }
+})(), 'Unknown playbook @the_unknown');
 
 // The Expert: a post-moves feature, no granted moves, and moves from another playbook
 const ex = 'the_expert';
@@ -287,5 +299,6 @@ for (const playbook of playbooks) {
 for (const [label, hunter] of [['Spell-Slinger', h], ['Expert', e], ['Monstrous', m]]) {
     check(`schema: built ${label}`, validate('hunter.schema.json', JSON.parse(JSON.stringify(toSaved(hunter)))), []);
 }
+check('schema: full, no computed', validate('hunter.schema.json', JSON.parse(JSON.stringify(full))), []);
 await server.close();
 finish();

@@ -74,8 +74,11 @@
     "level": { "type": "integer", "minimum": 0 },
     "computed": { "$ref": "#/$defs/computed" },
     "playbook": {
-      "description": "The hunter's own copy of its playbook (\"full\" format).",
-      "$ref": "playbook.schema.json"
+      "description": "Its playbook: a reference to the file (`@the_spellslinger`), loaded as a copy of it, or the hunter's own copy (\"full\" format).",
+      "anyOf": [
+        { "type": "string", "pattern": "^@the_[a-z0-9_]+$" },
+        { "$ref": "playbook.schema.json" }
+      ]
     }
   },
   "required": [
