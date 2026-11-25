@@ -22,9 +22,10 @@ const j2ts = Object.assign({}, ...[
 const here = path.dirname(fileURLToPath(import.meta.url));
 const schemaDir = path.dirname(here);
 
-// Where a schema came from, written into json2ts's copy of it: "common.schema.json#/$defs/dateString"
-// for a $def, "hunter.schema.json#" for a whole file. json2ts parses each schema object once,
-// so the types it makes from it can be traced back to it (see parseSchemas).
+// Where a schema came from, written into json2ts's copy of it:
+// "common.schema.json#/$defs/dateString" for a $def, "hunter.schema.json#" for a whole file.
+// json2ts parses each schema object once, so the types it makes from it can be traced back
+// to it (see parseSchemas).
 const SOURCE = 'x-source';
 
 const re_schemaFile = /\.schema\.json$/;
