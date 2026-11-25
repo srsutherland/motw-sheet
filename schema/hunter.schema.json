@@ -114,7 +114,7 @@
       "not": { "required": ["chosen", "choose"] }
     },
     "choice": {
-      "description": "One choice, written relative to the container it's chosen from (`@bases.blast`), as written there if the option is itself a reference (`@basic_moves.use_magic.heal`), or absolute for another playbook (`@the_spellslinger.moves.practitioner`). A plain-string option is stored as written. Free text: { ref: \"@textbox\", text }. A choice with its own choices: { ref, chosen } / { ref, choose }.",
+      "description": "One choice:\n- a reference: relative to the container it's chosen from (`@bases.blast`), as written there if the option is itself a reference (`@basic_moves.use_magic.heal`), or absolute for another playbook (`@the_spellslinger.moves.practitioner`)\n- a plain-string option: as written\n- free text: { ref: \"@textbox\", text }\n- a choice with its own choices: { ref, chosen } / { ref, choose }",
       "anyOf": [
         { "$ref": "common.schema.json#/$defs/reference" },
         { "$ref": "common.schema.json#/$defs/plainText" },
@@ -132,7 +132,7 @@
       "additionalProperties": false
     },
     "refWithChoices": {
-      "description": "The hunter's side of a playbook object (a grant, an improvement, a pick with its own choices). Just its reference when nothing's attached; otherwise { ref, ... }. Improvements: root-relative (`@improvements.weird`); `cost` if it cost more than 1; `pending` while being picked.",
+      "description": "The hunter's side of a playbook object (a grant, an improvement, a pick with its own choices): just its reference when nothing's attached, otherwise { ref, ... }. Improvements:\n- root-relative (`@improvements.weird`)\n- `cost` if it cost more than 1\n- `pending` while being picked",
       "anyOf": [
         { "$ref": "common.schema.json#/$defs/reference" },
         {

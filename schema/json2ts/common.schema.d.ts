@@ -97,11 +97,12 @@ export interface Ratings {
 export type Tags = string[];
 
 /**
- * One `choose` rule: where to choose from (`from`, default `@this`) a `verb` and its `count`.
- * pick: add it;
- * cross: strike it out, still visible;
- * remove: undo an earlier pick;
- * attach: attach this option to one of your picks, without picking it again.
+ * One `choose` rule: where to choose from (`from`, default `@this`) a `verb` and its `count`:
+ * - pick: add it
+ * - cross: strike it out, still visible
+ * - remove: undo an earlier pick
+ * - attach: attach this option to one of your picks, without picking it again
+ *
  * `min` (default: the count) allows fewer;
  * `limits` sets min / max per sub-list.
  */

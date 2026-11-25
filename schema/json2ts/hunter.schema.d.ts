@@ -96,12 +96,13 @@ export interface Choices {
 }
 
 /**
- * One choice, written relative to the container it's chosen from (`@bases.blast`), as written there
- * if the option is itself a reference (`@basic_moves.use_magic.heal`), or absolute for another
- * playbook (`@the_spellslinger.moves.practitioner`).
- * A plain-string option is stored as written.
- * Free text: { ref: "@textbox", text }.
- * A choice with its own choices: { ref, chosen } / { ref, choose }.
+ * One choice:
+ * - a reference: relative to the container it's chosen from (`@bases.blast`), as written there if
+ *   the option is itself a reference (`@basic_moves.use_magic.heal`), or absolute for another
+ *   playbook (`@the_spellslinger.moves.practitioner`)
+ * - a plain-string option: as written
+ * - free text: { ref: "@textbox", text }
+ * - a choice with its own choices: { ref, chosen } / { ref, choose }
  */
 export type Choice = Reference | PlainText | TextChoice | RefWithChoices;
 
@@ -111,12 +112,12 @@ export interface TextChoice {
 }
 
 /**
- * The hunter's side of a playbook object (a grant, an improvement, a pick with its own choices).
- * Just its reference when nothing's attached;
- * otherwise { ref, ... }.
- * Improvements: root-relative (`@improvements.weird`);
- * `cost` if it cost more than 1;
- * `pending` while being picked.
+ * The hunter's side of a playbook object (a grant, an improvement, a pick with its own choices):
+ * just its reference when nothing's attached, otherwise { ref, ... }.
+ * Improvements:
+ * - root-relative (`@improvements.weird`)
+ * - `cost` if it cost more than 1
+ * - `pending` while being picked
  */
 export type RefWithChoices =
   | Reference

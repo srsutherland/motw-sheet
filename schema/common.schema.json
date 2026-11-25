@@ -103,7 +103,7 @@
       "items": { "type": "string", "pattern": "^\\S+$" }
     },
     "chooseRule": {
-      "description": "One `choose` rule: where to choose from (`from`, default `@this`) a `verb` and its `count`. pick: add it; cross: strike it out, still visible; remove: undo an earlier pick; attach: attach this option to one of your picks, without picking it again. `min` (default: the count) allows fewer; `limits` sets min / max per sub-list.",
+      "description": "One `choose` rule: where to choose from (`from`, default `@this`) a `verb` and its `count`:\n- pick: add it\n- cross: strike it out, still visible\n- remove: undo an earlier pick\n- attach: attach this option to one of your picks, without picking it again\n\n`min` (default: the count) allows fewer; `limits` sets min / max per sub-list.",
       "type": "object",
       "properties": {
         "from": { "$ref": "#/$defs/ref_from" },
