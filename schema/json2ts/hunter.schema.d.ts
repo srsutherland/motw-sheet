@@ -16,7 +16,7 @@ export interface Hunter {
    * This file's schema, for editors.
    */
   $schema?: string;
-  schema_version: "0.1.2026.10.16";
+  schema_version: "0.1.2026.11.24";
   uid: string;
   created: Timestamp;
   /**

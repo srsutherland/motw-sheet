@@ -18,7 +18,8 @@ for (const file of fs.readdirSync('samples').filter((f) => f.endsWith('.json')))
 // The schemas catch what they should
 const pb = json('playbooks/the-expert.json');
 check('rejects an unknown key', validate('playbook.schema.json', { ...pb, colour: 'red' }).length > 0, true);
-check('rejects a rule with two verbs', validate('common.schema.json#/$defs/chooseRule', { pick: 1, cross: 1 }).length > 0, true);
+check('rejects an unknown verb', validate('common.schema.json#/$defs/chooseRule', { verb: 'take', count: 1 }).length > 0, true);
+check('rejects a rule without a count', validate('common.schema.json#/$defs/chooseRule', { verb: 'pick' }).length > 0, true);
 check('rejects a bad reference', validate('common.schema.json#/$defs/reference', '@Bad Ref').length > 0, true);
 
 // The TypeScript declarations match the schemas

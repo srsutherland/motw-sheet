@@ -1,6 +1,6 @@
 {
   "$schema": "../schema/playbook.schema.json",
-  "schema_version": "0.1.2026.10.02",
+  "schema_version": "0.1.2026.11.24",
   "updated": "2026-10-22",
   "id": "the_monstrous",
   "type": "playbook",
@@ -61,13 +61,13 @@
         {
           "name": "Feed",
           "description": "You must subsist on living humans—it might take the form of blood, brains, or spiritual essence but it must be from people. You need to [[act under pressure]] to resist feeding whenever a perfect opportunity presents itself.",
-          "choose": { "pick": 1 },
+          "choose": { "verb": "pick", "count": 1 },
           "options": ["@textbox"]
         },
         {
           "name": "Vulnerability",
           "description": "Pick a substance. You suffer +1 harm when you suffer harm from it. If you are bound or surrounded by it, you must [[act under pressure]] to use your powers.",
-          "choose": { "pick": 1 },
+          "choose": { "verb": "pick", "count": 1 },
           "options": ["@textbox"]
         },
         {
@@ -76,13 +76,13 @@
           "on_view": {
             "description": "One emotion rules you. Whenever you have a chance to indulge that emotion, you must do so immediately, or [[act under pressure]] to resist."
           },
-          "choose": { "pick": 1 },
+          "choose": { "verb": "pick", "count": 1 },
           "options": ["hunger", "hate", "anger", "fear", "jealousy", "greed", "joy", "pride", "envy", "lust", "cruelty"]
         },
         {
           "name": "Dark Master",
           "description": "You have an evil lord who doesn't know you changed sides. They still give you orders, and they do not tolerate refusal. Or failure.",
-          "choose": { "pick": 1 },
+          "choose": { "verb": "pick", "count": 1 },
           "options": ["@textbox"]
         }
       ]
@@ -109,15 +109,15 @@
           "options": [
             {
               "name": "Add +1 harm to a base",
-              "choose": { "from": "@natural_attacks.bases", "attach": 1 }
+              "choose": { "from": "@natural_attacks.bases", "verb": "attach", "count": 1 }
             },
             {
               "name": "Add ignore-armour to a base",
-              "choose": { "from": "@natural_attacks.bases", "attach": 1 }
+              "choose": { "from": "@natural_attacks.bases", "verb": "attach", "count": 1 }
             },
             {
               "name": "Add an extra range to a base (add intimate, hand, or close).",
-              "choose": { "from": "@natural_attacks.bases", "attach": 1 }
+              "choose": { "from": "@natural_attacks.bases", "verb": "attach", "count": 1 }
             }
           ]
         }
@@ -187,7 +187,7 @@
         "type": "move",
         "name": "Something Borrowed",
         "description": "Take a move from a hunter playbook that is not currently in play.",
-        "choose": { "from": "@*.moves", "pick": 1 }
+        "choose": { "from": "@*.moves", "verb": "pick", "count": 1 }
       }
     ]
   },
@@ -209,16 +209,16 @@
   "getting_started": {
     "description": "To make your Monstrous, first pick a name. Then follow the instructions in this playbook to decide your look, ratings, breed, moves, and gear. Finally, introduce yourself and pick history.",
     "choose": [
-      { "from": "@monster_breed.origin", "pick": 1 },
-      { "from": "@monster_breed.alignment", "pick": 1 },
-      { "from": "@curse", "pick": 1 },
+      { "from": "@monster_breed.origin", "verb": "pick", "count": 1 },
+      { "from": "@monster_breed.alignment", "verb": "pick", "count": 1 },
+      { "from": "@curse", "verb": "pick", "count": 1 },
       {
         "from": "@natural_attacks",
-        "pick": 2,
+        "verb": "pick", "count": 2,
         "limits": { "@natural_attacks.bases": { "min": 1 }, "@natural_attacks.extras": { "max": 1 } }
       },
-      { "from": "@moves", "pick": 2 },
-      { "from": "@starting_gear", "min": 0, "pick": 1 }
+      { "from": "@moves", "verb": "pick", "count": 2 },
+      { "from": "@starting_gear", "verb": "pick", "count": 1, "min": 0 }
     ]
   },
   "look": {
@@ -299,38 +299,38 @@
         "id": "move_1",
         "type": "improvement",
         "description": "Take another Monstrous move",
-        "choose": { "from": "@moves", "pick": 1 }
+        "choose": { "from": "@moves", "verb": "pick", "count": 1 }
       },
       {
         "id": "move_2",
         "type": "improvement",
         "description": "Take another Monstrous move",
-        "choose": { "from": "@moves", "pick": 1 }
+        "choose": { "from": "@moves", "verb": "pick", "count": 1 }
       },
       {
         "id": "haven",
         "type": "improvement",
         "description": "Gain a haven, like the Expert has, with two options",
         "grant": "@the_expert.haven",
-        "choose": { "from": "@the_expert.haven", "pick": 2 }
+        "choose": { "from": "@the_expert.haven", "verb": "pick", "count": 2 }
       },
       {
         "id": "natural_attacks",
         "type": "improvement",
         "description": "Take a natural attacks pick",
-        "choose": { "from": "@natural_attacks", "pick": 1 }
+        "choose": { "from": "@natural_attacks", "verb": "pick", "count": 1 }
       },
       {
         "id": "other_move_1",
         "type": "improvement",
         "description": "Take a move from another playbook",
-        "choose": { "from": "@*.moves", "pick": 1 }
+        "choose": { "from": "@*.moves", "verb": "pick", "count": 1 }
       },
       {
         "id": "other_move_2",
         "type": "improvement",
         "description": "Take a move from another playbook",
-        "choose": { "from": "@*.moves", "pick": 1 }
+        "choose": { "from": "@*.moves", "verb": "pick", "count": 1 }
       }
     ]
   },
@@ -343,7 +343,7 @@
         "id": "any_rating",
         "type": "improvement",
         "description": "Get +1 to any rating, max +3",
-        "choose": { "pick": 1 },
+        "choose": { "verb": "pick", "count": 1 },
         "options": [
           { "id": "charm", "name": "Charm", "effects": [{ "rating": "charm", "add": 1, "max": 3 }] },
           { "id": "cool", "name": "Cool", "effects": [{ "rating": "cool", "add": 1, "max": 3 }] },
@@ -368,14 +368,14 @@
         "id": "advanced_basic_1",
         "type": "improvement",
         "description": "Mark two of the basic moves as advanced",
-        "choose": { "from": "@basic_moves", "pick": 2 },
+        "choose": { "from": "@basic_moves", "verb": "pick", "count": 2 },
         "effects": [{ "advance_basic": true }]
       },
       {
         "id": "advanced_basic_2",
         "type": "improvement",
         "description": "Mark another two of the basic moves as advanced",
-        "choose": { "from": "@basic_moves", "pick": 2 },
+        "choose": { "from": "@basic_moves", "verb": "pick", "count": 2 },
         "effects": [{ "advance_basic": true }]
       },
       {
@@ -388,7 +388,7 @@
         "id": "free_from_curse",
         "type": "improvement",
         "description": "Free yourself from the curse of your kind. Your curse no longer applies, but you lose 1 Weird",
-        "choose": { "from": "@curse", "cross": 1 },
+        "choose": { "from": "@curse", "verb": "cross", "count": 1 },
         "effects": [{ "rating": "weird", "add": -1 }]
       },
       {
@@ -421,19 +421,19 @@
         "id": "mythic_move",
         "type": "improvement",
         "description": "Take another Monstrous move",
-        "choose": { "from": "@moves", "pick": 1 }
+        "choose": { "from": "@moves", "verb": "pick", "count": 1 }
       },
       {
         "id": "mythic_natural_attacks",
         "type": "improvement",
         "description": "Take a natural attacks pick",
-        "choose": { "from": "@natural_attacks", "pick": 1 }
+        "choose": { "from": "@natural_attacks", "verb": "pick", "count": 1 }
       },
       {
         "id": "mythic_other_move",
         "type": "improvement",
         "description": "Take a move from another playbook",
-        "choose": { "from": "@*.moves", "pick": 1 }
+        "choose": { "from": "@*.moves", "verb": "pick", "count": 1 }
       }
     ]
   }

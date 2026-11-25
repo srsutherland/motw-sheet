@@ -1,6 +1,6 @@
 {
   "$schema": "../schema/hunter.schema.json",
-  "schema_version": "0.1.2026.10.16",
+  "schema_version": "0.1.2026.11.24",
   "uid": "39e87fd3-0bda-456c-b659-6f672d508cc5",
   "created": "2026-10-09T21:18:06.045Z",
   "updated": "2026-10-09T21:18:06.045Z",
@@ -135,7 +135,7 @@
         "name": "Tools and Techniques",
         "description": "To use your combat magic effectively, you rely on a collection of tools and techniques. Cross off one; you'll need the rest.",
         "choose": {
-          "cross": 1
+          "verb": "cross", "count": 1
         },
         "options": [
           {
@@ -174,7 +174,7 @@
         "name": "Practitioner",
         "description": "Choose two effects available to you under [[use magic]]. Take +1 to [[use magic]] whenever you choose one of those effects.",
         "choose": {
-          "pick": 2
+          "verb": "pick", "count": 2
         },
         "options": [
           "@basic_moves.use_magic.inflict_harm",
@@ -339,7 +339,7 @@
     ]
   },
   "playbook": {
-    "schema_version": "0.1.2026.10.02",
+    "schema_version": "0.1.2026.11.24",
     "updated": "2026-10-17",
     "id": "the_spellslinger",
     "type": "playbook",
@@ -461,7 +461,7 @@
           "name": "Tools and Techniques",
           "description": "To use your combat magic effectively, you rely on a collection of tools and techniques. Cross off one; you'll need the rest.",
           "choose": {
-            "cross": 1
+            "verb": "cross", "count": 1
           },
           "options": [
             {
@@ -492,7 +492,7 @@
           "name": "Arcane Reputation",
           "description": "Pick three big organizations or groups in the supernatural community, which can include some of the more sociable types of monsters. They've heard of you and respect your power. With affected humans, take +1 forward when you [[manipulate someone|manipulate]] them. You may [[manipulate someone|manipulate]] affected monsters as if they were human, with no bonus.",
           "choose": {
-            "pick": 3
+            "verb": "pick", "count": 3
           },
           "options": [
             "@textbox",
@@ -521,7 +521,7 @@
           "name": "Enchanted Clothing",
           "description": "Pick an article of everyday clothing—it's enchanted without any change in appearance. Take -1 harm from any source that tries to get at you through the garment.",
           "choose": {
-            "pick": 1
+            "verb": "pick", "count": 1
           },
           "options": [
             "@textbox"
@@ -547,7 +547,7 @@
           "name": "Practitioner",
           "description": "Choose two effects available to you under [[use magic]]. Take +1 to [[use magic]] whenever you choose one of those effects.",
           "choose": {
-            "pick": 2
+            "verb": "pick", "count": 2
           },
           "options": [
             "@basic_moves.use_magic.inflict_harm",
@@ -617,7 +617,7 @@
       "choose": [
         {
           "from": "@combat_magic",
-          "pick": 3,
+          "verb": "pick", "count": 3,
           "limits": {
             "@combat_magic.bases": {
               "min": 1
@@ -626,11 +626,11 @@
         },
         {
           "from": "@moves",
-          "pick": 3
+          "verb": "pick", "count": 3
         },
         {
           "from": "@starting_gear",
-          "pick": 1
+          "verb": "pick", "count": 1
         }
       ]
     },
@@ -776,7 +776,7 @@
           "description": "Take another Spell-Slinger move",
           "choose": {
             "from": "@moves",
-            "pick": 1
+            "verb": "pick", "count": 1
           }
         },
         {
@@ -785,7 +785,7 @@
           "description": "Take another Spell-Slinger move",
           "choose": {
             "from": "@moves",
-            "pick": 1
+            "verb": "pick", "count": 1
           }
         },
         {
@@ -794,7 +794,7 @@
           "description": "Take a move from another playbook",
           "choose": {
             "from": "@*.moves",
-            "pick": 1
+            "verb": "pick", "count": 1
           }
         },
         {
@@ -803,7 +803,7 @@
           "description": "Take a move from another playbook",
           "choose": {
             "from": "@*.moves",
-            "pick": 1
+            "verb": "pick", "count": 1
           }
         },
         {
@@ -812,7 +812,7 @@
           "description": "Take another Combat Magic pick",
           "choose": {
             "from": "@combat_magic",
-            "pick": 1
+            "verb": "pick", "count": 1
           }
         }
       ]
@@ -829,7 +829,7 @@
           "type": "improvement",
           "description": "Get +1 to any rating, max +3",
           "choose": {
-            "pick": 1
+            "verb": "pick", "count": 1
           },
           "options": [
             {
@@ -907,7 +907,7 @@
           "description": "Mark two of the basic moves as advanced",
           "choose": {
             "from": "@basic_moves",
-            "pick": 2
+            "verb": "pick", "count": 2
           },
           "effects": [
             {
@@ -921,7 +921,7 @@
           "description": "Mark another two of the basic moves as advanced",
           "choose": {
             "from": "@basic_moves",
-            "pick": 2
+            "verb": "pick", "count": 2
           },
           "effects": [
             {
@@ -951,7 +951,7 @@
           "description": "Take another Combat Magic pick",
           "choose": {
             "from": "@combat_magic",
-            "pick": 1
+            "verb": "pick", "count": 1
           }
         },
         {
@@ -960,7 +960,7 @@
           "description": "You may cross off another option from your Tools and Techniques",
           "choose": {
             "from": "@moves.tools_and_techniques",
-            "cross": 1
+            "verb": "cross", "count": 1
           }
         }
       ]
@@ -989,7 +989,7 @@
           "description": "Take another Spell-Slinger move",
           "choose": {
             "from": "@moves",
-            "pick": 1
+            "verb": "pick", "count": 1
           }
         },
         {
@@ -998,7 +998,7 @@
           "description": "Take another Combat Magic pick",
           "choose": {
             "from": "@combat_magic",
-            "pick": 1
+            "verb": "pick", "count": 1
           }
         },
         {
@@ -1007,7 +1007,7 @@
           "description": "Take a move from another playbook",
           "choose": {
             "from": "@*.moves",
-            "pick": 1
+            "verb": "pick", "count": 1
           }
         }
       ]

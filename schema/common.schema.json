@@ -103,14 +103,12 @@
       "items": { "type": "string", "pattern": "^\\S+$" }
     },
     "chooseRule": {
-      "description": "One `choose` rule: where to choose from (`from`, default `@this`) and exactly one verb with its count. pick: add it; cross: strike it out, still visible; remove: undo an earlier pick; attach: attach this option to one of your picks, without picking it again. `min` (default: the count) allows fewer; `limits` sets min / max per sub-list.",
+      "description": "One `choose` rule: where to choose from (`from`, default `@this`) a `verb` and its `count`. pick: add it; cross: strike it out, still visible; remove: undo an earlier pick; attach: attach this option to one of your picks, without picking it again. `min` (default: the count) allows fewer; `limits` sets min / max per sub-list.",
       "type": "object",
       "properties": {
         "from": { "$ref": "#/$defs/ref_from" },
-        "pick": { "type": "integer", "minimum": 1 },
-        "cross": { "type": "integer", "minimum": 1 },
-        "remove": { "type": "integer", "minimum": 1 },
-        "attach": { "type": "integer", "minimum": 1 },
+        "verb": { "enum": ["pick", "cross", "remove", "attach"] },
+        "count": { "type": "integer", "minimum": 1 },
         "min": { "type": "integer", "minimum": 0 },
         "limits": {
           "type": "object",
@@ -125,12 +123,7 @@
           }
         }
       },
-      "oneOf": [
-        { "required": ["pick"] },
-        { "required": ["cross"] },
-        { "required": ["remove"] },
-        { "required": ["attach"] }
-      ],
+      "required": ["verb", "count"],
       "additionalProperties": false
     },
     "choose": {

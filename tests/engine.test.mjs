@@ -24,7 +24,7 @@ check('copy, not shared', h.playbook !== spellslinger, true);
 check('copy without the file\'s $schema', ['$schema' in spellslinger, '$schema' in h.playbook], [true, false]);
 check('getting_started mirrors the playbook', h.getting_started.choose.map((c) => c.from), ['@combat_magic', '@moves', '@starting_gear']);
 check('granted records', h.getting_started.grant, [{ ref: '@moves.tools_and_techniques', chosen: [] }]);
-check('version', h.schema_version, '0.1.2026.10.16');
+check('version', h.schema_version, '0.1.2026.11.24');
 check('created timestamp', /^\d{4}-\d\d-\d\dT/.test(h.created), true);
 check('playbook updated', h.playbook_updated, spellslinger.updated);
 check('slug', D.slug("Could've Been Worse"), 'couldve_been_worse');
@@ -43,7 +43,7 @@ check('onPage: other page', D.onPage({ description: 'a', on_view: { description:
 check('onPage: splice a string', D.onPage({ description: 'a', on_edit: { description: ['@...', 'b'] } }, 'description', 'edit'), ['a', 'b']);
 check('onPage: splice an array', D.onPage({ description: ['a', 'b'], on_edit: { description: ['z', '@...'] } }, 'description', 'edit'), ['z', 'a', 'b']);
 check('onPage: new key', D.onPage({ on_edit: { details: ['x', '@...'] } }, 'details', 'edit'), ['x']);
-check('rulesOf: from defaults to @this', rulesOf({ choose: { pick: 1 } }), [{ pick: 1, from: '@this' }]);
+check('rulesOf: from defaults to @this', rulesOf({ choose: { verb: 'pick', count: 1 } }), [{ verb: 'pick', count: 1, from: '@this' }]);
 check('other playbooks moves: not your own', D.optionsOf('@*.moves', pb).some((o) => o.group === 'The Spell-Slinger'), false);
 
 let st = S.hunterState(h);

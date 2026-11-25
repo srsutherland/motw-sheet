@@ -1,6 +1,6 @@
 {
   "$schema": "../schema/playbook.schema.json",
-  "schema_version": "0.1.2026.10.02",
+  "schema_version": "0.1.2026.11.24",
   "updated": "2026-10-22",
   "id": "the_expert",
   "type": "playbook",
@@ -126,9 +126,9 @@
   "getting_started": {
     "description": "To make your Expert, first pick a name. Then follow the instructions in this playbook to decide your look, ratings, haven, moves, and gear. Finally, introduce yourself and pick history.",
     "choose": [
-      { "from": "@haven", "pick": 3 },
-      { "from": "@moves", "pick": 2 },
-      { "from": "@starting_gear", "pick": 3 }
+      { "from": "@haven", "verb": "pick", "count": 3 },
+      { "from": "@moves", "verb": "pick", "count": 2 },
+      { "from": "@starting_gear", "verb": "pick", "count": 3 }
     ]
   },
   "look": {
@@ -205,37 +205,37 @@
         "id": "move_1",
         "type": "improvement",
         "description": "Take another Expert move",
-        "choose": { "from": "@moves", "pick": 1 }
+        "choose": { "from": "@moves", "verb": "pick", "count": 1 }
       },
       {
         "id": "move_2",
         "type": "improvement",
         "description": "Take another Expert move",
-        "choose": { "from": "@moves", "pick": 1 }
+        "choose": { "from": "@moves", "verb": "pick", "count": 1 }
       },
       {
         "id": "haven_1",
         "type": "improvement",
         "description": "Add an option to your haven",
-        "choose": { "from": "@haven", "pick": 1 }
+        "choose": { "from": "@haven", "verb": "pick", "count": 1 }
       },
       {
         "id": "haven_2",
         "type": "improvement",
         "description": "Add an option to your haven",
-        "choose": { "from": "@haven", "pick": 1 }
+        "choose": { "from": "@haven", "verb": "pick", "count": 1 }
       },
       {
         "id": "other_move_1",
         "type": "improvement",
         "description": "Take a move from another playbook",
-        "choose": { "from": "@*.moves", "pick": 1 }
+        "choose": { "from": "@*.moves", "verb": "pick", "count": 1 }
       },
       {
         "id": "other_move_2",
         "type": "improvement",
         "description": "Take a move from another playbook",
-        "choose": { "from": "@*.moves", "pick": 1 }
+        "choose": { "from": "@*.moves", "verb": "pick", "count": 1 }
       }
     ]
   },
@@ -248,7 +248,7 @@
         "id": "any_rating",
         "type": "improvement",
         "description": "Get +1 to any rating, max +3",
-        "choose": { "pick": 1 },
+        "choose": { "verb": "pick", "count": 1 },
         "options": [
           { "id": "charm", "name": "Charm", "effects": [{ "rating": "charm", "add": 1, "max": 3 }] },
           { "id": "cool", "name": "Cool", "effects": [{ "rating": "cool", "add": 1, "max": 3 }] },
@@ -279,14 +279,14 @@
         "id": "advanced_basic_1",
         "type": "improvement",
         "description": "Mark two of the basic moves as advanced",
-        "choose": { "from": "@basic_moves", "pick": 2 },
+        "choose": { "from": "@basic_moves", "verb": "pick", "count": 2 },
         "effects": [{ "advance_basic": true }]
       },
       {
         "id": "advanced_basic_2",
         "type": "improvement",
         "description": "Mark another two of the basic moves as advanced",
-        "choose": { "from": "@basic_moves", "pick": 2 },
+        "choose": { "from": "@basic_moves", "verb": "pick", "count": 2 },
         "effects": [{ "advance_basic": true }]
       },
       {
@@ -313,19 +313,19 @@
         "id": "mythic_move",
         "type": "improvement",
         "description": "Take another Expert move",
-        "choose": { "from": "@moves", "pick": 1 }
+        "choose": { "from": "@moves", "verb": "pick", "count": 1 }
       },
       {
         "id": "mythic_haven",
         "type": "improvement",
         "description": "Add an option to your haven",
-        "choose": { "from": "@haven", "pick": 1 }
+        "choose": { "from": "@haven", "verb": "pick", "count": 1 }
       },
       {
         "id": "mythic_other_move",
         "type": "improvement",
         "description": "Take a move from another playbook",
-        "choose": { "from": "@*.moves", "pick": 1 }
+        "choose": { "from": "@*.moves", "verb": "pick", "count": 1 }
       }
     ]
   }

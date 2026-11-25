@@ -91,14 +91,12 @@ export interface Ratings {
 export type Tags = string[];
 
 /**
- * One `choose` rule: where to choose from (`from`, default `@this`) and exactly one verb with its count. pick: add it; cross: strike it out, still visible; remove: undo an earlier pick; attach: attach this option to one of your picks, without picking it again. `min` (default: the count) allows fewer; `limits` sets min / max per sub-list.
+ * One `choose` rule: where to choose from (`from`, default `@this`) a `verb` and its `count`. pick: add it; cross: strike it out, still visible; remove: undo an earlier pick; attach: attach this option to one of your picks, without picking it again. `min` (default: the count) allows fewer; `limits` sets min / max per sub-list.
  */
-export type ChooseRule = {
+export interface ChooseRule {
   from?: RefFrom;
-  pick?: number;
-  cross?: number;
-  remove?: number;
-  attach?: number;
+  verb: "pick" | "cross" | "remove" | "attach";
+  count: number;
   min?: number;
   limits?: {
     [k: string]: {
@@ -106,9 +104,7 @@ export type ChooseRule = {
       max?: number;
     };
   };
-} & {
-  [k: string]: unknown;
-};
+}
 
 /**
  * One rule, or several.

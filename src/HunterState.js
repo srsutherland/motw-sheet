@@ -9,12 +9,10 @@ import {
 // (see docs/Schema Notes.md: "Getting started", "Choosing", "Placement", "Hunter JSON").
 
 const RATINGS = ['charm', 'cool', 'sharp', 'tough', 'weird'];
-const VERBS = ['pick', 'cross', 'remove', 'attach'];
-
-const verbOf = (rule) => VERBS.find((verb) => rule[verb] !== undefined) ?? 'pick';
+const verbOf = (rule) => rule.verb;
 
 // The number a rule asks for, whatever its verb.
-const countOf = (rule) => rule[verbOf(rule)];
+const countOf = (rule) => rule.count;
 
 const IMPROVEMENT_LISTS = ['improvements', 'improvements_advanced', 'improvements_mythic'];
 

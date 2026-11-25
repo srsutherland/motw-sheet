@@ -3,7 +3,7 @@ import { resolve } from '@/PlaybookData';
 
 // Date of the last breaking change to the hunter format (0.1.yyyy.mm.dd, plus .1, .2...
 // if it breaks again on a day it was already pushed).
-const SCHEMA_VERSION = '0.1.2026.10.16';
+const SCHEMA_VERSION = '0.1.2026.11.24';
 
 // A `choose` or `grant` may be one rule or a list of them.
 const asList = (value) => (value === undefined ? [] : [].concat(value));
