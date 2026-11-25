@@ -6,7 +6,9 @@
  */
 
 /**
- * Lowercase letters, digits and underscores. Without one, an object's id is made from its `name` ("Could've Been Worse" -> couldve_been_worse).
+ * Lowercase letters, digits and underscores.
+ * Without one, an object's id is made from its `name` ("Could've Been Worse" ->
+ * couldve_been_worse).
  */
 export type Id = string;
 
@@ -16,7 +18,9 @@ export type Id = string;
 export type Reference = RefPath | RefRelative | RefThis | RefAllPlaybooks | RefTextbox | RefSplice;
 
 /**
- * A path of ids. Root-relative, unless the first segment is a file id: `@combat_magic.bases`, `@basic_moves.use_magic.heal`, `@the_expert.haven`.
+ * A path of ids.
+ * Root-relative, unless the first segment is a file id: `@combat_magic.bases`,
+ * `@basic_moves.use_magic.heal`, `@the_expert.haven`.
  */
 export type RefPath = string;
 
@@ -36,7 +40,8 @@ export type RefThis = "@this";
 export type RefAllPlaybooks = string;
 
 /**
- * A free-text option. Chosen: { "ref": "@textbox", "text": "..." }.
+ * A free-text option.
+ * Chosen: { "ref": "@textbox", "text": "..." }.
  */
 export type RefTextbox = "@textbox";
 
@@ -68,7 +73,8 @@ export type Paragraphs = Markdown | Markdown[];
 export type DateString = string;
 
 /**
- * 0.1.yyyy.mm.dd: the date of the last breaking change, plus .1, .2... if it breaks again on a day it was already pushed.
+ * 0.1.yyyy.mm.dd: the date of the last breaking change, plus .1, .2... if it breaks again on a day
+ * it was already pushed.
  */
 export type SchemaVersion = string;
 
@@ -91,7 +97,13 @@ export interface Ratings {
 export type Tags = string[];
 
 /**
- * One `choose` rule: where to choose from (`from`, default `@this`) a `verb` and its `count`. pick: add it; cross: strike it out, still visible; remove: undo an earlier pick; attach: attach this option to one of your picks, without picking it again. `min` (default: the count) allows fewer; `limits` sets min / max per sub-list.
+ * One `choose` rule: where to choose from (`from`, default `@this`) a `verb` and its `count`.
+ * pick: add it;
+ * cross: strike it out, still visible;
+ * remove: undo an earlier pick;
+ * attach: attach this option to one of your picks, without picking it again.
+ * `min` (default: the count) allows fewer;
+ * `limits` sets min / max per sub-list.
  */
 export interface ChooseRule {
   from?: RefFrom;
@@ -112,12 +124,14 @@ export interface ChooseRule {
 export type Choose = ChooseRule | ChooseRule[];
 
 /**
- * What you gain outright: a reference or several. Granting a list grants everything in it.
+ * What you gain outright: a reference or several.
+ * Granting a list grants everything in it.
  */
 export type Grant = RefPath | RefPath[];
 
 /**
- * A fixed effect: a rating change (respecting `max`), luck (one-off, when taken), or marking this object's picks of basic moves as advanced.
+ * A fixed effect: a rating change (respecting `max`), luck (one-off, when taken), or marking this
+ * object's picks of basic moves as advanced.
  */
 export type Effect =
   | {
@@ -133,7 +147,8 @@ export type Effect =
     };
 
 /**
- * Display-only sub-items, chosen during play rather than when building the hunter (Could've Been Worse's options, Dark Past's questions).
+ * Display-only sub-items, chosen during play rather than when building the hunter (Could've Been
+ * Worse's options, Dark Past's questions).
  */
 export type Details = (
   | Markdown
@@ -144,7 +159,8 @@ export type Details = (
 )[];
 
 /**
- * on_edit / on_view: keys that replace the object's own on that page. In an array, `@...` stands for the object's own value.
+ * on_edit / on_view: keys that replace the object's own on that page.
+ * In an array, `@...` stands for the object's own value.
  */
 export interface PageOverride {
   name?: string;

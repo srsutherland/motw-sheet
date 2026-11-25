@@ -90,12 +90,19 @@ export interface Text {
 }
 
 /**
- * An entry in `options`: a reference (`@basic_moves.use_magic.heal`, `@textbox`), a plain string (stored as written), or an object.
+ * An entry in `options`: a reference (`@basic_moves.use_magic.heal`, `@textbox`), a plain string
+ * (stored as written), or an object.
  */
 export type Option = Reference | PlainText | Node;
 
 /**
- * A playbook object. Its `type` says where it goes when gained (move, gear, feature); options inside a feature or move usually have none. An untyped object with `options` and no `choose` is a sub-list (Combat Magic's bases): its options are offered with the container's, grouped. With its own `choose`, it's an option with its own choice (Pure Drive's emotion). It needs an `id`, or a `name` to make one from: choices are stored by path.
+ * A playbook object.
+ * Its `type` says where it goes when gained (move, gear, feature);
+ * options inside a feature or move usually have none.
+ * An untyped object with `options` and no `choose` is a sub-list (Combat Magic's bases): its
+ * options are offered with the container's, grouped.
+ * With its own `choose`, it's an option with its own choice (Pure Drive's emotion).
+ * It needs an `id`, or a `name` to make one from: choices are stored by path.
  */
 export type Node = {
   [k: string]: unknown;
@@ -143,7 +150,8 @@ export interface GearList {
 }
 
 /**
- * Character creation: what you're granted and the choices you make, in the same shape as an improvement.
+ * Character creation: what you're granted and the choices you make, in the same shape as an
+ * improvement.
  */
 export interface GettingStarted {
   description?: Paragraphs;
@@ -172,7 +180,9 @@ export interface ImprovementList {
   id: Id;
   description?: Paragraphs;
   /**
-   * When the list unlocks. level: level ups completed before the one being spent; improvements: improvements taken.
+   * When the list unlocks.
+   * level: level ups completed before the one being spent;
+   * improvements: improvements taken.
    */
   requires?: {
     level?: number;

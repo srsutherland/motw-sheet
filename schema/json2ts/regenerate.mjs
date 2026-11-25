@@ -28,8 +28,14 @@ const schemaDir = path.dirname(here);
 // to it (see parseSchemas).
 const SOURCE = 'x-source';
 
+// Line length, code and comments (the repo's max-len)
+const WIDTH = 100;
+
 const re_schemaFile = /\.schema\.json$/;
 const re_defKey = /#\/\$defs\/(\w+)$/;
+const re_commentLine = /^(\s*\* )(.*)$/; // in a /** */ comment: its " * ", then its text
+const re_clauseEnd = /(?<=[^.][.;]) +(?=\S)/; // after ". " or "; " (not "... ")
+const re_listItem = /^- /;
 
 /**
  * The schemas as json2ts gets them: tagged with their sources, and with each $ref beside
@@ -124,6 +130,7 @@ const json2tsOptions = (schemas) => ({
     ignoreMinAndMaxItems: true,
     // Each file gets its own (banner)
     bannerComment: '',
+    style: { ...j2ts.DEFAULT_OPTIONS.style, printWidth: WIDTH },
     customName: defName,
     // FIXES: json2ts would read the files a $ref points to from disk, without the tags and
     // wrapping from readSchemas
@@ -255,6 +262,47 @@ const namedTypes = (index) => {
 const moduleOf = (source) => source.split('#')[0].replace(/\.json$/, '');
 
 /**
+ * A line of text, wrapped to WIDTH at spaces.
+ * @param {string} text
+ * @param {string} prefix to start the first line with
+ * @param {string} hanging to start the rest with
+ * @returns {string[]}
+ */
+const wrapLine = (text, prefix, hanging) => {
+    const lines = [];
+    let lead = prefix;
+    let line = '';
+    for (const word of text.split(' ')) {
+        if (line && lead.length + line.length + 1 + word.length > WIDTH) {
+            lines.push(lead + line);
+            lead = hanging;
+            line = word;
+        } else {
+            line = line ? `${line} ${word}` : word;
+        }
+    }
+    return [...lines, lead + line];
+};
+
+/**
+ * Lays out the comments in formatted code: a line per sentence or clause, wrapped to WIDTH
+ * (list items with a hanging indent).
+ * FIXES: Prettier doesn't wrap comments, and json2ts writes each description on one line (one
+ * ran to over 400 characters).
+ * @param {string} code
+ * @returns {string}
+ */
+const layOutComments = (code) => code.split('\n').flatMap((line) => {
+    const [, prefix, text] = line.match(re_commentLine) ?? [];
+    if (!prefix) {
+        return [line];
+    }
+    const hanging = re_listItem.test(text) ? `${prefix}  ` : prefix;
+    return text.split(re_clauseEnd)
+        .flatMap((clause, i) => wrapLine(clause, i === 0 ? prefix : hanging, hanging));
+}).join('\n');
+
+/**
  * The comment at the top of each generated file.
  * @param {string} source what it's generated from
  * @returns {string}
@@ -268,7 +316,7 @@ const banner = (source) => `/**
 
 /**
  * A module's declarations, importing the types it uses from other modules, formatted the
- * way compile() formats its output.
+ * way compile() formats its output, with its comments laid out.
  * @param {string} module "common.schema"
  * @param {{ outline: object, refs: Set<object> }[]} types its types, in order
  * @param {Map<object, string>} sourceOf from parseSchemas
@@ -287,11 +335,12 @@ const moduleFile = async (module, types, sourceOf, options) => {
     const importLines = [...imports].sort(([a], [b]) => a.localeCompare(b))
         .map(([from, names]) => `import type {${[...names].sort().join(', ')}} from "./${from}";`);
     const code = [
-        banner(`\`../${module}.json\``),
         importLines.join('\n'),
         ...types.map((type) => j2ts.generate(type.outline, options)),
     ];
-    return j2ts.format(code.filter(Boolean).join('\n\n'), options);
+    // The banner goes on after the layout, which would split its sentences
+    const formatted = await j2ts.format(code.filter(Boolean).join('\n\n'), options);
+    return `${banner(`\`../${module}.json\``)}\n\n${layOutComments(formatted)}`;
 };
 
 /**
