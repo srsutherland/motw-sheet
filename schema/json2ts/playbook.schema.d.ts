@@ -7,7 +7,7 @@
 
 import type {
   Choose,
-  Date,
+  DateString,
   Details,
   Effect,
   Grant,
@@ -29,7 +29,7 @@ export interface Playbook {
    */
   $schema?: string;
   schema_version: SchemaVersion;
-  updated: Date;
+  updated: DateString;
   /**
    * The file id: absolute references start with it (`@the_expert.haven`).
    */

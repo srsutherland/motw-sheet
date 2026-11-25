@@ -8,7 +8,7 @@
   "properties": {
     "$schema": { "description": "This file's schema, for editors.", "type": "string" },
     "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
-    "updated": { "$ref": "common.schema.json#/$defs/date" },
+    "updated": { "$ref": "common.schema.json#/$defs/dateString" },
     "id": { "const": "basic_moves" },
     "type": { "const": "basic_moves" },
     "name": { "type": "string" },

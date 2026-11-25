@@ -46,7 +46,7 @@ Sections: **Decided** (with where it was decided), **Needs** (from the playbook 
 - `@this`: the object the reference is written in
 - A known first segment makes a reference absolute: playbook ids (`the_*`), `basic_moves`, `shared`
    - `@the_expert.haven`, `@basic_moves.use_magic.heal`
-- `schema/`: each kind of reference is its own definition, `ref_*` (`ref_path`, `ref_this`, `ref_everyPlaybook`...)
+- `schema/`: each kind of reference is its own definition, `ref_*` (`ref_path`, `ref_this`, `ref_allPlaybooks`...)
    - Definition names: a `prefix_` marks a family; otherwise camelCase (`chooseRule`)
 
 ## Getting started

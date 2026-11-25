@@ -5,7 +5,7 @@
  * and run `npm run schema:types` to regenerate this file.
  */
 
-import type {Date, PlainText, Ratings, Reference, Tags} from "./common.schema";
+import type {DateString, PlainText, Ratings, Reference, Tags} from "./common.schema";
 import type {Playbook} from "./playbook.schema";
 
 /**
@@ -27,7 +27,7 @@ export interface Hunter {
   /**
    * The playbook's `updated` date when this hunter was made.
    */
-  playbook_updated?: Date | "";
+  playbook_updated?: DateString | "";
   name: string;
   pronouns?: string;
   /**
@@ -49,12 +49,12 @@ export interface Hunter {
    * Mirrors the playbook's getting_started: a record per grant, and the choices for its choose rule(s).
    */
   getting_started: Choices & {
-    grant: Record[];
+    grant: RefWithChoices[];
   };
   /**
    * In the order taken.
    */
-  improvements: Record[];
+  improvements: RefWithChoices[];
   /**
    * Gear added during play.
    */
@@ -90,7 +90,7 @@ export interface Choices {
 /**
  * One choice, written relative to the container it's chosen from (`@bases.blast`), as written there if the option is itself a reference (`@basic_moves.use_magic.heal`), or absolute for another playbook (`@the_spellslinger.moves.practitioner`). A plain-string option is stored as written. Free text: { ref: "@textbox", text }. A choice with its own choices: { ref, chosen } / { ref, choose }.
  */
-export type Choice = Reference | PlainText | TextChoice | Record;
+export type Choice = Reference | PlainText | TextChoice | RefWithChoices;
 
 export interface TextChoice {
   ref: "@textbox";
@@ -100,7 +100,7 @@ export interface TextChoice {
 /**
  * The hunter's side of a playbook object (a grant, an improvement, a pick with its own choices). Just its reference when nothing's attached; otherwise { ref, ... }. Improvements: root-relative (`@improvements.weird`); `cost` if it cost more than 1; `pending` while being picked.
  */
-export type Record =
+export type RefWithChoices =
   | Reference
   | (Choices & {
       ref: Reference;

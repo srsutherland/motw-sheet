@@ -14,7 +14,7 @@
     "playbook_name": { "type": "string" },
     "playbook_updated": {
       "description": "The playbook's `updated` date when this hunter was made.",
-      "anyOf": [{ "$ref": "common.schema.json#/$defs/date" }, { "const": "" }]
+      "anyOf": [{ "$ref": "common.schema.json#/$defs/dateString" }, { "const": "" }]
     },
     "name": { "type": "string" },
     "pronouns": { "type": "string" },
@@ -44,7 +44,7 @@
       "type": "object",
       "allOf": [{ "$ref": "#/$defs/choices" }],
       "properties": {
-        "grant": { "type": "array", "items": { "$ref": "#/$defs/record" } }
+        "grant": { "type": "array", "items": { "$ref": "#/$defs/refWithChoices" } }
       },
       "required": ["grant"],
       "unevaluatedProperties": false
@@ -52,7 +52,7 @@
     "improvements": {
       "description": "In the order taken.",
       "type": "array",
-      "items": { "$ref": "#/$defs/record" }
+      "items": { "$ref": "#/$defs/refWithChoices" }
     },
     "extra_gear": {
       "description": "Gear added during play.",
@@ -116,7 +116,7 @@
         { "$ref": "common.schema.json#/$defs/reference" },
         { "$ref": "common.schema.json#/$defs/plainText" },
         { "$ref": "#/$defs/textChoice" },
-        { "$ref": "#/$defs/record" }
+        { "$ref": "#/$defs/refWithChoices" }
       ]
     },
     "textChoice": {
@@ -128,7 +128,7 @@
       "required": ["ref", "text"],
       "additionalProperties": false
     },
-    "record": {
+    "refWithChoices": {
       "description": "The hunter's side of a playbook object (a grant, an improvement, a pick with its own choices). Just its reference when nothing's attached; otherwise { ref, ... }. Improvements: root-relative (`@improvements.weird`); `cost` if it cost more than 1; `pending` while being picked.",
       "anyOf": [
         { "$ref": "common.schema.json#/$defs/reference" },

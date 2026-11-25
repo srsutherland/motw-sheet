@@ -13,7 +13,7 @@ export type Id = string;
 /**
  * Any reference: `@` and what it refers to.
  */
-export type Reference = RefPath | RefRelative | RefThis | RefEveryPlaybook | RefTextbox | RefSplice;
+export type Reference = RefPath | RefRelative | RefThis | RefAllPlaybooks | RefTextbox | RefSplice;
 
 /**
  * A path of ids. Root-relative, unless the first segment is a file id: `@combat_magic.bases`, `@basic_moves.use_magic.heal`, `@the_expert.haven`.
@@ -33,7 +33,7 @@ export type RefThis = "@this";
 /**
  * That list in every other playbook: `@*.moves`.
  */
-export type RefEveryPlaybook = string;
+export type RefAllPlaybooks = string;
 
 /**
  * A free-text option. Chosen: { "ref": "@textbox", "text": "..." }.
@@ -48,7 +48,7 @@ export type RefSplice = "@...";
 /**
  * What a choose rule chooses from.
  */
-export type RefFrom = RefPath | RefRelative | RefThis | RefEveryPlaybook;
+export type RefFrom = RefPath | RefRelative | RefThis | RefAllPlaybooks;
 
 /**
  * A plain value, not a reference: anything not starting with `@`.
@@ -65,7 +65,7 @@ export type Markdown = string;
  */
 export type Paragraphs = Markdown | [Markdown, ...Markdown[]];
 
-export type Date = string;
+export type DateString = string;
 
 /**
  * 0.1.yyyy.mm.dd: the date of the last breaking change, plus .1, .2... if it breaks again on a day it was already pushed.

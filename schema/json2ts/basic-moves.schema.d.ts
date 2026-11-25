@@ -5,7 +5,7 @@
  * and run `npm run schema:types` to regenerate this file.
  */
 
-import type {Date, Id, Markdown, Paragraphs, Rating, SchemaVersion} from "./common.schema";
+import type {DateString, Id, Markdown, Paragraphs, Rating, SchemaVersion} from "./common.schema";
 
 /**
  * The moves every hunter has.
@@ -16,7 +16,7 @@ export interface BasicMoves {
    */
   $schema?: string;
   schema_version: SchemaVersion;
-  updated: Date;
+  updated: DateString;
   id: "basic_moves";
   type: "basic_moves";
   name: string;

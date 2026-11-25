@@ -7,7 +7,7 @@
   "properties": {
     "$schema": { "description": "This file's schema, for editors.", "type": "string" },
     "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
-    "updated": { "$ref": "common.schema.json#/$defs/date" },
+    "updated": { "$ref": "common.schema.json#/$defs/dateString" },
     "id": {
       "description": "The file id: absolute references start with it (`@the_expert.haven`).",
       "type": "string",
