@@ -150,7 +150,7 @@ Limits on a `choose` (exact syntax not final):
 ## Look, ratings, history
 
 - Plain values, not objects: strings (look, history) and rating lines
-- `heading` is a special key name (e.g. next to the `clothes` and `eyes` lists in `look`); restructure if it causes problems in code
+- `look` is a container like the others: `{ "id": "look", "heading": "...", "options": [...] }`, one pick from each trait; the hunter's `look` is trait id -> the pick
 - No ids; copied into the hunter in full
 - Their own logic, not `getting_started`
 - History options are pre-fills; the hunter can edit them freely
@@ -290,7 +290,7 @@ Not discussed yet. From the old draft (plan-slop) or from me.
    - Advance basic moves: `{ "advance_basic": true }`, applying to the improvement's own picks
 - Narrative-only improvements and specials (change playbook, second hunter, retire) are just recorded: `"special": "retire"`
 - Mythic unlock: `"requires": { "improvements": 12 }` (plus the Keeper's say-so)
-- Look lists: `{ "format": "___ clothes", "options": [...] }`
+- Look traits: `{ "id": "clothes", "format": "___ clothes", "options": [...] }`
 
 ## From implementation (2026-10-02, `spellslinger-mvp`)
 
@@ -322,7 +322,7 @@ Conventions the code needed that weren't discussed. All used by the app as built
 - `"min": 0`: an optional pick ("Pick up to 1")
 - `cross` from a container whose options are picked (Curse) offers only your picks; otherwise all options (Tools and Techniques)
 - Saved `computed`: crossed options under `crossed`, separate from `selected`
-- A look list with no noun: `"format": "___"` (Monstrous `form`: almost human, half human...)
+- A look trait with no noun: `"format": "___"` (Monstrous `form`: almost human, half human...)
 
 # Open questions
 
