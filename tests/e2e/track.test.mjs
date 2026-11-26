@@ -13,7 +13,7 @@ const click = (section, which, times = 1) =>
     (async () => { for (let i = 0; i < times; i++) await page.locator(`${section} button.${which}`).click(); })();
 
 const newHunter = async (name) => {
-    await page.getByRole('button', { name: 'New Playbook' }).click();
+    await page.getByRole('button', { name: 'New Hunter' }).click();
     await page.locator('.select-button').first().click();
     await page.locator('.hunter-name input').fill(name);
     await page.locator('#edit-ratings input[type=radio]').first().check();

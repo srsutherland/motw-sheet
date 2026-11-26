@@ -8,7 +8,7 @@ const browser = await launch();
 const errors = [];
 const a = await watchedPage(browser, errors);
 await a.goto(BASE);
-await a.getByRole('button', { name: 'New Playbook' }).click();
+await a.getByRole('button', { name: 'New Hunter' }).click();
 await a.locator('#the_spellslinger').click();
 await a.locator('.hunter-name input').fill('Exported');
 await a.locator('#edit-ratings input[type=radio]').nth(2).check();

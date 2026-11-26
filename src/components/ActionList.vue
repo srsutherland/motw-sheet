@@ -1,6 +1,6 @@
 <template>
 <section id="main">
-    <button @click="$emit('change-view', 'new')">New Playbook</button>
+    <button @click="$emit('change-view', 'new')">New Hunter</button>
     <label class="button">
         Import Hunter
         <input type="file" accept=".json,application/json" @change="onImport" hidden />

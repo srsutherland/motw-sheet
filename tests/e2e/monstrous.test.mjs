@@ -9,7 +9,7 @@ const section = (legend) => page.locator('fieldset', { has: page.locator(`legend
 const box = (scope, name) => scope.getByRole('checkbox', { name: new RegExp(`^${name.replace(/[()+]/g, '\\$&')}`) });
 
 await page.goto(BASE);
-await page.getByRole('button', { name: 'New Playbook' }).click();
+await page.getByRole('button', { name: 'New Hunter' }).click();
 await page.locator('#the_monstrous').click();
 await page.waitForURL(/\?edit=/);
 await page.locator('.hunter-name input').fill('Vlad');

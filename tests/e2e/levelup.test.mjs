@@ -27,7 +27,7 @@ const take = async (text) => {
 const box = (name) => dialog.getByRole('checkbox', { name: new RegExp(`^${name}\\b`) });
 
 await page.goto(BASE);
-await page.getByRole('button', { name: 'New Playbook' }).click();
+await page.getByRole('button', { name: 'New Hunter' }).click();
 await page.locator('#the_spellslinger').click();
 await page.locator('#edit-ratings input[type=radio]').first().check(); // Charm-1 Cool+1 Sharp+1 Tough=0 Weird+2
 await page.getByRole('button', { name: 'Save' }).click();
