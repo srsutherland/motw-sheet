@@ -55,9 +55,9 @@ providePage('view');
 const features = (area) => state.value.features.filter((feature) => feature.area === area);
 
 // "rumpled clothes, weary eyes"
-const look = computed(() => Object.entries(hunter.value.playbook.look)
-    .filter(([key]) => key !== 'heading' && hunter.value.look[key])
-    .map(([key, list]) => list.format.replace('___', hunter.value.look[key]))
+const look = computed(() => hunter.value.playbook.look.options
+    .filter((trait) => hunter.value.look[trait.id])
+    .map((trait) => trait.format.replace('___', hunter.value.look[trait.id]))
     .join(', '));
 </script>
 

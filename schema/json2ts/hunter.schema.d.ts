@@ -17,7 +17,7 @@ export interface Hunter {
   /** JSON Schema URI */
   $schema?: string;
   /** Hunter format version (date of the last breaking change) */
-  schema_version: "0.1.2026.11.24";
+  schema_version: "0.1.2026.11.25";
   /** Unique id */
   uid: string;
   /** Creation timestamp */

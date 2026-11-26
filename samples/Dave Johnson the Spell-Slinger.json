@@ -1,6 +1,6 @@
 {
   "$schema": "../schema/hunter.schema.json",
-  "schema_version": "0.1.2026.11.24",
+  "schema_version": "0.1.2026.11.25",
   "uid": "39e87fd3-0bda-456c-b659-6f672d508cc5",
   "created": "2026-10-09T21:18:06.045Z",
   "updated": "2026-10-09T21:18:06.045Z",
@@ -339,7 +339,7 @@
     ]
   },
   "playbook": {
-    "schema_version": "0.1.2026.11.24",
+    "schema_version": "0.1.2026.11.25",
     "updated": "2026-10-17",
     "id": "the_spellslinger",
     "type": "playbook",
@@ -635,27 +635,20 @@
       ]
     },
     "look": {
+      "id": "look",
       "heading": "Look, pick one from each list:",
-      "clothes": {
-        "format": "___ clothes",
-        "options": [
-          "rumpled",
-          "stylish",
-          "goth",
-          "old fashioned",
-          "@textbox"
-        ]
-      },
-      "eyes": {
-        "format": "___ eyes",
-        "options": [
-          "shadowed",
-          "fierce",
-          "weary",
-          "sparkling",
-          "@textbox"
-        ]
-      }
+      "options": [
+        {
+          "id": "clothes",
+          "format": "___ clothes",
+          "options": ["rumpled", "stylish", "goth", "old fashioned", "@textbox"]
+        },
+        {
+          "id": "eyes",
+          "format": "___ eyes",
+          "options": ["shadowed", "fierce", "weary", "sparkling", "@textbox"]
+        }
+      ]
     },
     "ratings_base": {
       "heading": "Ratings, pick one line:",

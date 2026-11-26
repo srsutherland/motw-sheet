@@ -3,7 +3,7 @@ import { resolve } from '@/PlaybookData';
 
 // Date of the last breaking change to the hunter format (0.1.yyyy.mm.dd, plus .1, .2...
 // if it breaks again on a day it was already pushed).
-const SCHEMA_VERSION = '0.1.2026.11.24';
+const SCHEMA_VERSION = '0.1.2026.11.25';
 
 // A `choose` or `grant` may be one rule or a list of them.
 const asList = (value) => (value === undefined ? [] : [].concat(value));
@@ -50,7 +50,7 @@ class Hunter {
     playbook_updated = ''; // the playbook's "updated" date when this hunter was made
     name = '';
     pronouns = '';
-    look = {}; // look list key -> text
+    look = {}; // look trait id -> text
     ratings_base = null; // a copy of the chosen ratings line
     history = []; // { name, option, notes }
     getting_started = undefined; // { grant, choose }, mirroring the playbook's getting_started

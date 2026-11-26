@@ -3,29 +3,29 @@
     <fieldset>
         <legend>Look</legend>
         <p v-if="hunter.playbook.look.heading">{{ hunter.playbook.look.heading }}</p>
-        <div v-for="(list, key) in lookLists" :key="key" class="look-list">
-            <span class="format">{{ list.format }}:</span>
-            <label v-for="option in list.options.filter((o) => o !== TEXTBOX)" :key="option">
+        <div v-for="trait in hunter.playbook.look.options" :key="trait.id" class="look-list">
+            <span class="format">{{ trait.format }}:</span>
+            <label v-for="option in trait.options.filter((o) => o !== TEXTBOX)" :key="option">
                 <input
                     type="radio"
-                    :name="`look-${key}`"
+                    :name="`look-${trait.id}`"
                     :value="option"
-                    v-model="hunter.look[key]"
+                    v-model="hunter.look[trait.id]"
                 />
                 {{ option }}
             </label>
-            <label v-if="list.options.includes(TEXTBOX)">
+            <label v-if="trait.options.includes(TEXTBOX)">
                 <input
                     type="radio"
-                    :name="`look-${key}`"
-                    :checked="isCustomLook(key, list)"
-                    @change="pickCustomLook(key, list, $event)"
+                    :name="`look-${trait.id}`"
+                    :checked="isCustomLook(trait)"
+                    @change="pickCustomLook(trait, $event)"
                 />
                 <input
                     class="textbox"
                     placeholder="write your own"
-                    :value="lookText(key, list)"
-                    @change="setCustomLook(key, $event.target.value)"
+                    :value="lookText(trait)"
+                    @change="setCustomLook(trait, $event.target.value)"
                 />
             </label>
         </div>
@@ -34,29 +34,24 @@
 </template>
 
 <script setup>
-import { computed, reactive } from 'vue';
+import { reactive } from 'vue';
 import { useHunter } from '@/HunterContext';
 import { TEXTBOX } from '@/PlaybookData';
 
 const hunter = useHunter();
 
-// look: { heading, clothes: { format, options }, eyes: {...} }
-const lookLists = computed(() => Object.fromEntries(Object.entries(hunter.value.playbook.look)
-    .filter(([key]) => key !== 'heading')));
-
 // Look: what was typed into "write your own", kept while a listed option is picked
 const customLook = reactive({});
-const isCustomLook = (key, list) => !!hunter.value.look[key]
-    && !list.options.includes(hunter.value.look[key]);
-const lookText = (key, list) => customLook[`${hunter.value.uid}.${key}`]
-    ?? (isCustomLook(key, list) ? hunter.value.look[key] : '');
-const setCustomLook = (key, text) => {
-    customLook[`${hunter.value.uid}.${key}`] = text.trim();
-    hunter.value.look[key] = text.trim();
+const isCustomLook = (trait) => !!hunter.value.look[trait.id]
+    && !trait.options.includes(hunter.value.look[trait.id]);
+const lookText = (trait) => customLook[`${hunter.value.uid}.${trait.id}`]
+    ?? (isCustomLook(trait) ? hunter.value.look[trait.id] : '');
+const setCustomLook = (trait, text) => {
+    customLook[`${hunter.value.uid}.${trait.id}`] = text.trim();
+    hunter.value.look[trait.id] = text.trim();
 };
-const pickCustomLook = (key, list, event) => {
-    const text = lookText(key, list);
-    hunter.value.look[key] = text;
+const pickCustomLook = (trait, event) => {
+    hunter.value.look[trait.id] = lookText(trait);
     event.target.nextElementSibling.focus();
 };
 </script>

@@ -1,6 +1,6 @@
 {
   "$schema": "../schema/playbook.schema.json",
-  "schema_version": "0.1.2026.11.24",
+  "schema_version": "0.1.2026.11.25",
   "updated": "2026-10-22",
   "id": "the_expert",
   "type": "playbook",
@@ -132,15 +132,20 @@
     ]
   },
   "look": {
+    "id": "look",
     "heading": "Look, pick one from each list:",
-    "face": {
-      "format": "___ face",
-      "options": ["thoughtful", "lined", "scarred", "contemplative", "stern", "avuncular", "experienced", "ancient", "@textbox"]
-    },
-    "clothes": {
-      "format": "___ clothes",
-      "options": ["old fashioned", "casual", "utility", "tailored", "outdoor", "@textbox"]
-    }
+    "options": [
+      {
+        "id": "face",
+        "format": "___ face",
+        "options": ["thoughtful", "lined", "scarred", "contemplative", "stern", "avuncular", "experienced", "ancient", "@textbox"]
+      },
+      {
+        "id": "clothes",
+        "format": "___ clothes",
+        "options": ["old fashioned", "casual", "utility", "tailored", "outdoor", "@textbox"]
+      }
+    ]
   },
   "ratings_base": {
     "heading": "Ratings, pick one line:",

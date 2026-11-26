@@ -1,6 +1,6 @@
 {
   "$schema": "../schema/playbook.schema.json",
-  "schema_version": "0.1.2026.11.24",
+  "schema_version": "0.1.2026.11.25",
   "updated": "2026-10-22",
   "id": "the_monstrous",
   "type": "playbook",
@@ -222,19 +222,25 @@
     ]
   },
   "look": {
+    "id": "look",
     "heading": "Look, pick one from each list:",
-    "form": {
-      "format": "___",
-      "options": ["almost human", "half human", "monstrous", "@textbox"]
-    },
-    "aura": {
-      "format": "___ aura",
-      "options": ["sinister", "powerful", "dark", "unnerving", "energetic", "evil", "bestial", "@textbox"]
-    },
-    "clothes": {
-      "format": "___ clothes",
-      "options": ["archaic", "casual", "ragged", "tailored", "stylish", "street", "outdoor", "@textbox"]
-    }
+    "options": [
+      {
+        "id": "form",
+        "format": "___",
+        "options": ["almost human", "half human", "monstrous", "@textbox"]
+      },
+      {
+        "id": "aura",
+        "format": "___ aura",
+        "options": ["sinister", "powerful", "dark", "unnerving", "energetic", "evil", "bestial", "@textbox"]
+      },
+      {
+        "id": "clothes",
+        "format": "___ clothes",
+        "options": ["archaic", "casual", "ragged", "tailored", "stylish", "street", "outdoor", "@textbox"]
+      }
+    ]
   },
   "ratings_base": {
     "heading": "Ratings, pick one line:",

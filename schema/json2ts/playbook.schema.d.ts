@@ -179,21 +179,26 @@ export interface GettingStarted {
 }
 
 /**
- * Look lists, keyed by category (clothes, eyes, aura...)
+ * Look traits (clothes, eyes, aura...)
  */
 export interface Look {
+  /** Reference id */
+  id: "look";
   /** Heading text displayed before the options */
   heading?: string;
-  /** Look category: display format and options */
-  [k: string]:
-    | {
-        /** How the pick reads on the sheet: `___` stands for it ("___ clothes"). */
-        format: string;
-        /** List of options to choose from */
-        options: (PlainText | RefTextbox)[];
-      }
-    | string
-    | undefined;
+  /** List of traits, one pick from each */
+  options: LookTrait[];
+}
+
+/**
+ * Look trait: display format and options
+ */
+export interface LookTrait {
+  id: Id;
+  /** How the pick reads on the sheet: `___` stands for it ("___ clothes"). */
+  format: string;
+  /** List of options to choose from */
+  options: (PlainText | RefTextbox)[];
 }
 
 /**

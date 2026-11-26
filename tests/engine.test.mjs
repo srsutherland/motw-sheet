@@ -24,7 +24,7 @@ check('copy, not shared', h.playbook !== spellslinger, true);
 check('copy without the file\'s $schema', ['$schema' in spellslinger, '$schema' in h.playbook], [true, false]);
 check('getting_started mirrors the playbook', h.getting_started.choose.map((c) => c.from), ['@combat_magic', '@moves', '@starting_gear']);
 check('granted records', h.getting_started.grant, [{ ref: '@moves.tools_and_techniques', chosen: [] }]);
-check('version', h.schema_version, '0.1.2026.11.24');
+check('version', h.schema_version, '0.1.2026.11.25');
 check('created timestamp', /^\d{4}-\d\d-\d\dT/.test(h.created), true);
 check('playbook updated', h.playbook_updated, spellslinger.updated);
 check('slug', D.slug("Could've Been Worse"), 'couldve_been_worse');

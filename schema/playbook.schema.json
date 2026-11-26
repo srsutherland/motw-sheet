@@ -175,34 +175,43 @@
       "additionalProperties": false
     },
     "look": {
-      "description": "Look lists, keyed by category (clothes, eyes, aura...)",
+      "description": "Look traits (clothes, eyes, aura...)",
       "type": "object",
       "properties": {
-        "heading": { "description": "Heading text displayed before the options", "type": "string" }
+        "id": { "description": "Reference id", "const": "look" },
+        "heading": { "description": "Heading text displayed before the options", "type": "string" },
+        "options": {
+          "description": "List of traits, one pick from each",
+          "type": "array",
+          "items": { "$ref": "#/$defs/lookTrait" }
+        }
       },
-      "additionalProperties": {
-        "description": "Look category: display format and options",
-        "type": "object",
-        "properties": {
-          "format": {
-            "description": "How the pick reads on the sheet: `___` stands for it (\"___ clothes\").",
-            "type": "string",
-            "pattern": "___"
-          },
-          "options": {
-            "description": "List of options to choose from",
-            "type": "array",
-            "items": {
-              "anyOf": [
-                { "$ref": "common.schema.json#/$defs/plainText" },
-                { "$ref": "common.schema.json#/$defs/ref_textbox" }
-              ]
-            }
-          }
+      "required": ["id", "options"],
+      "additionalProperties": false
+    },
+    "lookTrait": {
+      "description": "Look trait: display format and options",
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "format": {
+          "description": "How the pick reads on the sheet: `___` stands for it (\"___ clothes\").",
+          "type": "string",
+          "pattern": "___"
         },
-        "required": ["format", "options"],
-        "additionalProperties": false
-      }
+        "options": {
+          "description": "List of options to choose from",
+          "type": "array",
+          "items": {
+            "anyOf": [
+              { "$ref": "common.schema.json#/$defs/plainText" },
+              { "$ref": "common.schema.json#/$defs/ref_textbox" }
+            ]
+          }
+        }
+      },
+      "required": ["id", "format", "options"],
+      "additionalProperties": false
     },
     "improvementList": {
       "description": "Improvement list",
