@@ -28,6 +28,16 @@ const schemaDir = path.dirname(here);
 // to it (see parseSchemas).
 const SOURCE = 'x-source';
 
+// TypeScript types for $defs whose patterns TypeScript can express, by SOURCE
+const TS_TYPES = {
+    'common.schema.json#/$defs/ref_path': '`@${string}`',
+    'common.schema.json#/$defs/ref_relative': '`@.${string}`',
+    'common.schema.json#/$defs/ref_allPlaybooks': '`@*.${string}`',
+    'common.schema.json#/$defs/dateString': '`${number}-${number}-${number}`',
+    'common.schema.json#/$defs/schemaVersion': '`0.1.${string}`',
+    'hunter.schema.json#/$defs/timestamp': '`${number}-${number}-${number}T${string}`',
+};
+
 // Line length, code and comments (the repo's max-len)
 const WIDTH = 100;
 
@@ -50,6 +60,7 @@ const readSchemas = () => {
     for (const file of fs.readdirSync(schemaDir).filter((f) => re_schemaFile.test(f)).sort()) {
         const schema = JSON.parse(fs.readFileSync(path.join(schemaDir, file), 'utf8'));
         tagSources(file, schema);
+        addTsTypes(schema);
         wrapRefsWithSiblings(schema);
         schemas.set(file, schema);
     }
@@ -68,6 +79,21 @@ const tagSources = (file, schema) => {
     schema[SOURCE] = `${file}#`;
     for (const [key, definition] of Object.entries(schema.$defs ?? {})) {
         definition[SOURCE] = `${file}#/$defs/${key}`;
+    }
+};
+
+/**
+ * Gives each $def in TS_TYPES its TypeScript type (json2ts's tsType keyword).
+ * FIXES: json2ts makes a string with a pattern plain `string`, so the kinds of reference
+ * (RefPath, RefAllPlaybooks...) look the same.
+ * @param {object} schema a schema file, changed in place
+ */
+const addTsTypes = (schema) => {
+    for (const definition of Object.values(schema.$defs ?? {})) {
+        const tsType = TS_TYPES[definition[SOURCE]];
+        if (tsType) {
+            definition.tsType = tsType;
+        }
     }
 };
 

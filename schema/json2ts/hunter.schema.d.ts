@@ -78,7 +78,7 @@ export interface Hunter {
 /**
  * ISO 8601 timestamp
  */
-export type Timestamp = string;
+export type Timestamp = `${number}-${number}-${number}T${string}`;
 
 /**
  * The hunter's side of an object's choose rule(s).

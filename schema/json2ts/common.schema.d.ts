@@ -21,12 +21,12 @@ export type Reference = RefPath | RefRelative | RefThis | RefAllPlaybooks | RefT
  * Root-relative, unless the first segment is a file id: `@combat_magic.bases`,
  * `@basic_moves.use_magic.heal`, `@the_expert.haven`.
  */
-export type RefPath = string;
+export type RefPath = `@${string}`;
 
 /**
  * A root-relative path whose first segment would otherwise read as a file id: `@.basic_moves`.
  */
-export type RefRelative = string;
+export type RefRelative = `@.${string}`;
 
 /**
  * The object the reference is written in.
@@ -36,7 +36,7 @@ export type RefThis = "@this";
 /**
  * The same list in every other playbook: `@*.moves`
  */
-export type RefAllPlaybooks = string;
+export type RefAllPlaybooks = `@*.${string}`;
 
 /**
  * A free-text option.
@@ -72,13 +72,13 @@ export type Paragraphs = Markdown | Markdown[];
 /**
  * Date (yyyy-mm-dd)
  */
-export type DateString = string;
+export type DateString = `${number}-${number}-${number}`;
 
 /**
  * 0.1.yyyy.mm.dd: the date of the last breaking change, plus .1, .2... if it breaks again on a day
  * it was already pushed.
  */
-export type SchemaVersion = string;
+export type SchemaVersion = `0.1.${string}`;
 
 /**
  * Rating name
