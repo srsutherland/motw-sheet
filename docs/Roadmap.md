@@ -68,6 +68,7 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - One component for an option's text ("**Name**: description (tags)"), now rendered separately in `ChooseRule`, `ViewFeature`, `Move` and `EditFeature`
 - Save/export options (`toSaved` has them; nothing sets them yet): the playbook as a reference (default) or a full copy; omit `computed` (the app recomputes it by replaying the sheet) for a smaller file
 - `ViewMoves`: the moves section is still inline in `ViewHunter`; match `EditMoves` and the other `View*` sections
+- `@*.moves` means every *other* playbook (the hunter's own is skipped), but `*` (and `ref_allPlaybooks`) reads as all of them: discuss the syntax
 
 # Minor
 
