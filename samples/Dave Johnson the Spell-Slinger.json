@@ -72,35 +72,35 @@
     ]
   },
   "improvements": [
-    "@improvements.weird",
-    "@improvements.cool",
-    "@improvements.tough",
+    "@improvements.basic.weird",
+    "@improvements.basic.cool",
+    "@improvements.basic.tough",
     {
-      "ref": "@improvements.more_combat_magic",
+      "ref": "@improvements.basic.more_combat_magic",
       "chosen": [
         "@bases.wall"
       ]
     },
     {
-      "ref": "@improvements.move_1",
+      "ref": "@improvements.basic.move_1",
       "chosen": [
         "@third_eye"
       ]
     },
     {
-      "ref": "@improvements.move_2",
+      "ref": "@improvements.basic.move_2",
       "chosen": [
         "@couldve_been_worse"
       ]
     },
     {
-      "ref": "@improvements_advanced.any_rating",
+      "ref": "@improvements.advanced.any_rating",
       "chosen": [
         "@cool"
       ]
     },
     {
-      "ref": "@improvements_advanced.more_combat_magic_2",
+      "ref": "@improvements.advanced.more_combat_magic_2",
       "chosen": [
         "@effects.force_or_wind"
       ]
@@ -135,7 +135,8 @@
         "name": "Tools and Techniques",
         "description": "To use your combat magic effectively, you rely on a collection of tools and techniques. Cross off one; you'll need the rest.",
         "choose": {
-          "verb": "cross", "count": 1
+          "verb": "cross",
+          "count": 1
         },
         "options": [
           {
@@ -174,7 +175,8 @@
         "name": "Practitioner",
         "description": "Choose two effects available to you under [[use magic]]. Take +1 to [[use magic]] whenever you choose one of those effects.",
         "choose": {
-          "verb": "pick", "count": 2
+          "verb": "pick",
+          "count": 2
         },
         "options": [
           "@basic_moves.use_magic.inflict_harm",
@@ -461,7 +463,8 @@
           "name": "Tools and Techniques",
           "description": "To use your combat magic effectively, you rely on a collection of tools and techniques. Cross off one; you'll need the rest.",
           "choose": {
-            "verb": "cross", "count": 1
+            "verb": "cross",
+            "count": 1
           },
           "options": [
             {
@@ -492,7 +495,8 @@
           "name": "Arcane Reputation",
           "description": "Pick three big organizations or groups in the supernatural community, which can include some of the more sociable types of monsters. They've heard of you and respect your power. With affected humans, take +1 forward when you [[manipulate someone|manipulate]] them. You may [[manipulate someone|manipulate]] affected monsters as if they were human, with no bonus.",
           "choose": {
-            "verb": "pick", "count": 3
+            "verb": "pick",
+            "count": 3
           },
           "options": [
             "@textbox",
@@ -521,7 +525,8 @@
           "name": "Enchanted Clothing",
           "description": "Pick an article of everyday clothing—it's enchanted without any change in appearance. Take -1 harm from any source that tries to get at you through the garment.",
           "choose": {
-            "verb": "pick", "count": 1
+            "verb": "pick",
+            "count": 1
           },
           "options": [
             "@textbox"
@@ -547,7 +552,8 @@
           "name": "Practitioner",
           "description": "Choose two effects available to you under [[use magic]]. Take +1 to [[use magic]] whenever you choose one of those effects.",
           "choose": {
-            "verb": "pick", "count": 2
+            "verb": "pick",
+            "count": 2
           },
           "options": [
             "@basic_moves.use_magic.inflict_harm",
@@ -617,7 +623,8 @@
       "choose": [
         {
           "from": "@combat_magic",
-          "verb": "pick", "count": 3,
+          "verb": "pick",
+          "count": 3,
           "limits": {
             "@combat_magic.bases": {
               "min": 1
@@ -626,11 +633,13 @@
         },
         {
           "from": "@moves",
-          "verb": "pick", "count": 3
+          "verb": "pick",
+          "count": 3
         },
         {
           "from": "@starting_gear",
-          "verb": "pick", "count": 1
+          "verb": "pick",
+          "count": 1
         }
       ]
     },
@@ -641,12 +650,24 @@
         {
           "id": "clothes",
           "format": "___ clothes",
-          "options": ["rumpled", "stylish", "goth", "old fashioned", "@textbox"]
+          "options": [
+            "rumpled",
+            "stylish",
+            "goth",
+            "old fashioned",
+            "@textbox"
+          ]
         },
         {
           "id": "eyes",
           "format": "___ eyes",
-          "options": ["shadowed", "fierce", "weary", "sparkling", "@textbox"]
+          "options": [
+            "shadowed",
+            "fierce",
+            "weary",
+            "sparkling",
+            "@textbox"
+          ]
         }
       ]
     },
@@ -709,169 +730,18 @@
         "A comrade-in-arms. You've faced the biggest threats together."
       ]
     },
-    "leveling_up": {
-      "description": "When you have filled all five experience boxes, you level up. Erase the marks and pick an improvement from the following list:"
-    },
     "improvements": {
       "id": "improvements",
+      "description": "When you have filled all five experience boxes, you level up. Erase the marks and pick an improvement from the following list:",
       "options": [
         {
-          "id": "weird",
-          "type": "improvement",
-          "description": "Get +1 Weird, max +3",
-          "effects": [
-            {
-              "rating": "weird",
-              "add": 1,
-              "max": 3
-            }
-          ]
-        },
-        {
-          "id": "cool",
-          "type": "improvement",
-          "description": "Get +1 Cool, max +2",
-          "effects": [
-            {
-              "rating": "cool",
-              "add": 1,
-              "max": 2
-            }
-          ]
-        },
-        {
-          "id": "sharp",
-          "type": "improvement",
-          "description": "Get +1 Sharp, max +2",
-          "effects": [
-            {
-              "rating": "sharp",
-              "add": 1,
-              "max": 2
-            }
-          ]
-        },
-        {
-          "id": "tough",
-          "type": "improvement",
-          "description": "Get +1 Tough, max +2",
-          "effects": [
-            {
-              "rating": "tough",
-              "add": 1,
-              "max": 2
-            }
-          ]
-        },
-        {
-          "id": "move_1",
-          "type": "improvement",
-          "description": "Take another Spell-Slinger move",
-          "choose": {
-            "from": "@moves",
-            "verb": "pick", "count": 1
-          }
-        },
-        {
-          "id": "move_2",
-          "type": "improvement",
-          "description": "Take another Spell-Slinger move",
-          "choose": {
-            "from": "@moves",
-            "verb": "pick", "count": 1
-          }
-        },
-        {
-          "id": "other_move_1",
-          "type": "improvement",
-          "description": "Take a move from another playbook",
-          "choose": {
-            "from": "@*.moves",
-            "verb": "pick", "count": 1
-          }
-        },
-        {
-          "id": "other_move_2",
-          "type": "improvement",
-          "description": "Take a move from another playbook",
-          "choose": {
-            "from": "@*.moves",
-            "verb": "pick", "count": 1
-          }
-        },
-        {
-          "id": "more_combat_magic",
-          "type": "improvement",
-          "description": "Take another Combat Magic pick",
-          "choose": {
-            "from": "@combat_magic",
-            "verb": "pick", "count": 1
-          }
-        }
-      ]
-    },
-    "improvements_advanced": {
-      "id": "improvements_advanced",
-      "description": "After you have leveled up *five* times, you qualify for advanced improvements in addition to these. They're below.",
-      "requires": {
-        "level": 5
-      },
-      "options": [
-        {
-          "id": "any_rating",
-          "type": "improvement",
-          "description": "Get +1 to any rating, max +3",
-          "choose": {
-            "verb": "pick", "count": 1
-          },
+          "id": "basic",
+          "name": "Improvements",
           "options": [
             {
-              "id": "charm",
-              "name": "Charm",
-              "effects": [
-                {
-                  "rating": "charm",
-                  "add": 1,
-                  "max": 3
-                }
-              ]
-            },
-            {
-              "id": "cool",
-              "name": "Cool",
-              "effects": [
-                {
-                  "rating": "cool",
-                  "add": 1,
-                  "max": 3
-                }
-              ]
-            },
-            {
-              "id": "sharp",
-              "name": "Sharp",
-              "effects": [
-                {
-                  "rating": "sharp",
-                  "add": 1,
-                  "max": 3
-                }
-              ]
-            },
-            {
-              "id": "tough",
-              "name": "Tough",
-              "effects": [
-                {
-                  "rating": "tough",
-                  "add": 1,
-                  "max": 3
-                }
-              ]
-            },
-            {
               "id": "weird",
-              "name": "Weird",
+              "type": "improvement",
+              "description": "Get +1 Weird, max +3",
               "effects": [
                 {
                   "rating": "weird",
@@ -879,129 +749,299 @@
                   "max": 3
                 }
               ]
+            },
+            {
+              "id": "cool",
+              "type": "improvement",
+              "description": "Get +1 Cool, max +2",
+              "effects": [
+                {
+                  "rating": "cool",
+                  "add": 1,
+                  "max": 2
+                }
+              ]
+            },
+            {
+              "id": "sharp",
+              "type": "improvement",
+              "description": "Get +1 Sharp, max +2",
+              "effects": [
+                {
+                  "rating": "sharp",
+                  "add": 1,
+                  "max": 2
+                }
+              ]
+            },
+            {
+              "id": "tough",
+              "type": "improvement",
+              "description": "Get +1 Tough, max +2",
+              "effects": [
+                {
+                  "rating": "tough",
+                  "add": 1,
+                  "max": 2
+                }
+              ]
+            },
+            {
+              "id": "move_1",
+              "type": "improvement",
+              "description": "Take another Spell-Slinger move",
+              "choose": {
+                "from": "@moves",
+                "verb": "pick",
+                "count": 1
+              }
+            },
+            {
+              "id": "move_2",
+              "type": "improvement",
+              "description": "Take another Spell-Slinger move",
+              "choose": {
+                "from": "@moves",
+                "verb": "pick",
+                "count": 1
+              }
+            },
+            {
+              "id": "other_move_1",
+              "type": "improvement",
+              "description": "Take a move from another playbook",
+              "choose": {
+                "from": "@*.moves",
+                "verb": "pick",
+                "count": 1
+              }
+            },
+            {
+              "id": "other_move_2",
+              "type": "improvement",
+              "description": "Take a move from another playbook",
+              "choose": {
+                "from": "@*.moves",
+                "verb": "pick",
+                "count": 1
+              }
+            },
+            {
+              "id": "more_combat_magic",
+              "type": "improvement",
+              "description": "Take another Combat Magic pick",
+              "choose": {
+                "from": "@combat_magic",
+                "verb": "pick",
+                "count": 1
+              }
             }
           ]
         },
         {
-          "id": "change_playbook",
-          "type": "improvement",
-          "description": "Change this hunter to a new type",
-          "special": "change_playbook"
-        },
-        {
-          "id": "second_hunter",
-          "type": "improvement",
-          "description": "Create a second hunter to play as well as this one",
-          "special": "second_hunter"
-        },
-        {
-          "id": "advanced_basic_1",
-          "type": "improvement",
-          "description": "Mark two of the basic moves as advanced",
-          "choose": {
-            "from": "@basic_moves",
-            "verb": "pick", "count": 2
+          "id": "advanced",
+          "name": "Advanced Improvements",
+          "description": "After you have leveled up *five* times, you qualify for advanced improvements in addition to these. They're below.",
+          "requires": {
+            "level": 5
           },
-          "effects": [
+          "options": [
             {
-              "advance_basic": true
+              "id": "any_rating",
+              "type": "improvement",
+              "description": "Get +1 to any rating, max +3",
+              "choose": {
+                "verb": "pick",
+                "count": 1
+              },
+              "options": [
+                {
+                  "id": "charm",
+                  "name": "Charm",
+                  "effects": [
+                    {
+                      "rating": "charm",
+                      "add": 1,
+                      "max": 3
+                    }
+                  ]
+                },
+                {
+                  "id": "cool",
+                  "name": "Cool",
+                  "effects": [
+                    {
+                      "rating": "cool",
+                      "add": 1,
+                      "max": 3
+                    }
+                  ]
+                },
+                {
+                  "id": "sharp",
+                  "name": "Sharp",
+                  "effects": [
+                    {
+                      "rating": "sharp",
+                      "add": 1,
+                      "max": 3
+                    }
+                  ]
+                },
+                {
+                  "id": "tough",
+                  "name": "Tough",
+                  "effects": [
+                    {
+                      "rating": "tough",
+                      "add": 1,
+                      "max": 3
+                    }
+                  ]
+                },
+                {
+                  "id": "weird",
+                  "name": "Weird",
+                  "effects": [
+                    {
+                      "rating": "weird",
+                      "add": 1,
+                      "max": 3
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "change_playbook",
+              "type": "improvement",
+              "description": "Change this hunter to a new type",
+              "special": "change_playbook"
+            },
+            {
+              "id": "second_hunter",
+              "type": "improvement",
+              "description": "Create a second hunter to play as well as this one",
+              "special": "second_hunter"
+            },
+            {
+              "id": "advanced_basic_1",
+              "type": "improvement",
+              "description": "Mark two of the basic moves as advanced",
+              "choose": {
+                "from": "@basic_moves",
+                "verb": "pick",
+                "count": 2
+              },
+              "effects": [
+                {
+                  "advance_basic_move": true
+                }
+              ]
+            },
+            {
+              "id": "advanced_basic_2",
+              "type": "improvement",
+              "description": "Mark another two of the basic moves as advanced",
+              "choose": {
+                "from": "@basic_moves",
+                "verb": "pick",
+                "count": 2
+              },
+              "effects": [
+                {
+                  "advance_basic_move": true
+                }
+              ]
+            },
+            {
+              "id": "retire",
+              "type": "improvement",
+              "description": "Retire this hunter to safety",
+              "special": "retire"
+            },
+            {
+              "id": "erase_luck",
+              "type": "improvement",
+              "description": "Erase one used Luck mark from your playbook",
+              "effects": [
+                {
+                  "luck": -1
+                }
+              ]
+            },
+            {
+              "id": "more_combat_magic_2",
+              "type": "improvement",
+              "description": "Take another Combat Magic pick",
+              "choose": {
+                "from": "@combat_magic",
+                "verb": "pick",
+                "count": 1
+              }
+            },
+            {
+              "id": "cross_off_tt",
+              "type": "improvement",
+              "description": "You may cross off another option from your Tools and Techniques",
+              "choose": {
+                "from": "@moves.tools_and_techniques",
+                "verb": "cross",
+                "count": 1
+              }
             }
           ]
         },
         {
-          "id": "advanced_basic_2",
-          "type": "improvement",
-          "description": "Mark another two of the basic moves as advanced",
-          "choose": {
-            "from": "@basic_moves",
-            "verb": "pick", "count": 2
+          "id": "mythic",
+          "name": "Mythic Improvements",
+          "description": "If you have taken at least twelve improvements, at your Keeper's discretion, you can take one of the following improvements by spending more than one improvement.",
+          "requires": {
+            "improvements": 12
           },
-          "effects": [
+          "cost": 2,
+          "options": [
             {
-              "advance_basic": true
+              "id": "mythic_erase_luck",
+              "type": "improvement",
+              "description": "Erase one used Luck mark from your playbook",
+              "effects": [
+                {
+                  "luck": -1
+                }
+              ]
+            },
+            {
+              "id": "mythic_move",
+              "type": "improvement",
+              "description": "Take another Spell-Slinger move",
+              "choose": {
+                "from": "@moves",
+                "verb": "pick",
+                "count": 1
+              }
+            },
+            {
+              "id": "mythic_more_combat_magic",
+              "type": "improvement",
+              "description": "Take another Combat Magic pick",
+              "choose": {
+                "from": "@combat_magic",
+                "verb": "pick",
+                "count": 1
+              }
+            },
+            {
+              "id": "mythic_other_move",
+              "type": "improvement",
+              "description": "Take a move from another playbook",
+              "choose": {
+                "from": "@*.moves",
+                "verb": "pick",
+                "count": 1
+              }
             }
           ]
-        },
-        {
-          "id": "retire",
-          "type": "improvement",
-          "description": "Retire this hunter to safety",
-          "special": "retire"
-        },
-        {
-          "id": "erase_luck",
-          "type": "improvement",
-          "description": "Erase one used Luck mark from your playbook",
-          "effects": [
-            {
-              "luck": -1
-            }
-          ]
-        },
-        {
-          "id": "more_combat_magic_2",
-          "type": "improvement",
-          "description": "Take another Combat Magic pick",
-          "choose": {
-            "from": "@combat_magic",
-            "verb": "pick", "count": 1
-          }
-        },
-        {
-          "id": "cross_off_tt",
-          "type": "improvement",
-          "description": "You may cross off another option from your Tools and Techniques",
-          "choose": {
-            "from": "@moves.tools_and_techniques",
-            "verb": "cross", "count": 1
-          }
-        }
-      ]
-    },
-    "improvements_mythic": {
-      "id": "improvements_mythic",
-      "description": "If you have taken at least twelve improvements, at your Keeper's discretion, you can take one of the following improvements by spending more than one improvement.",
-      "requires": {
-        "improvements": 12
-      },
-      "cost": 2,
-      "options": [
-        {
-          "id": "mythic_erase_luck",
-          "type": "improvement",
-          "description": "Erase one used Luck mark from your playbook",
-          "effects": [
-            {
-              "luck": -1
-            }
-          ]
-        },
-        {
-          "id": "mythic_move",
-          "type": "improvement",
-          "description": "Take another Spell-Slinger move",
-          "choose": {
-            "from": "@moves",
-            "verb": "pick", "count": 1
-          }
-        },
-        {
-          "id": "mythic_more_combat_magic",
-          "type": "improvement",
-          "description": "Take another Combat Magic pick",
-          "choose": {
-            "from": "@combat_magic",
-            "verb": "pick", "count": 1
-          }
-        },
-        {
-          "id": "mythic_other_move",
-          "type": "improvement",
-          "description": "Take a move from another playbook",
-          "choose": {
-            "from": "@*.moves",
-            "verb": "pick", "count": 1
-          }
         }
       ]
     }

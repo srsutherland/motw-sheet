@@ -134,7 +134,7 @@
       "additionalProperties": false
     },
     "refWithChoices": {
-      "description": "The hunter's side of a playbook object (a grant, an improvement, a pick with its own choices): just its reference when nothing's attached, otherwise { ref, ... }. Improvements:\n- root-relative (`@improvements.weird`)\n- `cost` if it cost more than 1\n- `pending` while being picked",
+      "description": "The hunter's side of a playbook object (a grant, an improvement, a pick with its own choices): just its reference when nothing's attached, otherwise { ref, ... }. Improvements:\n- root-relative (`@improvements.basic.weird`)\n- `cost` if it cost more than 1\n- `pending` while being picked",
       "anyOf": [
         { "$ref": "common.schema.json#/$defs/reference" },
         {

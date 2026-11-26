@@ -72,13 +72,7 @@
       "required": ["options"],
       "additionalProperties": false
     },
-    "leveling_up": { "description": "Leveling up section", "$ref": "#/$defs/text" },
-    "improvements": { "$ref": "#/$defs/improvementList" },
-    "improvements_advanced": { "description": "Advanced improvements (unlocked by `requires`)", "$ref": "#/$defs/improvementList" },
-    "improvements_mythic": {
-      "description": "Mythic improvements (homebrew: not on the paper playbook)",
-      "$ref": "#/$defs/improvementList"
-    }
+    "improvements": { "$ref": "#/$defs/improvements" }
   },
   "required": [
     "schema_version", "updated", "id", "type", "name", "luck", "harm", "moves",
@@ -213,11 +207,27 @@
       "required": ["id", "format", "options"],
       "additionalProperties": false
     },
+    "improvements": {
+      "description": "Leveling up: the improvement lists",
+      "type": "object",
+      "properties": {
+        "id": { "description": "Reference id", "const": "improvements" },
+        "description": { "description": "The display text from the playbook", "$ref": "common.schema.json#/$defs/paragraphs" },
+        "options": {
+          "description": "Improvement lists: basic, advanced, and mythic (homebrew: not on the paper playbook)",
+          "type": "array",
+          "items": { "$ref": "#/$defs/improvementList" }
+        }
+      },
+      "required": ["id", "options"],
+      "additionalProperties": false
+    },
     "improvementList": {
       "description": "Improvement list",
       "type": "object",
       "properties": {
-        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "id": { "description": "Reference id", "enum": ["basic", "advanced", "mythic"] },
+        "name": { "description": "Display name", "type": "string" },
         "description": { "description": "The display text from the playbook", "$ref": "common.schema.json#/$defs/paragraphs" },
         "requires": {
           "description": "Unlock conditions",
@@ -235,7 +245,7 @@
         },
         "options": { "description": "List of options to choose from", "type": "array", "items": { "$ref": "#/$defs/improvement" } }
       },
-      "required": ["id", "options"],
+      "required": ["id", "name", "options"],
       "additionalProperties": false
     },
     "improvement": {

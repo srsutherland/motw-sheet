@@ -167,8 +167,8 @@
         },
         {
           "type": "object",
-          "properties": { "advance_basic": { "const": true } },
-          "required": ["advance_basic"],
+          "properties": { "advance_basic_move": { "const": true } },
+          "required": ["advance_basic_move"],
           "additionalProperties": false
         }
       ]

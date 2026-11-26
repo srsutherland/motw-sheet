@@ -96,28 +96,28 @@ const take = (id, paths = []) => {
     return h.improvements.at(-1);
 };
 h.level = 4;
-check('improvement without choices is a string', take('weird'), '@improvements.weird');
-check('improvement with a choice', take('any_rating', [`${sp}.improvements_advanced.any_rating.cool`]), { ref: '@improvements_advanced.any_rating', chosen: ['@cool'] });
-check('move from an improvement, relative to @moves', take('move_1', [`${sp}.moves.shield_spell`]), { ref: '@improvements.move_1', chosen: ['@shield_spell'] });
+check('improvement without choices is a string', take('weird'), '@improvements.basic.weird');
+check('improvement with a choice', take('any_rating', [`${sp}.improvements.advanced.any_rating.cool`]), { ref: '@improvements.advanced.any_rating', chosen: ['@cool'] });
+check('move from an improvement, relative to @moves', take('move_1', [`${sp}.moves.shield_spell`]), { ref: '@improvements.basic.move_1', chosen: ['@shield_spell'] });
 take('advanced_basic_1', ['basic_moves.kick_some_ass', 'basic_moves.use_magic']);
 st = S.hunterState(h);
 check('ratings after improvements', st.ratings, { charm: -1, cool: 2, sharp: 1, tough: 0, weird: 3 });
 check('move from improvement', st.moves.at(-1).node.name, 'Shield Spell');
 check('advanced basic', [...st.advanced], ['basic_moves.kick_some_ass', 'basic_moves.use_magic']);
 check('advancing does not add moves', st.moves.length, 5);
-check('improvement by reference', S.improvementOf(pb, '@improvements_advanced.cross_off_tt')?.improvement.id, 'cross_off_tt');
+check('improvement by reference', S.improvementOf(pb, '@improvements.advanced.cross_off_tt')?.improvement.id, 'cross_off_tt');
 check('chosen, resolved', S.chosenFor(pb, S.findImprovement(pb, 'move_1').improvement, h.improvements[2]).map((c) => c.node.name), ['Shield Spell']);
 
 h.level = 3;
 const down = S.hunterState(h);
-check('level down: newest improvement disabled', [...S.improvementBudget(h).disabled].map(S.refOf), ['@improvements_advanced.advanced_basic_1']);
+check('level down: newest improvement disabled', [...S.improvementBudget(h).disabled].map(S.refOf), ['@improvements.advanced.advanced_basic_1']);
 check('level down: its effect is gone', [...down.advanced], []);
 check('level down: choices kept', h.improvements.at(-1).chosen.length, 2);
 check('level down: nothing unspent', S.unspentImprovements(h), 0);
 h.level = 6;
 check('unspent', S.unspentImprovements(h), 2);
 check('mythic cost', S.costOf(pb, 'mythic_move'), 2);
-h.improvements.push({ ref: '@improvements_mythic.mythic_move', cost: 2, chosen: [] });
+h.improvements.push({ ref: '@improvements.mythic.mythic_move', cost: 2, chosen: [] });
 check('unspent after a mythic', S.unspentImprovements(h), 0);
 h.improvements.pop();
 
@@ -135,7 +135,7 @@ const keys = Object.keys(saved);
 
 const rh = reactive(new Hunter(spellslinger, 'Reactive'));
 rh.level = 13;
-rh.improvements.push('@improvements.move_1', '@improvements_mythic.mythic_move');
+rh.improvements.push('@improvements.basic.move_1', '@improvements.mythic.mythic_move');
 const rst = S.hunterState(rh);
 const imp = (id) => S.findImprovement(rh.playbook, id).improvement;
 check('repeat: taken improvement blocked (reactive hunter)', S.improvementBlocked(rh, imp('move_1'), rst, 5), 'already taken');
@@ -300,5 +300,6 @@ for (const [label, hunter] of [['Spell-Slinger', h], ['Expert', e], ['Monstrous'
     check(`schema: built ${label}`, validate('hunter.schema.json', JSON.parse(JSON.stringify(toSaved(hunter)))), []);
 }
 check('schema: full, no computed', validate('hunter.schema.json', JSON.parse(JSON.stringify(full))), []);
+
 await server.close();
 finish();

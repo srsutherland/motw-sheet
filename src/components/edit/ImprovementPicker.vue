@@ -2,19 +2,19 @@
 <dialog ref="dialog" class="improvement-picker" @cancel.prevent="cancel">
     <h2>Advancement</h2>
     <MarkdownText
-        v-if="hunter.playbook.leveling_up"
-        :text="hunter.playbook.leveling_up.description"
+        v-if="hunter.playbook.improvements.description"
+        :text="hunter.playbook.improvements.description"
     />
 
     <template v-if="pendingIndex < 0">
         <section v-for="{ key, list, unlocked } in lists" :key="key">
-            <h3>{{ listNames[key] }}</h3>
+            <h3>{{ list.name }}</h3>
             <MarkdownText
-                v-if="list.description && key !== 'improvements'"
+                v-if="list.description && key !== 'basic'"
                 class="list-description"
                 :text="list.description"
             />
-            <p v-if="key === 'improvements_mythic'" class="note">
+            <p v-if="key === 'mythic'" class="note">
                 Homebrew: not on the paper playbook.
             </p>
             <p v-if="!unlocked" class="note">Not unlocked yet.</p>
@@ -81,12 +81,6 @@ const dialog = ref(null);
 
 onMounted(() => dialog.value.showModal());
 
-const listNames = {
-    improvements: 'Improvements',
-    improvements_advanced: 'Advanced Improvements',
-    improvements_mythic: 'Mythic Improvements',
-};
-
 // Level ups completed before the one this improvement is for (advanced: "after you have
 // leveled up five times").
 const levelsBefore = computed(() => {
@@ -96,7 +90,7 @@ const levelsBefore = computed(() => {
 
 // mythic improvements stay hidden until they unlock
 const lists = computed(() => improvementLists(hunter.value, levelsBefore.value)
-    .filter(({ key, unlocked }) => unlocked || key !== 'improvements_mythic'));
+    .filter(({ key, unlocked }) => unlocked || key !== 'mythic'));
 // Improvements available to spend
 const points = computed(() => unspentImprovements(hunter.value));
 const blocked = (improvement) => improvementBlocked(

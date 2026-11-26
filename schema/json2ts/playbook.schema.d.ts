@@ -79,13 +79,7 @@ export interface Playbook {
     description?: Paragraphs;
     options: PlainText[];
   };
-  /** Leveling up section */
-  leveling_up?: Text;
-  improvements: ImprovementList;
-  /** Advanced improvements (unlocked by `requires`) */
-  improvements_advanced?: ImprovementList;
-  /** Mythic improvements (homebrew: not on the paper playbook) */
-  improvements_mythic?: ImprovementList;
+  improvements: Improvements;
 }
 
 export interface Text {
@@ -202,10 +196,25 @@ export interface LookTrait {
 }
 
 /**
+ * Leveling up: the improvement lists
+ */
+export interface Improvements {
+  /** Reference id */
+  id: "improvements";
+  /** The display text from the playbook */
+  description?: Paragraphs;
+  /** Improvement lists: basic, advanced, and mythic (homebrew: not on the paper playbook) */
+  options: ImprovementList[];
+}
+
+/**
  * Improvement list
  */
 export interface ImprovementList {
-  id: Id;
+  /** Reference id */
+  id: "basic" | "advanced" | "mythic";
+  /** Display name */
+  name: string;
   /** The display text from the playbook */
   description?: Paragraphs;
   /** Unlock conditions */

@@ -14,13 +14,14 @@ const verbOf = (rule) => rule.verb;
 // The number a rule asks for, whatever its verb.
 const countOf = (rule) => rule.count;
 
-const IMPROVEMENT_LISTS = ['improvements', 'improvements_advanced', 'improvements_mythic'];
+// The improvement lists: basic, advanced, mythic
+const improvementListsOf = (playbook) => playbook.improvements?.options ?? [];
 
 const findImprovement = (playbook, id) => {
-    for (const list of IMPROVEMENT_LISTS) {
-        const found = playbook[list]?.options.find((option) => option.id === id);
+    for (const list of improvementListsOf(playbook)) {
+        const found = list.options.find((option) => option.id === id);
         if (found) {
-            return { improvement: found, list: playbook[list] };
+            return { improvement: found, list };
         }
     }
     return null;
@@ -31,13 +32,13 @@ const findImprovement = (playbook, id) => {
 const refOf = (stored) => (typeof stored === 'string' ? stored : stored?.ref);
 const isText = (stored) => stored?.ref === TEXTBOX;
 
-// A taken improvement's playbook definition, from its reference ("@improvements.weird").
+// A taken improvement's playbook definition, from its reference ("@improvements.basic.weird").
 const improvementOf = (playbook, taken) => {
     const node = resolve(refOf(taken), playbook);
     return node ? findImprovement(playbook, node.id) : null;
 };
 
-// How the hunter refers to an improvement: root-relative ("@improvements_advanced.any_rating")
+// How the hunter refers to an improvement: root-relative ("@improvements.advanced.any_rating")
 const improvementRef = (playbook, improvement) => `@${pathOf(improvement, playbook)
     .slice(playbook.id.length + 1)}`;
 
@@ -109,7 +110,8 @@ const chosenFor = (playbook, holder, record) => rulesOf(holder).flatMap((rule, i
         .filter(Boolean);
 });
 
-const advancesBasicMoves = (holder) => (holder?.effects ?? []).some((e) => e.advance_basic);
+const advancesBasicMoves = (holder) => (holder?.effects ?? [])
+    .some((e) => e.advance_basic_move);
 
 // Replay every source of choices, in order: getting_started, each improvement in the
 // order taken, then the choices that belong to items the hunter has gained.
@@ -341,15 +343,13 @@ const overMax = (effect, state) => effect.rating !== undefined && effect.max !==
 
 // The improvement lists, each with whether it's unlocked yet.
 // `levelsBefore`: level ups completed before the one this improvement is for.
-const improvementLists = (h, levelsBefore) => IMPROVEMENT_LISTS
-    .filter((key) => h.playbook[key])
-    .map((key) => {
-        const list = h.playbook[key];
+const improvementLists = (h, levelsBefore) => improvementListsOf(h.playbook)
+    .map((list) => {
         const requires = list.requires ?? {};
         const unlocked = (requires.level === undefined || levelsBefore >= requires.level)
             && (requires.improvements === undefined
                 || takenImprovements(h).length >= requires.improvements);
-        return { key, list, unlocked };
+        return { key: list.id, list, unlocked };
     });
 
 // Why an improvement can't be taken right now, or null if it can.
@@ -357,8 +357,7 @@ const improvementLists = (h, levelsBefore) => IMPROVEMENT_LISTS
 const improvementBlocked = (h, improvement, state, points) => {
     // by id: the hunter's playbook copy may be reactive, so the objects can differ.
     // Mythic improvements can be taken again.
-    const repeatable = findImprovement(h.playbook, improvement.id)?.list
-        === h.playbook.improvements_mythic;
+    const repeatable = findImprovement(h.playbook, improvement.id)?.list.id === 'mythic';
     if (!repeatable && takenImprovements(h).some((taken) => improvementOf(h.playbook, taken)
         ?.improvement.id === improvement.id)) {
         return 'already taken';
@@ -397,7 +396,7 @@ const applyOneOffEffects = (h, improvement) => {
 const basicMovesByRating = (rating) => basicMoves.options.filter((move) => move.rating === rating);
 
 export {
-    RATINGS, IMPROVEMENT_LISTS,
+    RATINGS, improvementListsOf,
     verbOf, countOf, findImprovement, improvementOf, improvementRef, refOf, isText,
     choiceSet, grantRecord, pickRecord, toggleChoice, setTextChoice, gettingStartedRules, chosenFor,
     advancesBasicMoves,

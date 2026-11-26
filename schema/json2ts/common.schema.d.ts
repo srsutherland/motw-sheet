@@ -152,7 +152,7 @@ export type Effect =
       luck: number;
     }
   | {
-      advance_basic: true;
+      advance_basic_move: true;
     };
 
 /**

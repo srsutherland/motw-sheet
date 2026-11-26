@@ -115,7 +115,7 @@ export interface TextChoice {
  * The hunter's side of a playbook object (a grant, an improvement, a pick with its own choices):
  * just its reference when nothing's attached, otherwise { ref, ... }.
  * Improvements:
- * - root-relative (`@improvements.weird`)
+ * - root-relative (`@improvements.basic.weird`)
  * - `cost` if it cost more than 1
  * - `pending` while being picked
  */

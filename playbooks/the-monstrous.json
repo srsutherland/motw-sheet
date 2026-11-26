@@ -271,175 +271,181 @@
       "They saved you from another hunter who was prepared to kill you. Ask them what happened."
     ]
   },
-  "leveling_up": {
-    "description": "When you have filled all five experience boxes, you level up. Erase the marks and pick an improvement from the following list:"
-  },
   "improvements": {
     "id": "improvements",
+    "description": "When you have filled all five experience boxes, you level up. Erase the marks and pick an improvement from the following list:",
     "options": [
       {
-        "id": "charm",
-        "type": "improvement",
-        "description": "Get +1 Charm, max +2",
-        "effects": [{ "rating": "charm", "add": 1, "max": 2 }]
-      },
-      {
-        "id": "cool",
-        "type": "improvement",
-        "description": "Get +1 Cool, max +2",
-        "effects": [{ "rating": "cool", "add": 1, "max": 2 }]
-      },
-      {
-        "id": "sharp",
-        "type": "improvement",
-        "description": "Get +1 Sharp, max +2",
-        "effects": [{ "rating": "sharp", "add": 1, "max": 2 }]
-      },
-      {
-        "id": "tough",
-        "type": "improvement",
-        "description": "Get +1 Tough, max +2",
-        "effects": [{ "rating": "tough", "add": 1, "max": 2 }]
-      },
-      {
-        "id": "move_1",
-        "type": "improvement",
-        "description": "Take another Monstrous move",
-        "choose": { "from": "@moves", "verb": "pick", "count": 1 }
-      },
-      {
-        "id": "move_2",
-        "type": "improvement",
-        "description": "Take another Monstrous move",
-        "choose": { "from": "@moves", "verb": "pick", "count": 1 }
-      },
-      {
-        "id": "haven",
-        "type": "improvement",
-        "description": "Gain a haven, like the Expert has, with two options",
-        "grant": "@the_expert.haven",
-        "choose": { "from": "@the_expert.haven", "verb": "pick", "count": 2 }
-      },
-      {
-        "id": "natural_attacks",
-        "type": "improvement",
-        "description": "Take a natural attacks pick",
-        "choose": { "from": "@natural_attacks", "verb": "pick", "count": 1 }
-      },
-      {
-        "id": "other_move_1",
-        "type": "improvement",
-        "description": "Take a move from another playbook",
-        "choose": { "from": "@*.moves", "verb": "pick", "count": 1 }
-      },
-      {
-        "id": "other_move_2",
-        "type": "improvement",
-        "description": "Take a move from another playbook",
-        "choose": { "from": "@*.moves", "verb": "pick", "count": 1 }
-      }
-    ]
-  },
-  "improvements_advanced": {
-    "id": "improvements_advanced",
-    "description": "After you have leveled up *five* times, you qualify for advanced improvements in addition to these. They're below.",
-    "requires": { "level": 5 },
-    "options": [
-      {
-        "id": "any_rating",
-        "type": "improvement",
-        "description": "Get +1 to any rating, max +3",
-        "choose": { "verb": "pick", "count": 1 },
+        "id": "basic",
+        "name": "Improvements",
         "options": [
-          { "id": "charm", "name": "Charm", "effects": [{ "rating": "charm", "add": 1, "max": 3 }] },
-          { "id": "cool", "name": "Cool", "effects": [{ "rating": "cool", "add": 1, "max": 3 }] },
-          { "id": "sharp", "name": "Sharp", "effects": [{ "rating": "sharp", "add": 1, "max": 3 }] },
-          { "id": "tough", "name": "Tough", "effects": [{ "rating": "tough", "add": 1, "max": 3 }] },
-          { "id": "weird", "name": "Weird", "effects": [{ "rating": "weird", "add": 1, "max": 3 }] }
+          {
+            "id": "charm",
+            "type": "improvement",
+            "description": "Get +1 Charm, max +2",
+            "effects": [{ "rating": "charm", "add": 1, "max": 2 }]
+          },
+          {
+            "id": "cool",
+            "type": "improvement",
+            "description": "Get +1 Cool, max +2",
+            "effects": [{ "rating": "cool", "add": 1, "max": 2 }]
+          },
+          {
+            "id": "sharp",
+            "type": "improvement",
+            "description": "Get +1 Sharp, max +2",
+            "effects": [{ "rating": "sharp", "add": 1, "max": 2 }]
+          },
+          {
+            "id": "tough",
+            "type": "improvement",
+            "description": "Get +1 Tough, max +2",
+            "effects": [{ "rating": "tough", "add": 1, "max": 2 }]
+          },
+          {
+            "id": "move_1",
+            "type": "improvement",
+            "description": "Take another Monstrous move",
+            "choose": { "from": "@moves", "verb": "pick", "count": 1 }
+          },
+          {
+            "id": "move_2",
+            "type": "improvement",
+            "description": "Take another Monstrous move",
+            "choose": { "from": "@moves", "verb": "pick", "count": 1 }
+          },
+          {
+            "id": "haven",
+            "type": "improvement",
+            "description": "Gain a haven, like the Expert has, with two options",
+            "grant": "@the_expert.haven",
+            "choose": { "from": "@the_expert.haven", "verb": "pick", "count": 2 }
+          },
+          {
+            "id": "natural_attacks",
+            "type": "improvement",
+            "description": "Take a natural attacks pick",
+            "choose": { "from": "@natural_attacks", "verb": "pick", "count": 1 }
+          },
+          {
+            "id": "other_move_1",
+            "type": "improvement",
+            "description": "Take a move from another playbook",
+            "choose": { "from": "@*.moves", "verb": "pick", "count": 1 }
+          },
+          {
+            "id": "other_move_2",
+            "type": "improvement",
+            "description": "Take a move from another playbook",
+            "choose": { "from": "@*.moves", "verb": "pick", "count": 1 }
+          }
         ]
       },
       {
-        "id": "change_playbook",
-        "type": "improvement",
-        "description": "Change this hunter to a new type",
-        "special": "change_playbook"
+        "id": "advanced",
+        "name": "Advanced Improvements",
+        "description": "After you have leveled up *five* times, you qualify for advanced improvements in addition to these. They're below.",
+        "requires": { "level": 5 },
+        "options": [
+          {
+            "id": "any_rating",
+            "type": "improvement",
+            "description": "Get +1 to any rating, max +3",
+            "choose": { "verb": "pick", "count": 1 },
+            "options": [
+              { "id": "charm", "name": "Charm", "effects": [{ "rating": "charm", "add": 1, "max": 3 }] },
+              { "id": "cool", "name": "Cool", "effects": [{ "rating": "cool", "add": 1, "max": 3 }] },
+              { "id": "sharp", "name": "Sharp", "effects": [{ "rating": "sharp", "add": 1, "max": 3 }] },
+              { "id": "tough", "name": "Tough", "effects": [{ "rating": "tough", "add": 1, "max": 3 }] },
+              { "id": "weird", "name": "Weird", "effects": [{ "rating": "weird", "add": 1, "max": 3 }] }
+            ]
+          },
+          {
+            "id": "change_playbook",
+            "type": "improvement",
+            "description": "Change this hunter to a new type",
+            "special": "change_playbook"
+          },
+          {
+            "id": "second_hunter",
+            "type": "improvement",
+            "description": "Create a second hunter to play as well as this one",
+            "special": "second_hunter"
+          },
+          {
+            "id": "advanced_basic_1",
+            "type": "improvement",
+            "description": "Mark two of the basic moves as advanced",
+            "choose": { "from": "@basic_moves", "verb": "pick", "count": 2 },
+            "effects": [{ "advance_basic_move": true }]
+          },
+          {
+            "id": "advanced_basic_2",
+            "type": "improvement",
+            "description": "Mark another two of the basic moves as advanced",
+            "choose": { "from": "@basic_moves", "verb": "pick", "count": 2 },
+            "effects": [{ "advance_basic_move": true }]
+          },
+          {
+            "id": "retire",
+            "type": "improvement",
+            "description": "Retire this hunter to safety",
+            "special": "retire"
+          },
+          {
+            "id": "free_from_curse",
+            "type": "improvement",
+            "description": "Free yourself from the curse of your kind. Your curse no longer applies, but you lose 1 Weird",
+            "choose": { "from": "@curse", "verb": "cross", "count": 1 },
+            "effects": [{ "rating": "weird", "add": -1 }]
+          },
+          {
+            "id": "turn_evil",
+            "type": "improvement",
+            "description": "You turn evil (again). Retire this character, they become one of the Keeper's threats",
+            "special": "turn_evil"
+          },
+          {
+            "id": "erase_luck",
+            "type": "improvement",
+            "description": "Get back one used Luck point",
+            "effects": [{ "luck": -1 }]
+          }
+        ]
       },
       {
-        "id": "second_hunter",
-        "type": "improvement",
-        "description": "Create a second hunter to play as well as this one",
-        "special": "second_hunter"
-      },
-      {
-        "id": "advanced_basic_1",
-        "type": "improvement",
-        "description": "Mark two of the basic moves as advanced",
-        "choose": { "from": "@basic_moves", "verb": "pick", "count": 2 },
-        "effects": [{ "advance_basic": true }]
-      },
-      {
-        "id": "advanced_basic_2",
-        "type": "improvement",
-        "description": "Mark another two of the basic moves as advanced",
-        "choose": { "from": "@basic_moves", "verb": "pick", "count": 2 },
-        "effects": [{ "advance_basic": true }]
-      },
-      {
-        "id": "retire",
-        "type": "improvement",
-        "description": "Retire this hunter to safety",
-        "special": "retire"
-      },
-      {
-        "id": "free_from_curse",
-        "type": "improvement",
-        "description": "Free yourself from the curse of your kind. Your curse no longer applies, but you lose 1 Weird",
-        "choose": { "from": "@curse", "verb": "cross", "count": 1 },
-        "effects": [{ "rating": "weird", "add": -1 }]
-      },
-      {
-        "id": "turn_evil",
-        "type": "improvement",
-        "description": "You turn evil (again). Retire this character, they become one of the Keeper's threats",
-        "special": "turn_evil"
-      },
-      {
-        "id": "erase_luck",
-        "type": "improvement",
-        "description": "Get back one used Luck point",
-        "effects": [{ "luck": -1 }]
-      }
-    ]
-  },
-  "improvements_mythic": {
-    "id": "improvements_mythic",
-    "description": "If you have taken at least twelve improvements, at your Keeper's discretion, you can take one of the following improvements by spending more than one improvement.",
-    "requires": { "improvements": 12 },
-    "cost": 2,
-    "options": [
-      {
-        "id": "mythic_erase_luck",
-        "type": "improvement",
-        "description": "Get back one used Luck point",
-        "effects": [{ "luck": -1 }]
-      },
-      {
-        "id": "mythic_move",
-        "type": "improvement",
-        "description": "Take another Monstrous move",
-        "choose": { "from": "@moves", "verb": "pick", "count": 1 }
-      },
-      {
-        "id": "mythic_natural_attacks",
-        "type": "improvement",
-        "description": "Take a natural attacks pick",
-        "choose": { "from": "@natural_attacks", "verb": "pick", "count": 1 }
-      },
-      {
-        "id": "mythic_other_move",
-        "type": "improvement",
-        "description": "Take a move from another playbook",
-        "choose": { "from": "@*.moves", "verb": "pick", "count": 1 }
+        "id": "mythic",
+        "name": "Mythic Improvements",
+        "description": "If you have taken at least twelve improvements, at your Keeper's discretion, you can take one of the following improvements by spending more than one improvement.",
+        "requires": { "improvements": 12 },
+        "cost": 2,
+        "options": [
+          {
+            "id": "mythic_erase_luck",
+            "type": "improvement",
+            "description": "Get back one used Luck point",
+            "effects": [{ "luck": -1 }]
+          },
+          {
+            "id": "mythic_move",
+            "type": "improvement",
+            "description": "Take another Monstrous move",
+            "choose": { "from": "@moves", "verb": "pick", "count": 1 }
+          },
+          {
+            "id": "mythic_natural_attacks",
+            "type": "improvement",
+            "description": "Take a natural attacks pick",
+            "choose": { "from": "@natural_attacks", "verb": "pick", "count": 1 }
+          },
+          {
+            "id": "mythic_other_move",
+            "type": "improvement",
+            "description": "Take a move from another playbook",
+            "choose": { "from": "@*.moves", "verb": "pick", "count": 1 }
+          }
+        ]
       }
     ]
   }
