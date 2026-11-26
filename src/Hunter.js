@@ -1,5 +1,6 @@
 import { files } from '@/Playbooks';
 import { resolve } from '@/PlaybookData';
+import { upgradeSave } from '@/SaveUpgrade';
 
 // Date of the last breaking change to the hunter format (0.1.yyyy.mm.dd, plus .1, .2...
 // if it breaks again on a day it was already pushed).
@@ -78,8 +79,9 @@ class Hunter {
         };
     }
 
-    // Returns null for data saved in an older format.
-    static fromJSON(data) {
+    // Returns null for data saved in an older format that can't be upgraded (SaveUpgrade.js).
+    static fromJSON(saved) {
+        const data = upgradeSave(saved);
         if (data?.schema_version !== SCHEMA_VERSION) {
             return null;
         }

@@ -301,5 +301,35 @@ for (const [label, hunter] of [['Spell-Slinger', h], ['Expert', e], ['Monstrous'
 }
 check('schema: full, no computed', validate('hunter.schema.json', JSON.parse(JSON.stringify(full))), []);
 
+// Save upgrades (SaveUpgrade.js)
+const { STEPS, upgradeSave } = await load('/src/SaveUpgrade.js');
+const { SCHEMA_VERSION } = await load('/src/Hunter.js');
+const chained = STEPS.every((step, i) => i === 0 || step.from === STEPS[i - 1].to);
+check('upgrade: steps chain to the current version', chained && STEPS.at(-1).to, SCHEMA_VERSION);
+check('upgrade: unknown old version still rejected', Hunter.fromJSON({ schema_version: '0.1', uid: 'x', playbook: {} }), null);
+const byRef = { schema_version: '0.1.2026.11.24', playbook: '@the_spellslinger',
+    improvements: ['@improvements.weird', { ref: '@improvements_advanced.any_rating', chosen: ['@cool'] }] };
+check('upgrade: improvement references gain their list', upgradeSave(byRef).improvements,
+    ['@improvements.basic.weird', { ref: '@improvements.advanced.any_rating', chosen: ['@cool'] }]);
+check('upgrade: the save itself is unchanged', byRef.improvements[0], '@improvements.weird');
+
+// DEPRECATED, with the steps they test (to be removed in 2027): real saves in 2026 formats
+const fs = await import('node:fs');
+for (const version of ['0.1.2026.10.16', '0.1.2026.11.24']) {
+    const old = JSON.parse(fs.readFileSync(`tests/fixtures/save-${version}.json`, 'utf8'));
+    const upgraded = Hunter.fromJSON(old);
+    check(`upgrade ${version}: loads`, upgraded?.schema_version, SCHEMA_VERSION);
+    // the replay gives what the app showed when it was saved
+    const replayed = toSaved(upgraded).computed;
+    const names = (computed) => ['moves', 'gear', 'features']
+        .map((key) => computed[key].map((item) => item.name));
+    check(`upgrade ${version}: same sheet`, [replayed.ratings, names(replayed)],
+        [old.computed.ratings, names(old.computed)]);
+    check(`upgrade ${version}: playbook copy upgraded`, upgraded.playbook.schema_version, '0.1.2026.11.25');
+}
+const sample = JSON.parse(fs.readFileSync('samples/Dave Johnson the Spell-Slinger.json', 'utf8'));
+const { $schema: _, ...sampleData } = sample; // eslint-disable-line no-unused-vars
+const upgradedSample = upgradeSave(JSON.parse(fs.readFileSync('tests/fixtures/save-0.1.2026.11.24.json', 'utf8')));
+check('upgrade: the sample is its 0.1.2026.11.24 save, upgraded', JSON.stringify(upgradedSample) === JSON.stringify(sampleData), true);
 await server.close();
 finish();
