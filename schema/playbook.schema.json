@@ -13,7 +13,7 @@
       "type": "string",
       "pattern": "^the_[a-z0-9_]+$"
     },
-    "type": { "description": "Object type", "const": "playbook" },
+    "type": { "description": "Object type hint", "const": "playbook" },
     "name": { "description": "Display name, including \"The\" (`The Spell-Slinger`)", "type": "string" },
     "emoji": { "description": "Emoji icon (`🔮`)", "type": "string" },
     "quote": { "description": "Flavor text at the top of the playbook", "$ref": "common.schema.json#/$defs/markdown" },
@@ -102,11 +102,11 @@
       ]
     },
     "node": {
-      "description": "A playbook object (`type`: move, gear, feature; options inside a feature or move usually have none). Untyped, with `options` and no `choose`: a sub-list (Combat Magic's bases), offered grouped with the container's options. With its own `choose`: an option with its own choice (Pure Drive's emotion).",
+      "description": "A playbook object. Needs an `id`, or a `name` to make one from (choices are stored by path).\n- Untyped, with `options` and no `choose`: a sub-list (Combat Magic's bases), offered grouped with the container's options\n- With its own `choose`: an option with its own choice (Pure Drive's emotion)",
       "type": "object",
       "properties": {
         "id": { "$ref": "common.schema.json#/$defs/id" },
-        "type": { "description": "Object type", "enum": ["move", "gear", "feature"] },
+        "type": { "description": "Object type hint", "enum": ["move", "gear", "feature"] },
         "name": { "description": "Display name", "type": "string" },
         "description": { "description": "The display text from the playbook", "$ref": "common.schema.json#/$defs/paragraphs" },
         "heading": { "description": "Heading text displayed before the options", "$ref": "common.schema.json#/$defs/markdown" },
@@ -119,10 +119,8 @@
         "on_view": { "$ref": "common.schema.json#/$defs/pageOverride" }
       },
       "additionalProperties": false,
-      "anyOf": [
-        { "required": ["id"] },
-        { "required": ["name"] }
-      ]
+      "if": { "not": { "required": ["name"] } },
+      "then": { "required": ["id"] }
     },
     "feature": {
       "description": "A playbook-specific section that isn't a move (Combat Magic, Haven, Curse).",
@@ -236,7 +234,7 @@
       "type": "object",
       "properties": {
         "id": { "$ref": "common.schema.json#/$defs/id" },
-        "type": { "description": "Object type", "const": "improvement" },
+        "type": { "description": "Object type hint", "const": "improvement" },
         "description": { "description": "The display text from the playbook", "$ref": "common.schema.json#/$defs/markdown" },
         "grant": { "$ref": "common.schema.json#/$defs/grant" },
         "choose": { "$ref": "common.schema.json#/$defs/choose" },

@@ -21,6 +21,9 @@ check('rejects an unknown key', validate('playbook.schema.json', { ...pb, colour
 check('rejects an unknown verb', validate('common.schema.json#/$defs/chooseRule', { verb: 'take', count: 1 }).length > 0, true);
 check('rejects a rule without a count', validate('common.schema.json#/$defs/chooseRule', { verb: 'pick' }).length > 0, true);
 check('rejects a bad reference', validate('common.schema.json#/$defs/reference', '@Bad Ref').length > 0, true);
+const nodeErrors = (node) => validate('playbook.schema.json#/$defs/node', node).length;
+check('a node needs an id or a name', [{}, { id: 'a' }, { name: 'A' }].map(nodeErrors).map(Boolean),
+    [true, false, false]);
 
 // The TypeScript declarations match the schemas
 const typesDir = 'schema/json2ts';

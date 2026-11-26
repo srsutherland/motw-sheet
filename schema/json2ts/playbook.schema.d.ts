@@ -31,7 +31,7 @@ export interface Playbook {
   updated: DateString;
   /** File id, the first segment of absolute references (`@the_expert.haven`) */
   id: string;
-  /** Object type */
+  /** Object type hint */
   type: "playbook";
   /** Display name, including "The" (`The Spell-Slinger`) */
   name: string;
@@ -99,17 +99,15 @@ export interface Text {
 export type Option = Reference | PlainText | Node;
 
 /**
- * A playbook object (`type`: move, gear, feature;
- * options inside a feature or move usually have none).
- * Untyped, with `options` and no `choose`: a sub-list (Combat Magic's bases), offered grouped with
- * the container's options.
- * With its own `choose`: an option with its own choice (Pure Drive's emotion).
+ * A playbook object.
+ * Needs an `id`, or a `name` to make one from (choices are stored by path).
+ * - Untyped, with `options` and no `choose`: a sub-list (Combat Magic's bases), offered grouped
+ *   with the container's options
+ * - With its own `choose`: an option with its own choice (Pure Drive's emotion)
  */
-export type Node = {
-  [k: string]: unknown;
-} & {
+export interface Node {
   id?: Id;
-  /** Object type */
+  /** Object type hint */
   type?: "move" | "gear" | "feature";
   /** Display name */
   name?: string;
@@ -126,7 +124,7 @@ export type Node = {
   details?: Details;
   on_edit?: PageOverride;
   on_view?: PageOverride;
-};
+}
 
 /**
  * A playbook-specific section that isn't a move (Combat Magic, Haven, Curse).
@@ -224,7 +222,7 @@ export interface ImprovementList {
  */
 export interface Improvement {
   id: Id;
-  /** Object type */
+  /** Object type hint */
   type: "improvement";
   /** The display text from the playbook */
   description: Markdown;
