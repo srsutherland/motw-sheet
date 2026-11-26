@@ -168,6 +168,7 @@ Limits on a `choose` (exact syntax not final):
 
 ## Improvements
 
+- `improvements` is a container (its description: the leveling-up text) of three lists, `basic`, `advanced`, `mythic`, each with a `name`: `@improvements.advanced.any_rating`
 - Either a pre-determined effect, or a reference to a list to choose from (DESIGN.md)
 - The choice is made on, and stored with, the improvement (DESIGN.md)
 - Chosen in a popup, or a dropdown if simple (DESIGN.md)
@@ -176,7 +177,7 @@ Limits on a `choose` (exact syntax not final):
 - "+1 to any rating": sub-options, one per rating, each a fixed effect; `"choose": { "verb": "pick", "count": 1 }`
 - Monstrous "Free yourself from the curse": `cross` the curse (stays visible, crossed off), plus -1 Weird
    - Long term, DRY it to `"from": "@shared.improve_any_rating"`
-- "Mark two basic moves as advanced": a pick plus an effect, `advance_basic`
+- "Mark two basic moves as advanced": a pick plus an effect, `advance_basic_move`
 - Advanced improvements unlock at level 5 (the paper: "after you have leveled up five times"): `"requires": { "level": 5 }`
 - "Change this hunter to a new type": its own flow (choose what to keep); the old playbook's sheet goes in `past_lives`, keyed by the previous playbook's name (not built)
 - Mythic improvements are **homebrew**: not on the paper playbook
@@ -287,7 +288,7 @@ Not discussed yet. From the old draft (plan-slop) or from me.
 - Fixed effects as a list: `"effects": [ { "rating": "weird", "add": 1, "max": 3 } ]`
    - Compound improvements = multiple effects
    - Erase a used luck mark: `{ "luck": -1 }`
-   - Advance basic moves: `{ "advance_basic": true }`, applying to the improvement's own picks
+   - Advance basic moves: `{ "advance_basic_move": true }`, applying to the improvement's own picks
 - Narrative-only improvements and specials (change playbook, second hunter, retire) are just recorded: `"special": "retire"`
 - Mythic unlock: `"requires": { "improvements": 12 }` (plus the Keeper's say-so)
 - Look traits: `{ "id": "clothes", "format": "___ clothes", "options": [...] }`

@@ -50,7 +50,7 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
    - e.g. define node interface, then move some of the parsing/export logic there?
    - Node types like "choices", "options", etc following the schema
    - PlaybookModel.js, HunterModel.js, CommonModel.js
-- Migrating hunters from old versions: a module of incremental conversions (one per breaking hunter format change), separate from the loader; conversions from formats before 2027 are deprecated, to be removed in 2027
+- Remove the save upgrade steps from 2026 formats (`SaveUpgrade.js`, deprecated) in 2027
 - Remaining core playbooks
 - Basic move popups (needs basic rules JSON)
 - List of playbooks ordered by book release date, then alphabetically
@@ -95,7 +95,7 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - Initiate's and Professional's granted moves have no name; auto ids need one
 - Edit page is too cluttered; more should be in popups
 - Mythic improvement costs are fixed at 2 (Keeper-chosen schemes are post-MVP)
-- Saves from older hunter formats can only be deleted (the sample was converted with one-off scripts)
+- Saves from hunter formats before 0.1.2026.10.16 can only be deleted
 - Saves reference the playbook file by default; once something edits a hunter's playbook copy, those saves would lose the edits
 - `basic_moves.json` has names and ratings only, no descriptions (needed for popups)
 - `[[wikilinks]]` render as dotted-underline text, no popup yet

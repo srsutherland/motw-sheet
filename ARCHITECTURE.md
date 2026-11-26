@@ -19,6 +19,7 @@ motw-sheet/
 │   ├── PlaybookData.js       # Ids, paths, @ references
 │   ├── Playbooks.js          # Loads the playbook JSON
 │   ├── Storage.js            # localStorage, import/export
+│   ├── SaveUpgrade.js        # Old saves to the current format
 │   ├── Markdown.js           # Display-text markdown subset
 │   ├── Format.js             # Text formatting (ratings lines)
 │   └── Tags.js               # Gear tag parsing
@@ -78,7 +79,7 @@ Deployment: GitHub Pages (see 6)
 - `Hunter.js`
    - `Hunter` class, `SCHEMA_VERSION`
    - Record builders: `makeChoices`, `makeRecord`
-   - `fromJSON`: rejects other versions, ignores `computed`
+   - `fromJSON`: upgrades older saves (`SaveUpgrade.js`), rejects versions it can't, ignores `computed`
 - `HunterState.js`
    - `hunterState(h)`: moves, features, gear, ratings, picks, cross-offs, advanced basic moves
    - Choice editing: `choiceSet`, `toggleChoice`, `setTextChoice`
@@ -89,6 +90,8 @@ Deployment: GitHub Pages (see 6)
    - localStorage, one key per hunter
    - Import/export
    - `toSaved`: adds `updated`, `computed`; playbook last. Options: `playbookRef` (default true), `computed` (default true)
+- `SaveUpgrade.js`
+   - `upgradeSave`: one step per breaking format change, each from one version to the next
 - `Markdown.js`
    - Markdown subset for display text
    - Escapes everything first (imported files can carry their own playbook text)
@@ -137,7 +140,7 @@ Type: browser localStorage, one key per hunter (`motw-sheet.hunter.{uid}`); JSON
 
 Purpose: the user's hunters; nothing leaves the browser
 
-Versions: `schema_version` in `src/Hunter.js`; other versions load as "old format" (delete only; migration is on the roadmap). Breaking changes: bump the version, convert `samples/`
+Versions: `schema_version` in `src/Hunter.js`; older saves are upgraded on load (`SaveUpgrade.js`); versions with no upgrade step load as "old format" (delete only). Breaking changes: bump the version, add an upgrade step, convert `samples/`
 
 ## 5. External Integrations / APIs
 
