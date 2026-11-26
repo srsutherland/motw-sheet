@@ -50,7 +50,7 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
    - e.g. define node interface, then move some of the parsing/export logic there?
    - Node types like "choices", "options", etc following the schema
    - PlaybookModel.js, HunterModel.js, CommonModel.js
-- Migrating hunters from old versions (a loader that upgrades old saves)
+- Migrating hunters from old versions: a module of incremental conversions (one per breaking hunter format change), separate from the loader; conversions from formats before 2027 are deprecated, to be removed in 2027
 - Remaining core playbooks
 - Basic move popups (needs basic rules JSON)
 - List of playbooks ordered by book release date, then alphabetically
@@ -80,6 +80,7 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - Rating colors: check them in light and dark mode
 - Monstrous: Monster Breed's layout on the view page needs a design
 - Monstrous: natural attack extras show the sheet's full wording on their base ("teeth (3-harm intimate) (Add +1 harm to a base)"); maybe a shorter `on_view` text
+- "Record" in the code and docs (`makeRecord`, Schema Notes) is what the schema calls `refWithChoices`; align them
 
 # Later
 

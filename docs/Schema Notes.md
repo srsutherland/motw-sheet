@@ -171,7 +171,7 @@ Limits on a `choose` (exact syntax not final):
 - Either a pre-determined effect, or a reference to a list to choose from (DESIGN.md)
 - The choice is made on, and stored with, the improvement (DESIGN.md)
 - Chosen in a popup, or a dropdown if simple (DESIGN.md)
-- Specials that cost more than one improvement: ignore for now
+- Specials that cost more than one unspent improvement: ignore for now
 - Redo / remove improvements: implementation detail, not a design question
 - "+1 to any rating": sub-options, one per rating, each a fixed effect; `"choose": { "verb": "pick", "count": 1 }`
 - Monstrous "Free yourself from the curse": `cross` the curse (stays visible, crossed off), plus -1 Weird
