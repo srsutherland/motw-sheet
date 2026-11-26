@@ -6,9 +6,8 @@
  */
 
 /**
- * Lowercase letters, digits and underscores.
- * Without one, an object's id is made from its `name` ("Could've Been Worse" ->
- * couldve_been_worse).
+ * Reference id: lowercase letters, digits and underscores;
+ * defaults to one made from `name` ("Could've Been Worse" -> couldve_been_worse)
  */
 export type Id = string;
 
@@ -35,7 +34,7 @@ export type RefRelative = string;
 export type RefThis = "@this";
 
 /**
- * That list in every other playbook: `@*.moves`.
+ * The same list in every other playbook: `@*.moves`
  */
 export type RefAllPlaybooks = string;
 
@@ -70,6 +69,9 @@ export type Markdown = string;
  */
 export type Paragraphs = Markdown | Markdown[];
 
+/**
+ * Date (yyyy-mm-dd)
+ */
 export type DateString = string;
 
 /**
@@ -78,6 +80,9 @@ export type DateString = string;
  */
 export type SchemaVersion = string;
 
+/**
+ * Rating name
+ */
 export type Rating = "charm" | "cool" | "sharp" | "tough" | "weird";
 
 /**
@@ -97,20 +102,23 @@ export interface Ratings {
 export type Tags = string[];
 
 /**
- * One `choose` rule: where to choose from (`from`, default `@this`) a `verb` and its `count`:
- * - pick: add it
- * - cross: strike it out, still visible
- * - remove: undo an earlier pick
- * - attach: attach this option to one of your picks, without picking it again
- *
- * `min` (default: the count) allows fewer;
- * `limits` sets min / max per sub-list.
+ * A `choose` rule
  */
 export interface ChooseRule {
+  /** Container to choose from (default `@this`) */
   from?: RefFrom;
+  /**
+   * - pick: add it
+   * - cross: strike it out, still visible
+   * - remove: undo an earlier pick
+   * - attach: attach this option to one of your picks, without picking it again
+   */
   verb: "pick" | "cross" | "remove" | "attach";
+  /** Number of choices */
   count: number;
+  /** Minimum number of choices (default: `count`) */
   min?: number;
+  /** Min / max per sub-list, keyed by sub-list reference */
   limits?: {
     [k: string]: {
       min?: number;
@@ -120,13 +128,13 @@ export interface ChooseRule {
 }
 
 /**
- * One rule, or several.
+ * A choose rule, or a list of them
  */
 export type Choose = ChooseRule | ChooseRule[];
 
 /**
- * What you gain outright: a reference or several.
- * Granting a list grants everything in it.
+ * References gained outright, one or several;
+ * granting a list grants everything in it
  */
 export type Grant = RefPath | RefPath[];
 

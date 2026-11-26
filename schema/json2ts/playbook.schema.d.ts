@@ -24,21 +24,31 @@ import type {
 } from "./common.schema";
 
 export interface Playbook {
-  /** This file's schema, for editors. */
+  /** JSON Schema URI */
   $schema?: string;
   schema_version: SchemaVersion;
+  /** Date last changed */
   updated: DateString;
-  /** The file id: absolute references start with it (`@the_expert.haven`). */
+  /** File id, the first segment of absolute references (`@the_expert.haven`) */
   id: string;
+  /** Object type */
   type: "playbook";
+  /** Display name, including "The" (`The Spell-Slinger`) */
   name: string;
+  /** Emoji icon (`🔮`) */
   emoji?: string;
+  /** Flavor text at the top of the playbook */
   quote?: Markdown;
+  /** Luck track */
   luck: {
+    /** Number of boxes */
     max: number;
+    /** Playbook's consequences for spending luck */
     special: Markdown;
   };
+  /** Harm track */
   harm: {
+    /** Number of boxes */
     max: number;
     /** Harm at which wounds become unstable. */
     unstable: number;
@@ -51,21 +61,30 @@ export interface Playbook {
   starting_gear: GearList;
   getting_started: GettingStarted;
   look: Look;
+  /** Initial ratings arrays */
   ratings_base: {
+    /** Heading text displayed before the options */
     heading?: string;
-    /** @minItems 1 */
+    /**
+     * List of options to choose from
+     *
+     * @minItems 1
+     */
     options: Ratings[];
   };
+  /** Introductions section */
   introductions?: Text;
-  /** Plain values: pre-fills the hunter can edit freely. */
+  /** Relationship options for the other hunters (plain text, freely edited once picked) */
   history: {
     description?: Paragraphs;
     options: PlainText[];
   };
+  /** Leveling up section */
   leveling_up?: Text;
   improvements: ImprovementList;
+  /** Advanced improvements (unlocked by `requires`) */
   improvements_advanced?: ImprovementList;
-  /** Homebrew: not on the paper playbook. */
+  /** Mythic improvements (homebrew: not on the paper playbook) */
   improvements_mythic?: ImprovementList;
 }
 
@@ -80,25 +99,29 @@ export interface Text {
 export type Option = Reference | PlainText | Node;
 
 /**
- * A playbook object.
- * Its `type` says where it goes when gained (move, gear, feature);
- * options inside a feature or move usually have none.
- * An untyped object with `options` and no `choose` is a sub-list (Combat Magic's bases): its
- * options are offered with the container's, grouped.
- * With its own `choose`, it's an option with its own choice (Pure Drive's emotion).
- * It needs an `id`, or a `name` to make one from: choices are stored by path.
+ * A playbook object (`type`: move, gear, feature;
+ * options inside a feature or move usually have none).
+ * Untyped, with `options` and no `choose`: a sub-list (Combat Magic's bases), offered grouped with
+ * the container's options.
+ * With its own `choose`: an option with its own choice (Pure Drive's emotion).
  */
 export type Node = {
   [k: string]: unknown;
 } & {
   id?: Id;
+  /** Object type */
   type?: "move" | "gear" | "feature";
+  /** Display name */
   name?: string;
+  /** The display text from the playbook */
   description?: Paragraphs;
+  /** Heading text displayed before the options */
   heading?: Markdown;
   tags?: Tags;
+  /** List of options to choose from */
   options?: Option[];
   choose?: Choose;
+  /** Effects when gained */
   effects?: Effect[];
   details?: Details;
   on_edit?: PageOverride;
@@ -120,16 +143,29 @@ export type Gear = Node & {
   type: "gear";
 };
 
+/**
+ * Playbook moves
+ */
 export interface MoveList {
+  /** Reference id */
   id: "moves";
+  /** The display text from the playbook */
   description?: Paragraphs;
+  /** List of options to choose from */
   options: Move[];
 }
 
+/**
+ * Starting gear options
+ */
 export interface GearList {
+  /** Reference id */
   id: "starting_gear";
+  /** The display text from the playbook */
   description?: Paragraphs;
+  /** Heading text displayed before the options */
   heading?: Markdown;
+  /** List of options to choose from */
   options: Gear[];
 }
 
@@ -138,55 +174,68 @@ export interface GearList {
  * improvement.
  */
 export interface GettingStarted {
+  /** The display text from the playbook */
   description?: Paragraphs;
   grant?: Grant;
   choose?: Choose;
 }
 
 /**
- * Lists to pick one from each, keyed by what they describe (clothes, eyes, aura...).
+ * Look lists, keyed by category (clothes, eyes, aura...)
  */
 export interface Look {
+  /** Heading text displayed before the options */
   heading?: string;
+  /** Look category: display format and options */
   [k: string]:
     | {
         /** How the pick reads on the sheet: `___` stands for it ("___ clothes"). */
         format: string;
+        /** List of options to choose from */
         options: (PlainText | RefTextbox)[];
       }
     | string
     | undefined;
 }
 
+/**
+ * Improvement list
+ */
 export interface ImprovementList {
   id: Id;
+  /** The display text from the playbook */
   description?: Paragraphs;
-  /**
-   * When the list unlocks.
-   * level: level ups completed before the one being spent;
-   * improvements: improvements taken.
-   */
+  /** Unlock conditions */
   requires?: {
+    /** Level ups completed before the one being spent */
     level?: number;
+    /** Improvements taken */
     improvements?: number;
   };
-  /** Improvements each one costs. */
+  /** Cost of each, in unspent improvements */
   cost?: number;
+  /** List of options to choose from */
   options: Improvement[];
 }
 
 /**
- * Ids are explicit and unique across all improvement lists (mythic ones prefixed mythic_).
+ * An improvement option (ids explicit and unique across all improvement lists;
+ * mythic ones prefixed `mythic_`)
  */
 export interface Improvement {
   id: Id;
+  /** Object type */
   type: "improvement";
+  /** The display text from the playbook */
   description: Markdown;
   grant?: Grant;
   choose?: Choose;
+  /** Effects when gained */
   effects?: Effect[];
+  /** Kind of special improvement effect */
   special?: "change_playbook" | "second_hunter" | "retire" | "turn_evil";
+  /** Cost in unspent improvements (default: the list's `cost`, or 1) */
   cost?: number;
-  /** Its own options ("+1 to any rating": one per rating). */
+  /** List of options to choose from ("+1 to any rating": one per rating) */
   options?: Option[];
 }

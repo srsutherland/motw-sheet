@@ -14,17 +14,23 @@ import type {Playbook} from "./playbook.schema";
  * the order taken.
  */
 export interface Hunter {
-  /** This file's schema, for editors. */
+  /** JSON Schema URI */
   $schema?: string;
+  /** Hunter format version (date of the last breaking change) */
   schema_version: "0.1.2026.11.24";
+  /** Unique id */
   uid: string;
+  /** Creation timestamp */
   created: Timestamp;
   /** When last saved. */
   updated?: Timestamp;
+  /** Playbook display name (`The Spell-Slinger`) */
   playbook_name: string;
   /** The playbook's `updated` date when this hunter was made. */
   playbook_updated?: DateString | "";
+  /** Hunter name */
   name: string;
+  /** Pronouns */
   pronouns?: string;
   /** Look list key -> the pick, or what was written in. */
   look: {
@@ -32,14 +38,17 @@ export interface Hunter {
   };
   /** A copy of the chosen ratings line. */
   ratings_base: Ratings | null;
+  /** Relationships with the other hunters */
   history: {
+    /** Other hunter's name */
     name?: string;
+    /** Relationship: a playbook option, freely edited */
     option?: string;
     notes?: string;
   }[];
   /**
-   * Mirrors the playbook's getting_started: a record per grant, and the choices for its choose
-   * rule(s).
+   * Choices for the playbook's getting_started: an entry per grant, and the choices for the choose
+   * rule(s)
    */
   getting_started: Choices & {
     grant: RefWithChoices[];
@@ -51,19 +60,24 @@ export interface Hunter {
     name: string;
     tags: Tags;
   }[];
+  /** Harm marked */
   harm: number;
+  /** Unstable wounds */
   unstable: boolean;
+  /** Luck spent */
   luck_used: number;
+  /** Experience marked (out of 5) */
   experience: number;
+  /** Total level, including unspent improvements */
   level: number;
   computed?: Computed;
-  /**
-   * Its playbook: a reference to the file (`@the_spellslinger`), loaded as a copy of it, or the
-   * hunter's own copy ("full" format).
-   */
+  /** A reference to (`@the_spellslinger`), or copy of, the hunter's playbook */
   playbook: string | Playbook;
 }
 
+/**
+ * ISO 8601 timestamp
+ */
 export type Timestamp = string;
 
 /**
@@ -114,8 +128,7 @@ export type RefWithChoices =
     });
 
 /**
- * What the sheet shows, derived from the rest;
- * not authoritative.
+ * Derived sheet values, not authoritative.
  * Moves and features are copies of the playbook objects, plus `selected` (picked from their
  * options, written like `chosen`) and `crossed`.
  */

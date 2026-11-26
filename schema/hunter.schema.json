@@ -6,18 +6,18 @@
   "description": "Choices and plain values; ratings, moves, gear and features follow from replaying getting_started, then each improvement in the order taken.",
   "type": "object",
   "properties": {
-    "$schema": { "description": "This file's schema, for editors.", "type": "string" },
-    "schema_version": { "const": "0.1.2026.11.24" },
-    "uid": { "type": "string", "minLength": 1 },
-    "created": { "$ref": "#/$defs/timestamp" },
+    "$schema": { "description": "JSON Schema URI", "type": "string" },
+    "schema_version": { "description": "Hunter format version (date of the last breaking change)", "const": "0.1.2026.11.24" },
+    "uid": { "description": "Unique id", "type": "string", "minLength": 1 },
+    "created": { "description": "Creation timestamp", "$ref": "#/$defs/timestamp" },
     "updated": { "description": "When last saved.", "$ref": "#/$defs/timestamp" },
-    "playbook_name": { "type": "string" },
+    "playbook_name": { "description": "Playbook display name (`The Spell-Slinger`)", "type": "string" },
     "playbook_updated": {
       "description": "The playbook's `updated` date when this hunter was made.",
       "anyOf": [{ "$ref": "common.schema.json#/$defs/dateString" }, { "const": "" }]
     },
-    "name": { "type": "string" },
-    "pronouns": { "type": "string" },
+    "name": { "description": "Hunter name", "type": "string" },
+    "pronouns": { "description": "Pronouns", "type": "string" },
     "look": {
       "description": "Look list key -> the pick, or what was written in.",
       "type": "object",
@@ -28,19 +28,20 @@
       "anyOf": [{ "$ref": "common.schema.json#/$defs/ratings" }, { "type": "null" }]
     },
     "history": {
+      "description": "Relationships with the other hunters",
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "name": { "type": "string" },
-          "option": { "type": "string" },
+          "name": { "description": "Other hunter's name", "type": "string" },
+          "option": { "description": "Relationship: a playbook option, freely edited", "type": "string" },
           "notes": { "type": "string" }
         },
         "additionalProperties": false
       }
     },
     "getting_started": {
-      "description": "Mirrors the playbook's getting_started: a record per grant, and the choices for its choose rule(s).",
+      "description": "Choices for the playbook's getting_started: an entry per grant, and the choices for the choose rule(s)",
       "type": "object",
       "allOf": [{ "$ref": "#/$defs/choices" }],
       "properties": {
@@ -67,14 +68,14 @@
         "additionalProperties": false
       }
     },
-    "harm": { "type": "integer", "minimum": 0 },
-    "unstable": { "type": "boolean" },
-    "luck_used": { "type": "integer", "minimum": 0 },
-    "experience": { "type": "integer", "minimum": 0 },
-    "level": { "type": "integer", "minimum": 0 },
+    "harm": { "description": "Harm marked", "type": "integer", "minimum": 0 },
+    "unstable": { "description": "Unstable wounds", "type": "boolean" },
+    "luck_used": { "description": "Luck spent", "type": "integer", "minimum": 0 },
+    "experience": { "description": "Experience marked (out of 5)", "type": "integer", "minimum": 0 },
+    "level": { "description": "Total level, including unspent improvements", "type": "integer", "minimum": 0 },
     "computed": { "$ref": "#/$defs/computed" },
     "playbook": {
-      "description": "Its playbook: a reference to the file (`@the_spellslinger`), loaded as a copy of it, or the hunter's own copy (\"full\" format).",
+      "description": "A reference to (`@the_spellslinger`), or copy of, the hunter's playbook",
       "anyOf": [
         { "type": "string", "pattern": "^@the_[a-z0-9_]+$" },
         { "$ref": "playbook.schema.json" }
@@ -90,6 +91,7 @@
 
   "$defs": {
     "timestamp": {
+      "description": "ISO 8601 timestamp",
       "type": "string",
       "pattern": "^\\d{4}-\\d{2}-\\d{2}T"
     },
@@ -149,7 +151,7 @@
       ]
     },
     "computed": {
-      "description": "What the sheet shows, derived from the rest; not authoritative. Moves and features are copies of the playbook objects, plus `selected` (picked from their options, written like `chosen`) and `crossed`.",
+      "description": "Derived sheet values, not authoritative. Moves and features are copies of the playbook objects, plus `selected` (picked from their options, written like `chosen`) and `crossed`.",
       "type": "object",
       "properties": {
         "ratings": { "$ref": "common.schema.json#/$defs/ratings" },

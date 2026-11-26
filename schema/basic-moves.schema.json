@@ -6,9 +6,9 @@
   "description": "The moves every hunter has.",
   "type": "object",
   "properties": {
-    "$schema": { "description": "This file's schema, for editors.", "type": "string" },
+    "$schema": { "description": "JSON Schema URI", "type": "string" },
     "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
-    "updated": { "$ref": "common.schema.json#/$defs/dateString" },
+    "updated": { "description": "Date last changed", "$ref": "common.schema.json#/$defs/dateString" },
     "id": { "const": "basic_moves" },
     "type": { "const": "basic_moves" },
     "name": { "type": "string" },
@@ -23,7 +23,7 @@
           "rating": { "$ref": "common.schema.json#/$defs/rating" },
           "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
           "options": {
-            "description": "Use magic's effects.",
+            "description": "List of options to choose from",
             "type": "array",
             "items": {
               "type": "object",

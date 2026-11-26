@@ -5,7 +5,7 @@
   "$comment": "PRELIMINARY. Describes the format as the app uses it today; it isn't a spec to design against, and it changes whenever development needs it. Background and decisions: docs/Schema Notes.md.",
   "$defs": {
     "id": {
-      "description": "Lowercase letters, digits and underscores. Without one, an object's id is made from its `name` (\"Could've Been Worse\" -> couldve_been_worse).",
+      "description": "Reference id: lowercase letters, digits and underscores; defaults to one made from `name` (\"Could've Been Worse\" -> couldve_been_worse)",
       "type": "string",
       "pattern": "^[a-z0-9_]+$"
     },
@@ -35,7 +35,7 @@
       "const": "@this"
     },
     "ref_allPlaybooks": {
-      "description": "That list in every other playbook: `@*.moves`.",
+      "description": "The same list in every other playbook: `@*.moves`",
       "type": "string",
       "pattern": "^@\\*\\.[a-z0-9_]+(\\.[a-z0-9_]+)*$"
     },
@@ -73,6 +73,7 @@
       ]
     },
     "dateString": {
+      "description": "Date (yyyy-mm-dd)",
       "type": "string",
       "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
     },
@@ -82,6 +83,7 @@
       "pattern": "^0\\.1\\.\\d{4}\\.\\d{2}\\.\\d{2}(\\.\\d+)?$"
     },
     "rating": {
+      "description": "Rating name",
       "enum": ["charm", "cool", "sharp", "tough", "weird"]
     },
     "ratings": {
@@ -103,14 +105,18 @@
       "items": { "type": "string", "pattern": "^\\S+$" }
     },
     "chooseRule": {
-      "description": "One `choose` rule: where to choose from (`from`, default `@this`) a `verb` and its `count`:\n- pick: add it\n- cross: strike it out, still visible\n- remove: undo an earlier pick\n- attach: attach this option to one of your picks, without picking it again\n\n`min` (default: the count) allows fewer; `limits` sets min / max per sub-list.",
+      "description": "A `choose` rule",
       "type": "object",
       "properties": {
-        "from": { "$ref": "#/$defs/ref_from" },
-        "verb": { "enum": ["pick", "cross", "remove", "attach"] },
-        "count": { "type": "integer", "minimum": 1 },
-        "min": { "type": "integer", "minimum": 0 },
+        "from": { "description": "Container to choose from (default `@this`)", "$ref": "#/$defs/ref_from" },
+        "verb": {
+          "description": "- pick: add it\n- cross: strike it out, still visible\n- remove: undo an earlier pick\n- attach: attach this option to one of your picks, without picking it again",
+          "enum": ["pick", "cross", "remove", "attach"]
+        },
+        "count": { "description": "Number of choices", "type": "integer", "minimum": 1 },
+        "min": { "description": "Minimum number of choices (default: `count`)", "type": "integer", "minimum": 0 },
         "limits": {
+          "description": "Min / max per sub-list, keyed by sub-list reference",
           "type": "object",
           "propertyNames": { "$ref": "#/$defs/ref_path" },
           "additionalProperties": {
@@ -127,14 +133,14 @@
       "additionalProperties": false
     },
     "choose": {
-      "description": "One rule, or several.",
+      "description": "A choose rule, or a list of them",
       "oneOf": [
         { "$ref": "#/$defs/chooseRule" },
         { "type": "array", "items": { "$ref": "#/$defs/chooseRule" }, "minItems": 1 }
       ]
     },
     "grant": {
-      "description": "What you gain outright: a reference or several. Granting a list grants everything in it.",
+      "description": "References gained outright, one or several; granting a list grants everything in it",
       "oneOf": [
         { "$ref": "#/$defs/ref_path" },
         { "type": "array", "items": { "$ref": "#/$defs/ref_path" } }

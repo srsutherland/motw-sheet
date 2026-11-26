@@ -5,31 +5,33 @@
   "$comment": "PRELIMINARY. Describes the format as the app uses it today; it isn't a spec to design against, and it changes whenever development needs it. Background and decisions: docs/Schema Notes.md.",
   "type": "object",
   "properties": {
-    "$schema": { "description": "This file's schema, for editors.", "type": "string" },
+    "$schema": { "description": "JSON Schema URI", "type": "string" },
     "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
-    "updated": { "$ref": "common.schema.json#/$defs/dateString" },
+    "updated": { "description": "Date last changed", "$ref": "common.schema.json#/$defs/dateString" },
     "id": {
-      "description": "The file id: absolute references start with it (`@the_expert.haven`).",
+      "description": "File id, the first segment of absolute references (`@the_expert.haven`)",
       "type": "string",
       "pattern": "^the_[a-z0-9_]+$"
     },
-    "type": { "const": "playbook" },
-    "name": { "type": "string" },
-    "emoji": { "type": "string" },
-    "quote": { "$ref": "common.schema.json#/$defs/markdown" },
+    "type": { "description": "Object type", "const": "playbook" },
+    "name": { "description": "Display name, including \"The\" (`The Spell-Slinger`)", "type": "string" },
+    "emoji": { "description": "Emoji icon (`🔮`)", "type": "string" },
+    "quote": { "description": "Flavor text at the top of the playbook", "$ref": "common.schema.json#/$defs/markdown" },
     "luck": {
+      "description": "Luck track",
       "type": "object",
       "properties": {
-        "max": { "type": "integer", "minimum": 1 },
-        "special": { "$ref": "common.schema.json#/$defs/markdown" }
+        "max": { "description": "Number of boxes", "type": "integer", "minimum": 1 },
+        "special": { "description": "Playbook's consequences for spending luck", "$ref": "common.schema.json#/$defs/markdown" }
       },
       "required": ["max", "special"],
       "additionalProperties": false
     },
     "harm": {
+      "description": "Harm track",
       "type": "object",
       "properties": {
-        "max": { "type": "integer", "minimum": 1 },
+        "max": { "description": "Number of boxes", "type": "integer", "minimum": 1 },
         "unstable": { "description": "Harm at which wounds become unstable.", "type": "integer", "minimum": 1 }
       },
       "required": ["max", "unstable"],
@@ -50,17 +52,18 @@
     "getting_started": { "$ref": "#/$defs/gettingStarted" },
     "look": { "$ref": "#/$defs/look" },
     "ratings_base": {
+      "description": "Initial ratings arrays",
       "type": "object",
       "properties": {
-        "heading": { "type": "string" },
-        "options": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/ratings" }, "minItems": 1 }
+        "heading": { "description": "Heading text displayed before the options", "type": "string" },
+        "options": { "description": "List of options to choose from", "type": "array", "items": { "$ref": "common.schema.json#/$defs/ratings" }, "minItems": 1 }
       },
       "required": ["options"],
       "additionalProperties": false
     },
-    "introductions": { "$ref": "#/$defs/text" },
+    "introductions": { "description": "Introductions section", "$ref": "#/$defs/text" },
     "history": {
-      "description": "Plain values: pre-fills the hunter can edit freely.",
+      "description": "Relationship options for the other hunters (plain text, freely edited once picked)",
       "type": "object",
       "properties": {
         "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
@@ -69,11 +72,11 @@
       "required": ["options"],
       "additionalProperties": false
     },
-    "leveling_up": { "$ref": "#/$defs/text" },
+    "leveling_up": { "description": "Leveling up section", "$ref": "#/$defs/text" },
     "improvements": { "$ref": "#/$defs/improvementList" },
-    "improvements_advanced": { "$ref": "#/$defs/improvementList" },
+    "improvements_advanced": { "description": "Advanced improvements (unlocked by `requires`)", "$ref": "#/$defs/improvementList" },
     "improvements_mythic": {
-      "description": "Homebrew: not on the paper playbook.",
+      "description": "Mythic improvements (homebrew: not on the paper playbook)",
       "$ref": "#/$defs/improvementList"
     }
   },
@@ -99,18 +102,18 @@
       ]
     },
     "node": {
-      "description": "A playbook object. Its `type` says where it goes when gained (move, gear, feature); options inside a feature or move usually have none. An untyped object with `options` and no `choose` is a sub-list (Combat Magic's bases): its options are offered with the container's, grouped. With its own `choose`, it's an option with its own choice (Pure Drive's emotion). It needs an `id`, or a `name` to make one from: choices are stored by path.",
+      "description": "A playbook object (`type`: move, gear, feature; options inside a feature or move usually have none). Untyped, with `options` and no `choose`: a sub-list (Combat Magic's bases), offered grouped with the container's options. With its own `choose`: an option with its own choice (Pure Drive's emotion).",
       "type": "object",
       "properties": {
         "id": { "$ref": "common.schema.json#/$defs/id" },
-        "type": { "enum": ["move", "gear", "feature"] },
-        "name": { "type": "string" },
-        "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
-        "heading": { "$ref": "common.schema.json#/$defs/markdown" },
+        "type": { "description": "Object type", "enum": ["move", "gear", "feature"] },
+        "name": { "description": "Display name", "type": "string" },
+        "description": { "description": "The display text from the playbook", "$ref": "common.schema.json#/$defs/paragraphs" },
+        "heading": { "description": "Heading text displayed before the options", "$ref": "common.schema.json#/$defs/markdown" },
         "tags": { "$ref": "common.schema.json#/$defs/tags" },
-        "options": { "type": "array", "items": { "$ref": "#/$defs/option" } },
+        "options": { "description": "List of options to choose from", "type": "array", "items": { "$ref": "#/$defs/option" } },
         "choose": { "$ref": "common.schema.json#/$defs/choose" },
-        "effects": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/effect" } },
+        "effects": { "description": "Effects when gained", "type": "array", "items": { "$ref": "common.schema.json#/$defs/effect" } },
         "details": { "$ref": "common.schema.json#/$defs/details" },
         "on_edit": { "$ref": "common.schema.json#/$defs/pageOverride" },
         "on_view": { "$ref": "common.schema.json#/$defs/pageOverride" }
@@ -141,22 +144,24 @@
       "required": ["type", "name", "tags"]
     },
     "moveList": {
+      "description": "Playbook moves",
       "type": "object",
       "properties": {
-        "id": { "const": "moves" },
-        "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
-        "options": { "type": "array", "items": { "$ref": "#/$defs/move" } }
+        "id": { "description": "Reference id", "const": "moves" },
+        "description": { "description": "The display text from the playbook", "$ref": "common.schema.json#/$defs/paragraphs" },
+        "options": { "description": "List of options to choose from", "type": "array", "items": { "$ref": "#/$defs/move" } }
       },
       "required": ["id", "options"],
       "additionalProperties": false
     },
     "gearList": {
+      "description": "Starting gear options",
       "type": "object",
       "properties": {
-        "id": { "const": "starting_gear" },
-        "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
-        "heading": { "$ref": "common.schema.json#/$defs/markdown" },
-        "options": { "type": "array", "items": { "$ref": "#/$defs/gear" } }
+        "id": { "description": "Reference id", "const": "starting_gear" },
+        "description": { "description": "The display text from the playbook", "$ref": "common.schema.json#/$defs/paragraphs" },
+        "heading": { "description": "Heading text displayed before the options", "$ref": "common.schema.json#/$defs/markdown" },
+        "options": { "description": "List of options to choose from", "type": "array", "items": { "$ref": "#/$defs/gear" } }
       },
       "required": ["id", "options"],
       "additionalProperties": false
@@ -165,19 +170,20 @@
       "description": "Character creation: what you're granted and the choices you make, in the same shape as an improvement.",
       "type": "object",
       "properties": {
-        "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
+        "description": { "description": "The display text from the playbook", "$ref": "common.schema.json#/$defs/paragraphs" },
         "grant": { "$ref": "common.schema.json#/$defs/grant" },
         "choose": { "$ref": "common.schema.json#/$defs/choose" }
       },
       "additionalProperties": false
     },
     "look": {
-      "description": "Lists to pick one from each, keyed by what they describe (clothes, eyes, aura...).",
+      "description": "Look lists, keyed by category (clothes, eyes, aura...)",
       "type": "object",
       "properties": {
-        "heading": { "type": "string" }
+        "heading": { "description": "Heading text displayed before the options", "type": "string" }
       },
       "additionalProperties": {
+        "description": "Look category: display format and options",
         "type": "object",
         "properties": {
           "format": {
@@ -186,6 +192,7 @@
             "pattern": "___"
           },
           "options": {
+            "description": "List of options to choose from",
             "type": "array",
             "items": {
               "anyOf": [
@@ -200,43 +207,44 @@
       }
     },
     "improvementList": {
+      "description": "Improvement list",
       "type": "object",
       "properties": {
         "id": { "$ref": "common.schema.json#/$defs/id" },
-        "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
+        "description": { "description": "The display text from the playbook", "$ref": "common.schema.json#/$defs/paragraphs" },
         "requires": {
-          "description": "When the list unlocks. level: level ups completed before the one being spent; improvements: improvements taken.",
+          "description": "Unlock conditions",
           "type": "object",
           "properties": {
-            "level": { "type": "integer", "minimum": 0 },
-            "improvements": { "type": "integer", "minimum": 0 }
+            "level": { "description": "Level ups completed before the one being spent", "type": "integer", "minimum": 0 },
+            "improvements": { "description": "Improvements taken", "type": "integer", "minimum": 0 }
           },
           "additionalProperties": false
         },
         "cost": {
-          "description": "Improvements each one costs.",
+          "description": "Cost of each, in unspent improvements",
           "type": "integer",
           "minimum": 1
         },
-        "options": { "type": "array", "items": { "$ref": "#/$defs/improvement" } }
+        "options": { "description": "List of options to choose from", "type": "array", "items": { "$ref": "#/$defs/improvement" } }
       },
       "required": ["id", "options"],
       "additionalProperties": false
     },
     "improvement": {
-      "description": "Ids are explicit and unique across all improvement lists (mythic ones prefixed mythic_).",
+      "description": "An improvement option (ids explicit and unique across all improvement lists; mythic ones prefixed `mythic_`)",
       "type": "object",
       "properties": {
         "id": { "$ref": "common.schema.json#/$defs/id" },
-        "type": { "const": "improvement" },
-        "description": { "$ref": "common.schema.json#/$defs/markdown" },
+        "type": { "description": "Object type", "const": "improvement" },
+        "description": { "description": "The display text from the playbook", "$ref": "common.schema.json#/$defs/markdown" },
         "grant": { "$ref": "common.schema.json#/$defs/grant" },
         "choose": { "$ref": "common.schema.json#/$defs/choose" },
-        "effects": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/effect" } },
-        "special": { "enum": ["change_playbook", "second_hunter", "retire", "turn_evil"] },
-        "cost": { "type": "integer", "minimum": 1 },
+        "effects": { "description": "Effects when gained", "type": "array", "items": { "$ref": "common.schema.json#/$defs/effect" } },
+        "special": { "description": "Kind of special improvement effect", "enum": ["change_playbook", "second_hunter", "retire", "turn_evil"] },
+        "cost": { "description": "Cost in unspent improvements (default: the list's `cost`, or 1)", "type": "integer", "minimum": 1 },
         "options": {
-          "description": "Its own options (\"+1 to any rating\": one per rating).",
+          "description": "List of options to choose from (\"+1 to any rating\": one per rating)",
           "type": "array",
           "items": { "$ref": "#/$defs/option" }
         }
