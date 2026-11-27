@@ -113,6 +113,10 @@ const entries = computed(() => {
     if (['remove', 'attach'].includes(verb.value) || (verb.value === 'cross' && picked.size)) {
         return options.filter((entry) => picked.has(entry.path));
     }
+    // only moves with an advanced result can be marked advanced (not Big Magic)
+    if (advancing.value) {
+        return options.filter((entry) => entry.node?.advanced);
+    }
     return options;
 });
 

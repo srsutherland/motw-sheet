@@ -118,6 +118,7 @@ await levelUp();
 await advancement().click();
 await option('Mark two of the basic moves as advanced').click();
 check('basic moves selectable', await box('Kick Some Ass').isDisabled(), false);
+check('only moves with an advanced result', await box('Big Magic').count(), 0);
 await box('Kick Some Ass').check();
 await box('Use Magic').check();
 await dialog.getByRole('button', { name: 'Take it' }).click();
