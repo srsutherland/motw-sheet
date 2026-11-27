@@ -21,6 +21,15 @@ check('rejects an unknown key', validate('playbook.schema.json', { ...pb, colour
 check('rejects an unknown verb', validate('common.schema.json#/$defs/chooseRule', { verb: 'take', count: 1 }).length > 0, true);
 check('rejects a rule without a count', validate('common.schema.json#/$defs/chooseRule', { verb: 'pick' }).length > 0, true);
 check('rejects a bad reference', validate('common.schema.json#/$defs/reference', '@Bad Ref').length > 0, true);
+const isPath = (ref) => validate('common.schema.json#/$defs/ref_path', ref).length === 0;
+check('@this and @textbox are not paths', ['@this', '@textbox', '@this.x'].map(isPath),
+    [false, false, true]);
+const sample = json('samples/Dave Johnson the Spell-Slinger.json');
+const hunterErrors = (changes) => validate('hunter.schema.json', { ...sample, ...changes }).length;
+check('rejects a look key that is not an id', hunterErrors({ look: { 'Eyes!': 'x' } }) > 0, true);
+check('rejects a bad date and a bad timestamp',
+    [{ playbook_updated: '2026-13-01' }, { created: '2026-10-09T25:00:00Z' }].map(hunterErrors).map(Boolean),
+    [true, true]);
 const nodeErrors = (node) => validate('playbook.schema.json#/$defs/node', node).length;
 check('a node needs an id or a name', [{}, { id: 'a' }, { name: 'A' }].map(nodeErrors).map(Boolean),
     [true, false, false]);

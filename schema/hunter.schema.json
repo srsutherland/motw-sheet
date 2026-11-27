@@ -19,8 +19,9 @@
     "name": { "description": "Hunter name", "type": "string" },
     "pronouns": { "description": "Pronouns", "type": "string" },
     "look": {
-      "description": "Look list key -> the pick, or what was written in.",
+      "description": "Look trait id -> the pick, or what was written in.",
       "type": "object",
+      "propertyNames": { "$ref": "common.schema.json#/$defs/id" },
       "additionalProperties": { "type": "string" }
     },
     "ratings_base": {
@@ -93,7 +94,7 @@
     "timestamp": {
       "description": "ISO 8601 timestamp",
       "type": "string",
-      "pattern": "^\\d{4}-\\d{2}-\\d{2}T"
+      "format": "date-time"
     },
     "choices": {
       "description": "The hunter's side of an object's choose rule(s). One rule: `chosen` directly. Several: `choose`, mirroring the playbook (the nth rule with a given `from` goes with the nth entry with that `from`). No rules: neither.",

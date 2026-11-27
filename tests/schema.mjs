@@ -1,11 +1,13 @@
 // The JSON Schemas in schema/, compiled with ajv: validate(name, data) -> list of errors.
 import fs from 'node:fs';
 import Ajv2020 from 'ajv/dist/2020.js';
+import addFormats from 'ajv-formats';
 
 const dir = new URL('../schema/', import.meta.url);
 
 const loadSchemas = () => {
     const ajv = new Ajv2020({ allErrors: true });
+    addFormats(ajv, ['date', 'date-time']);
     for (const file of fs.readdirSync(dir).filter((f) => f.endsWith('.schema.json'))) {
         ajv.addSchema(JSON.parse(fs.readFileSync(new URL(file, dir), 'utf8')));
     }

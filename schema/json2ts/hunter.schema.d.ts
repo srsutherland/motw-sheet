@@ -32,7 +32,7 @@ export interface Hunter {
   name: string;
   /** Pronouns */
   pronouns?: string;
-  /** Look list key -> the pick, or what was written in. */
+  /** Look trait id -> the pick, or what was written in. */
   look: {
     [k: string]: string;
   };
