@@ -56,7 +56,7 @@ This page displays the given hunter: everything needed to play, including the ru
 This page has responsive columns with the following sections:
 
 1. Hunter name (displayed as "{name} the {playbook}"; name is editable)
-   - Pronouns (editable)
+   - Pronouns (editable); buttons ♂ ♀ ⚥ fill in he/him, she/her, they/them
 2. Ratings display (during character creation, this is hidden until the user makes a ratings selection below)
 3. Gear (editable; select from options)
    - Starting Gear
@@ -73,7 +73,8 @@ This page has responsive columns with the following sections:
      - a field for notes/clarification on each relationship
      - (This isn't actually a data link to another hunter, it's just local strings selected from options)
 9. Improvements
-   - Manage those taken (edit choices, remove)
+   - Level, with "Set level" (for existing hunters)
+   - Manage those taken (edit choices, remove with confirmation)
    - Advancement dialog (also on view page)
    - Improvements provide either a pre-determined increase or provide a reference to some list you can choose from
    - The user selects an improvement, and if it offers a choice, the choice is tied to the improvement itself.
