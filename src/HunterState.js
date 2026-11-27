@@ -334,6 +334,15 @@ const improvementBudget = (h) => {
     return { unspent: disabled.size ? 0 : h.level - spent, disabled };
 };
 
+/**
+ * How many more improvements would be disabled if the hunter were at another level.
+ * @param {object} h The hunter
+ * @param {number} level The other level
+ * @returns {number} Improvements newly disabled (0 for a higher level)
+ */
+const newlyDisabledAt = (h, level) => Math.max(0,
+    improvementBudget({ ...h, level }).disabled.size - improvementBudget(h).disabled.size);
+
 const unspentImprovements = (h) => improvementBudget(h).unspent;
 const isDisabled = (h, taken) => improvementBudget(h).disabled.has(toRaw(taken));
 
@@ -401,7 +410,7 @@ export {
     choiceSet, grantRecord, pickRecord, toggleChoice, setTextChoice, gettingStartedRules, chosenFor,
     advancesBasicMoves,
     hunterState, picksUnder, crossedUnder, attachedTo, basicMovesByRating,
-    takenImprovements, costOf, improvementBudget, unspentImprovements, isDisabled,
+    takenImprovements, costOf, improvementBudget, newlyDisabledAt, unspentImprovements, isDisabled,
     overMax, improvementLists, improvementBlocked,
     applyOneOffEffects,
 };

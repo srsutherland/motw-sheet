@@ -89,11 +89,24 @@ await levelUp();
 await take('Erase one used Luck mark from your playbook');
 check('luck mark erased', await page.locator('.view-luck .track').innerText().then((t) => (t.match(/■/g) || []).length), 1);
 
-// Remove an improvement on the edit page; take it again through Advancement
+// Confirmations from here on: recorded, and accepted unless `refuseNext` is set
+const confirms = [];
+let refuseNext = false;
+page.on('dialog', (d) => {
+    confirms.push(d.message());
+    return refuseNext ? (refuseNext = false, d.dismiss()) : d.accept();
+});
+
+// Remove an improvement on the edit page (confirmed); take it again through Advancement
 await page.getByTitle('Edit').click();
 const improvements = page.locator('#improvements .improvement');
 check('edit page lists improvements', await improvements.count(), 7);
-await improvements.filter({ hasText: 'Get +1 Sharp' }).getByTitle(/^Remove/).click();
+const removeSharp = improvements.filter({ hasText: 'Get +1 Sharp' }).getByTitle(/^Remove/);
+refuseNext = true;
+await removeSharp.click();
+check('remove asks first; refused keeps it', [confirms.at(-1)?.startsWith('Remove this improvement?'), await improvements.count()], [true, 7]);
+await removeSharp.click();
+check('removed', await improvements.count(), 6);
 check('advancement on the edit page', (await page.locator('#improvements').getByRole('button', { name: /^Advancement/ }).innerText()).trim(), 'Advancement (+1)');
 await page.getByRole('button', { name: 'Save' }).click();
 check('sharp back down', (await ratings())[2], '1');
@@ -113,10 +126,8 @@ check('advanced on the ratings table', await advancedMoves(), 2);
 check('not added as moves', await page.locator('.view-move .move-name', { hasText: 'Kick Some Ass' }).count(), 0);
 
 // Level down: - at 0 XP, confirmed; the newest improvement is disabled, choices kept
-const confirms = [];
-page.on('dialog', (d) => { confirms.push(d.message()); d.accept(); });
 await page.locator('.view-experience button.minus').click();
-check('level down asks first', confirms[0]?.startsWith('Level down to level 7?') && confirms[0].includes('1 improvement will be disabled'), true);
+check('level down asks first', confirms.at(-1)?.startsWith('Level down to level 7?') && confirms.at(-1).includes('1 improvement will be disabled'), true);
 check('leveled down', [await level(), await xp()], ['Level 7', 4]);
 check('disabled note', (await page.locator('.view-experience .disabled-note').innerText()).trim(), '1 improvement disabled');
 check('its effect is gone', await advancedMoves(), 0);
@@ -141,6 +152,21 @@ check('improvements are last', await page.locator('main > :last-child').getAttri
 
 await page.reload();
 check('after reload', [await ratings(), await level(), await page.locator('.view-improvements li').count(), (await advancement().innerText()).trim()], [['0', '2', '2', '1', '3'], 'Level 10', 8, 'Advancement (+2)']);
+
+// Set level (edit page): up adds unspent improvements; down disables some, after confirming
+await page.getByTitle('Edit').click();
+const setLevel = async (n) => {
+    await page.getByRole('button', { name: 'Set level' }).click();
+    await page.getByLabel('New level').fill(String(n));
+    await page.locator('#improvements').getByRole('button', { name: 'Set', exact: true }).click();
+};
+const editLevel = () => page.locator('#improvements em').first().innerText();
+const confirmCount = confirms.length;
+await setLevel(12);
+check('set level up', [await editLevel(), (await page.locator('#improvements').getByRole('button', { name: /^Advancement/ }).innerText()).trim(), confirms.length], ['Level 12', 'Advancement (+4)', confirmCount]);
+await setLevel(6);
+check('set level down asks first', confirms.at(-1)?.startsWith('Set level to 6?') && confirms.at(-1).includes('2 improvements will be disabled'), true);
+check('set level down', [await editLevel(), await page.locator('#improvements .disabled-improvement').count()], ['Level 6', 2]);
 
 check('console errors', errors, []);
 await browser.close();

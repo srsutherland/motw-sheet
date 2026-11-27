@@ -21,7 +21,7 @@
 // Experience: Level Up at 5; - at 0 levels down (after confirming). Improvements are taken
 // separately, through Advancement, so leveling up mid-session never blocks the sheet.
 import { useHunter } from '@/HunterContext';
-import { improvementBudget, takenImprovements } from '@/HunterState';
+import { newlyDisabledAt } from '@/HunterState';
 import AdvancementButton from '../edit/AdvancementButton.vue';
 import Track from './Track.vue';
 
@@ -38,9 +38,7 @@ const levelDown = () => {
     if (h.level <= 0) {
         return;
     }
-    // how many improvements the lower level would leave unpaid for
-    const lower = { ...h, level: h.level - 1, improvements: takenImprovements(h) };
-    const disabling = improvementBudget(lower).disabled.size - improvementBudget(h).disabled.size;
+    const disabling = newlyDisabledAt(h, h.level - 1);
     const plural = disabling > 1 ? 's' : '';
     const warning = disabling > 0
         ? `\n\n${disabling} improvement${plural} will be disabled (choices kept) until you level up again.`
