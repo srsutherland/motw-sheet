@@ -40,18 +40,19 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 # 2. Roadmap
 
 - ~~A second playbook, picked to stress the schema (Expert, Monstrous, Chosen, or Wronged)~~
-- Draft the schema (soon)
-   - JSON Schema files in `/schema/`: playbook, hunter, probably `common.schema.json`
-   - A big comment on each: preliminary and descriptive, not prescriptive; changes if development needs it
-   - `npm run validate` (ajv) if it's worth it
-- Settle the schema (after the second playbook)
-   - What "optional" means: a liberal loader vs the schema's "proper" shape; some notation for the difference
-- Discuss moving some logic to the model (mirror the schema in code)
-   - e.g. define node interface, then move some of the parsing/export logic there?
-   - Node types like "choices", "options", etc following the schema
-   - PlaybookModel.js, HunterModel.js, CommonModel.js
+- ~~Draft the schema~~
+   - ~~JSON Schema files in `/schema/`: playbook, hunter, `common.schema.json`, basic moves~~
+   - ~~A big comment on each: preliminary and descriptive, not prescriptive; changes if development needs it~~
+   - ~~Validation (ajv): `npm run test:schema`~~
 - Remove the save upgrade steps from 2026 formats (`SaveUpgrade.js`, deprecated) in 2027
 - Remaining core playbooks
+- Backend cleanup (after the remaining playbooks)
+   - Settle the schema: what "optional" means: a liberal loader vs the schema's "proper" shape; some notation for the difference
+   - Discuss moving some logic to the model (mirror the schema in code)
+      - e.g. define node interface, then move some of the parsing/export logic there?
+      - Node types like "choices", "options", etc following the schema
+      - PlaybookModel.js, HunterModel.js, CommonModel.js
+   - `@*.moves` means every *other* playbook (the hunter's own is skipped), but `*` (and `ref_allPlaybooks`) reads as all of them: discuss the syntax
 - Basic move popups (needs basic rules JSON)
 - List of playbooks ordered by book release date, then alphabetically
 - Reconcile `DESIGN.md` with what shipped
@@ -68,7 +69,6 @@ Not MVP: the other 11 playbooks, save migration, sync, keeper tools.
 - One component for an option's text ("**Name**: description (tags)"), now rendered separately in `ChooseRule`, `ViewFeature`, `Move` and `EditFeature`
 - Save/export options (`toSaved` has them; nothing sets them yet): the playbook as a reference (default) or a full copy; omit `computed` (the app recomputes it by replaying the sheet) for a smaller file
 - `ViewMoves`: the moves section is still inline in `ViewHunter`; match `EditMoves` and the other `View*` sections
-- `@*.moves` means every *other* playbook (the hunter's own is skipped), but `*` (and `ref_allPlaybooks`) reads as all of them: discuss the syntax
 
 # Minor
 
