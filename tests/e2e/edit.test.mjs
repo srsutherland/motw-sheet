@@ -15,7 +15,12 @@ await page.waitForURL(/\?edit=/);
 const id = new URL(page.url()).searchParams.get('edit');
 
 await page.locator('.hunter-name input').fill('Alice');
-await page.locator('.pronouns input').fill('they/them');
+// Pronouns: typed, or filled in by a button
+const pronouns = page.locator('.pronouns input');
+await pronouns.fill('xe/xem');
+await page.getByRole('button', { name: 'she/her' }).click();
+check('pronoun button', await pronouns.inputValue(), 'she/her');
+await page.getByRole('button', { name: 'they/them' }).click();
 
 // Combat Magic: 3 picks, at least 1 base
 const cm = section('Combat Magic');

@@ -6,6 +6,16 @@
     </h1>
     <p class="pronouns">
         <label>Pronouns: <input v-model="hunter.pronouns" placeholder="pronouns" /></label>
+        <button
+            v-for="{ symbol, pronouns } in PRONOUN_SETS"
+            :key="pronouns"
+            class="small"
+            :title="pronouns"
+            :aria-label="pronouns"
+            @click="hunter.pronouns = pronouns"
+        >
+            {{ symbol }}
+        </button>
     </p>
 
     <!-- Current ratings (picked below, under Ratings) -->
@@ -70,6 +80,13 @@ const state = useHunterState();
 providePage('edit');
 
 const emit = defineEmits(['change-view']);
+
+// Buttons that fill in the pronouns field (︎: as text, not emoji)
+const PRONOUN_SETS = [
+    { symbol: '♂︎', pronouns: 'he/him' },
+    { symbol: '♀︎', pronouns: 'she/her' },
+    { symbol: '⚥︎', pronouns: 'they/them' },
+];
 
 const bendRules = ref(false);
 provide('bendRules', bendRules);
