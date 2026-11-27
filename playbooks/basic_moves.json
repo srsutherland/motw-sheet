@@ -1,25 +1,141 @@
 {
   "$schema": "../schema/basic-moves.schema.json",
   "schema_version": "0.1.2026.11.24",
-  "updated": "2026-10-02",
+  "updated": "2026-11-27",
   "id": "basic_moves",
   "type": "basic_moves",
   "name": "Basic Moves",
   "options": [
-    { "type": "basic_move", "name": "Manipulate Someone", "rating": "charm" },
-    { "type": "basic_move", "name": "Act Under Pressure", "rating": "cool" },
-    { "type": "basic_move", "name": "Help Out", "rating": "cool" },
-    { "type": "basic_move", "name": "Investigate a Mystery", "rating": "sharp" },
-    { "type": "basic_move", "name": "Read a Bad Situation", "rating": "sharp" },
-    { "type": "basic_move", "name": "Kick Some Ass", "rating": "tough" },
-    { "type": "basic_move", "name": "Protect Someone", "rating": "tough" },
+    {
+      "type": "basic_move",
+      "name": "Manipulate Someone",
+      "rating": "charm",
+      "description": "Once you have given them a reason, tell them what you want them to do and **roll +Charm**.",
+      "details": [
+        {
+          "name": "For a normal person",
+          "description": "**On a 10+**, then they'll do it for the reason you gave them. If you asked too much, they'll tell you the minimum it would take for them to do it (or if there's no way they'd do it). **On a 7-9**, they'll do it, but only if you do something for them right now to show that you mean it. If you asked too much, they'll tell you what, if anything, it would take for them to do it."
+        },
+        {
+          "name": "For another hunter",
+          "description": "**On a 10+**, if they do what you ask they mark experience and get +1 forward. **On a 7-9**, they mark experience if they do what you ask. **On a miss**, it's up to that hunter to decide how badly you offend or annoy them. They mark experience if they decide not to do what you asked. Monsters and minions cannot normally be manipulated."
+        }
+      ],
+      "advanced": [
+        "**For a normal person**: **On a 12+** not only do they do what you want right now, they also become your **ally** for the rest of the mystery (or, if you do enough for them, permanently).",
+        "**For another hunter**: **On a 12+** they must [[act under pressure]] to resist your request. If they do what you ask, they mark one experience and take +1 ongoing while doing what you asked."
+      ]
+    },
+    {
+      "type": "basic_move",
+      "name": "Act Under Pressure",
+      "rating": "cool",
+      "description": [
+        "When you act under pressure, **roll +Cool**.",
+        "**On a 10+** you do what you set out to.",
+        "**On a 7-9** the Keeper is going to give you a worse outcome, hard choice, or price to pay."
+      ],
+      "advanced": "**On a 12+** you may choose to either do what you wanted and something extra, or to do what you wanted to absolute perfection."
+    },
+    {
+      "type": "basic_move",
+      "name": "Help Out",
+      "rating": "cool",
+      "description": [
+        "When you help another hunter, **roll +Cool**.",
+        "**On a 10+** your help grants them +1 to their roll.",
+        "**On a 7-9** your help grants them +1 to their roll, but you also expose yourself to trouble or danger."
+      ],
+      "advanced": "**On a 12+** your help lets them act as if they just rolled a 12, regardless of what they actually got."
+    },
+    {
+      "type": "basic_move",
+      "name": "Investigate a Mystery",
+      "rating": "sharp",
+      "description": "When you investigate a mystery, **roll +Sharp**. **On a 10+** hold 2, and **on a 7-9** hold 1. One hold can be spent to ask the Keeper one of the following questions:",
+      "details": [
+        "What happened here?",
+        "What sort of creature is it?",
+        "What can it do?",
+        "What can hurt it?",
+        "Where did it go?",
+        "What was it going to do?",
+        "What is being concealed here?"
+      ],
+      "advanced": "**On a 12+**, you may ask the Keeper any question you want about the mystery, not just the listed ones."
+    },
+    {
+      "type": "basic_move",
+      "name": "Read a Bad Situation",
+      "rating": "sharp",
+      "description": [
+        "When you look around and read a bad situation, **roll +Sharp**.",
+        "**On a 10+** hold 3, and **on a 7-9**, hold 1. If you act on the answers, you get +1 ongoing while the information is relevant. One hold can be spent to ask the Keeper one of the following questions:"
+      ],
+      "details": [
+        "What's my best way in?",
+        "What's my best way out?",
+        "Are there any dangers we haven't noticed?",
+        "What's the biggest threat?",
+        "What's most vulnerable to me?",
+        "What's the best way to protect the victims?"
+      ],
+      "advanced": "**On a 12+** you may ask the Keeper any question you want about the situation, not just the listed ones."
+    },
+    {
+      "type": "basic_move",
+      "name": "Kick Some Ass",
+      "rating": "tough",
+      "description": [
+        "When you get into a fight and kick some ass, **roll +Tough**.",
+        "**On a 7+**, you and whatever you're fighting inflict harm on each other. The amount of harm is based on the established dangers in the game. That usually means you inflict the harm rating of your weapon and your enemy inflicts their attack's harm rating on you.",
+        "**On a 10+**, choose one extra effect:"
+      ],
+      "details": [
+        "You gain the advantage: take +1 forward, or give +1 forward to another hunter.",
+        "You inflict terrible harm (+1 harm).",
+        "You suffer less harm (-1 harm).",
+        "You force them where you want them."
+      ],
+      "advanced": {
+        "description": "**On a 12+** instead pick an enhanced effect:",
+        "details": [
+          "You completely hold the advantage. All hunters involved in the fight get +1 forward.",
+          "You suffer no harm at all.",
+          "Your attack inflicts double the normal harm.",
+          "Your attack drives the enemy away in a rout."
+        ]
+      }
+    },
+    {
+      "type": "basic_move",
+      "name": "Protect Someone",
+      "rating": "tough",
+      "description": [
+        "When you prevent harm to another character, **roll +Tough**.",
+        "**On a 7+**, you protect them okay, but you'll suffer some or all of the harm they were going to get.",
+        "**On a 10+** choose an extra:"
+      ],
+      "details": [
+        "You suffer little harm (-1 harm).",
+        "All impending danger is now focused on you.",
+        "You inflict harm on the enemy.",
+        "You hold the enemy back."
+      ],
+      "advanced": "**On a 12+** both you and the character you are protecting are unharmed and out of danger. If you were protecting a bystander, they also become your **ally**."
+    },
     {
       "type": "basic_move",
       "name": "Use Magic",
       "rating": "weird",
+      "description": [
+        "When you use magic, say what you're trying to achieve and how you do the spell, then **roll +Weird**.",
+        "**On a 10+**, the magic works without issues: choose your effect.",
+        "**On a 7-9**, it works imperfectly: choose your effect and a glitch. The Keeper will decide what effect the glitch has."
+      ],
       "options": [
-        { "id": "inflict_harm", "description": "Inflict harm" },
-        { "id": "enchant_weapon", "description": "Enchant a weapon" },
+        { "id": "inflict_harm", "description": "Inflict harm (1-harm ignore-armour magic obvious)" },
+        { "id": "enchant_weapon", "description": "Enchant a weapon. It gets +1 harm and +magic" },
         { "id": "beyond_human", "description": "Do one thing that is beyond human limitations" },
         {
           "id": "bar",
@@ -40,6 +156,35 @@
           "id": "heal",
           "description": "Heal 1-harm from an injury, or cure a disease, or neutralize a poison"
         }
+      ],
+      "details": [
+        {
+          "name": "Glitches",
+          "description": "The effect is weakened. The effect is of short duration. You take 1-harm ignore-armour. The magic draws immediate, unwelcome attention. It has a problematic side effect."
+        },
+        {
+          "name": "The Keeper may say that...",
+          "description": "The spell requires weird materials. The spell will take 10 seconds, 30 seconds, or 1 minute to cast. The spell requires ritual chanting and gestures. The spell requires you to draw arcane symbols. You need one or two people to help cast the spell. You need to refer to a tome of magic for the details."
+        }
+      ],
+      "advanced": "**On a 12+** the Keeper will offer you some added benefit."
+    },
+    {
+      "type": "basic_move",
+      "name": "Big Magic",
+      "description": [
+        "Use this when you want more than the [[use magic]] effects. Tell the Keeper what you want to do. If you meet the requirements, then the magic takes effect.",
+        "The Keeper may require:"
+      ],
+      "details": [
+        "You need to spend a lot of time (days or weeks) researching the magic ritual.",
+        "You need to experiment with the spell – there will be lots of failures before you get it right.",
+        "You need some rare and weird ingredients and supplies.",
+        "The spell will take a long time (hours or days) to cast.",
+        "You need a lot of people (2, 3, 7, 13, or more) to help.",
+        "The spell needs to be cast at a particular place and/or time.",
+        "You need to [[use magic]] as part of the ritual, perhaps to summon a monster, communicate with something, or bar the portal you opened.",
+        "It will have a specific side-effect or danger."
       ]
     }
   ]

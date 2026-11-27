@@ -18,10 +18,26 @@
         "type": "object",
         "properties": {
           "id": { "$ref": "common.schema.json#/$defs/id" },
-          "type": { "const": "basic_move" },
-          "name": { "type": "string" },
-          "rating": { "$ref": "common.schema.json#/$defs/rating" },
-          "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
+          "type": { "description": "Object type hint", "const": "basic_move" },
+          "name": { "description": "Display name", "type": "string" },
+          "rating": { "description": "Rating rolled (none for Big Magic)", "$ref": "common.schema.json#/$defs/rating" },
+          "description": { "description": "The display text from the reference sheet", "$ref": "common.schema.json#/$defs/paragraphs" },
+          "details": { "$ref": "common.schema.json#/$defs/details" },
+          "advanced": {
+            "description": "Advanced result (12+), for a move marked advanced",
+            "anyOf": [
+              { "$ref": "common.schema.json#/$defs/paragraphs" },
+              {
+                "type": "object",
+                "properties": {
+                  "description": { "$ref": "common.schema.json#/$defs/paragraphs" },
+                  "details": { "$ref": "common.schema.json#/$defs/details" }
+                },
+                "required": ["description", "details"],
+                "additionalProperties": false
+              }
+            ]
+          },
           "options": {
             "description": "List of options to choose from",
             "type": "array",
@@ -36,7 +52,7 @@
             }
           }
         },
-        "required": ["type", "name", "rating"],
+        "required": ["type", "name", "description"],
         "additionalProperties": false
       }
     }

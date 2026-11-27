@@ -48,7 +48,7 @@ check('other playbooks moves: not your own', D.optionsOf('@*.moves', pb).some((o
 
 let st = S.hunterState(h);
 check('granted moves', st.moves.map((m) => m.node.name), ['Tools and Techniques']);
-check('basic moves, implicit', st.basicMoves.length, 8);
+check('basic moves, implicit (with Big Magic)', st.basicMoves.length, 9);
 check('own features', st.features.map((f) => `${f.area}:${f.node.name}`), ['pre_moves:Combat Magic']);
 
 // Choose the way the UI does: find the option in its container, toggle it
@@ -179,7 +179,7 @@ const pickIn = (playbook, record, holder, i, path) => {
     S.toggleChoice(S.choiceSet(record, holder, i), entry);
 };
 let est = S.hunterState(e);
-check('expert: nothing granted; basic moves anyway', [e.getting_started.grant, est.moves.length, est.basicMoves.length], [[], 0, 8]);
+check('expert: nothing granted; basic moves anyway', [e.getting_started.grant, est.moves.length, est.basicMoves.length], [[], 0, 9]);
 check('expert: haven is post-moves', est.features.map((f) => `${f.area}:${f.path}`), [`post_moves:${ex}.haven`]);
 const egs = epb.getting_started;
 for (const p of ['lore_library', 'armory', 'panic_room']) pickIn(epb, e.getting_started, egs, 0, `${ex}.haven.${p}`);

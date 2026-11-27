@@ -5,7 +5,15 @@
  * and run `npm run schema:types` to regenerate this file.
  */
 
-import type {DateString, Id, Markdown, Paragraphs, Rating, SchemaVersion} from "./common.schema";
+import type {
+  DateString,
+  Details,
+  Id,
+  Markdown,
+  Paragraphs,
+  Rating,
+  SchemaVersion
+} from "./common.schema";
 
 /**
  * The moves every hunter has.
@@ -21,10 +29,22 @@ export interface BasicMoves {
   name: string;
   options: {
     id?: Id;
+    /** Object type hint */
     type: "basic_move";
+    /** Display name */
     name: string;
-    rating: Rating;
-    description?: Paragraphs;
+    /** Rating rolled (none for Big Magic) */
+    rating?: Rating;
+    /** The display text from the reference sheet */
+    description: Paragraphs;
+    details?: Details;
+    /** Advanced result (12+), for a move marked advanced */
+    advanced?:
+      | Paragraphs
+      | {
+          description: Paragraphs;
+          details: Details;
+        };
     /** List of options to choose from */
     options?: {
       id: Id;
